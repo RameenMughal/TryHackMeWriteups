@@ -17,4 +17,4 @@ If you're learning along with me or have suggestions, feel free to reach out or 
 
 ## 🙌 Credits
 
-Special thanks to uttambodara for (TryHackMeRoadmap)[https://github.com/uttambodara/TryHackMeRoadmap.git]. It really helped to learn new cybersecurity tools and sharpen my fundamental knowledge. Make sure to star this and my respository to show support to us.
+Special thanks to uttambodara for [TryHackMeRoadmap](https://github.com/uttambodara/TryHackMeRoadmap.git). It really helped to learn new cybersecurity tools and sharpen my fundamental knowledge. Make sure to star this and my respository to show support to us.
