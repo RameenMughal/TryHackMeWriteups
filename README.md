@@ -14,3 +14,7 @@ By organizing content clearly and updating it frequently, this repository become
 
 ## 📧 Connect
 If you're learning along with me or have suggestions, feel free to reach out or follow along. Let’s grow together in the world of cybersecurity!
+
+## 🙌 Credits
+
+Special thanks to uttambodara for (TryHackMeRoadmap)[https://github.com/uttambodara/TryHackMeRoadmap.git]. It really helped to learn new cybersecurity tools and sharpen my fundamental knowledge. Make sure to star this and my respository to show support to us.
