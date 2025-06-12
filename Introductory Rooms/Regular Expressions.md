@@ -172,36 +172,50 @@ If we want to search `.` in a string then `a\.c` will match only `a.c`
 
 ## Starts with/ends with, groups, and either/ or
 
-^ starts with
-$ ends with
+`^` starts with
 
-If you want to search starting from abc then ^abc.
-If you want to search ending with xyz then xyz$
+`$` ends with
 
-^ is also used in charsets but with square brackets.
+If you want to search starting from `abc` then `^abc`.
+
+If you want to search ending with `xyz` then `xyz$`
+
+`^` is also used in charsets but with square brackets.
 
 You can also define groups by enclosing a pattern in (parentheses).
-For either/ or pattern, use | pipe.
 
-during the (day | night) will match during the day and during the night.
-(no)[5} will match nonononono.
+For either/ or pattern, use `|` pipe.
 
-Answer the questions below
+`during the (day | night)` will match `during the day` and `during the night`.
 
-1. Match every string that starts with "Password:" followed by any 10 characters excluding "0", irrespective of the position. Answer: Password:[^0]{10}
+`(no){5}` will match `nonononono`.
 
-2. Match "username: " in the beginning of a line (note the space!) Answer: ^username:\s
+### Answer the questions below
 
-3. Match every line that doesn't start with a digit (use a metacharacter) Answer: ^\D
+1. Match every string that starts with "Password:" followed by any 10 characters excluding "0", irrespective of the position.
 
-4. Match this string at the end of a line: EOF$ Answer: EOF\$$
+`Password:[^0]{10}`
 
-5. Match all lines that start with $, followed by any single digit, followed by $, followed by one or more non-whitespace characters. Answer: \$\d\$\S+
+2. Match "username: " in the beginning of a line (note the space!)
+
+`^username:\s`
+
+3. Match every line that doesn't start with a digit (use a metacharacter)
+
+`^\D`
+
+4. Match this string at the end of a line: EOF$
+
+`EOF\$$`
+
+5. Match all lines that start with $, followed by any single digit, followed by $, followed by one or more non-whitespace characters.
+
+`\$\d\$\S+`
 
 6. Match every possible IPv4 IP address (use metacharacters and groups)
-Answer: (\d{1,3}\.){3}\d{1,3}
 
-7. Match all of these emails while also adding the username and the domain name (not the TLD) in separate groups (use\w): hello@tryhackme.com, username@domain.com, dummy_email@xyz.com
-Answer: (\w+)@(\w+)\.com
+`(\d{1,3}\.){3}\d{1,3}`
 
+7. Match all of these emails while also adding the username and the domain name (not the TLD) in separate groups (use\w): `hello@tryhackme.com`, `username@domain.com`, `dummy_email@xyz.com`
 
+`(\w+)@(\w+)\.com`
