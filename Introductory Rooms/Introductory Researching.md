@@ -147,7 +147,9 @@ Search in ExploitDB “VLC Media Player”, Go to the end
 CVE-2007-0017
 
 4. If you wanted to exploit a 2020 buffer overflow in the sudo program, which CVE would you use?
+
 Search in ExploitDB “Buffer overflow sudo”
+
 CVE-2019-18634
 
 ## Manual Pages
@@ -158,9 +160,8 @@ Example: `man ssh` – gives description about the tool ssh
 
 Syntax for the shh is `[user@]hostname` or `ssh://[user@]hostname[:port]`
 
-We can see from the manual page that -V can be used to check the version of ssh
+We can see from the manual page that -V can be used to check the version of ssh `ssh -V`
 
-`ssh -V`
 If we want to search without checking the manual page, we can do this by adding the grep command which checks for that text in the manual page.
 
 `man ssh | grep -e "version number"`
