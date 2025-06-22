@@ -111,8 +111,6 @@ We can use `dig DOMAIN_NAME`, but to specify the record type, we would use `dig 
 
 By command `nslookup -type=TXT thmlabs.com` or `dig thmlabs.com TXT`
 
-THM{a5b83929888ed36acb0272971e438d78}
-
 ## DNSDumpster
 
 There are many subdomains that tools like `nslookup` or `dig` wont give.
