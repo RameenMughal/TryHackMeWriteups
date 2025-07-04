@@ -454,3 +454,242 @@ This decrypts the file into personal.txt
 Checking the contents of personal.txt
 
 ![image](https://github.com/user-attachments/assets/705a2e0d-5af8-40c6-b8f3-c51abf21e68f)
+
+## Reading SQL Databases
+
+Structured query language (SQL) is a programming language for storing and processing information in a relational database. A relational database stores information in tabular form, with rows and columns representing different data attributes and the various relationships between the data values.
+
+SQL is a language for storing, manipulating and retrieving data from databases.
+
+Developers mostly create 'relational databases' which use multiple databases that reference each other for organising data, hence the name 'relational databases'.
+
+Each database contains tables of records and each table can consist of multiple columns and rows which store the data in a organised format.
+
+### Reading the Database of a Local mysql Workspace 
+
+`service mysql start/stop`
+
+Start starts mysql while stop stops it.
+
+### Connect to Remote SQL Database
+
+Mysql databases can be hosted for remote access. To access remote databases use the following command: `mysql -u [username] -p -h [host ip]`
+
+### Open SQL Database File Locally
+
+To open mysql file/files locally, simply change to the directory of the mysql file and type mysql. You'll be taken to a specialised command prompt for mysql. 
+
+**Note**: In some cases you may have to run `mysql -p [password]` if the mysql system was configured to require authenticiation.
+
+1. `mysql -u [username] -p`
+
+Type "source" followed by the filename of the mysql database to specify that you wish to view its database.
+
+2. `source [sql filename]`
+
+Example: `source employees.sql`
+
+### Displaying the Database
+
+After this, you will see how mysql takes a little time to load the database. Once finished, type the following too see all of the relational databases: `SHOW DATABASES;`
+
+### Choosing a Database to View
+
+We can select one of the databases by using the use command followed by the name of it. 
+
+`USE [database name]`
+
+### Displaying the Tables in Selected Database
+
+We can display which tables inside that database we selected previously using: `SHOW TABLES;`
+
+### Describing the Table Data Structure
+
+We can also view the table structure of individual tables using the DESCRIBE command: `DESCRIBE [table name]`
+
+### Displaying all Data Sorted in Specific Table
+
+Let's display all the data stored in the employees database using the following: `SELECT * FROM [table name]`
+
+### Answer the questions below
+
+1. Find a file called employees.sql and read the SQL database. (Sarah and Sameer can log both into mysql using the password: password). Find the flag contained in one of the tables. What is the flag?
+
+Finding the employees.sql file `find / -type f -name employees.sql 2>/dev/null`
+
+![image](https://github.com/user-attachments/assets/5c93e1ce-1a0e-4dfc-a068-c4fa43e34141)
+
+Checking the status of mysql if it is already running `service mysql status`
+
+![image](https://github.com/user-attachments/assets/97b91f4e-ea5f-4831-845d-6dc331c67393)
+
+Connecting to the SQL Database `mysql -u sarah -p`
+
+![image](https://github.com/user-attachments/assets/351d89b6-7e6c-45d2-ac15-919829efc76e)
+
+Selecting the employees.sql file `source employees.sql`
+
+![image](https://github.com/user-attachments/assets/48b20e74-8e98-489d-9e4c-09c67827a81a)
+
+Checking how many Databases and we will select the employees Database `SHOW DATABASES;`
+
+![image](https://github.com/user-attachments/assets/66fef026-f9e7-4421-b927-c3dea80c82dc)
+
+Using the employees Database `USE employees;`
+
+Checking the data structure of employee database which will hint of columns which can have characters. `DESCRIBE employees;`
+
+![image](https://github.com/user-attachments/assets/6bf17835-8295-49f7-b090-2a5390739899)
+
+Two columns first_name and last_name can contain the flag as the data type is varchar. Flag format is with curly brackets so we will find something like ‘%{%}’
+
+`SELECT * FROM employees WHERE first_name LIKE '%{%}' OR last_name LIKE '%{%}';`
+
+![image](https://github.com/user-attachments/assets/087629b1-eff4-4c4c-8388-35a5b3cc01a2)
+
+## Final Challenge
+
+### Answer the questions below
+
+1. Go to the /home/shared/chatlogs directory and read the first chat log named: LpnQ. Use this to help you to proceed to the next task.
+
+Going to the chatlogs directory and checking the contents of LpnQ
+
+![image](https://github.com/user-attachments/assets/b561f252-e75e-4ff2-8427-de2a5b2002eb)
+
+2. What is Sameer's SSH password?
+
+This hints that the SSH password is somewhere in plain text and can be in one of the chatlogs.
+
+Checking if one of the file contains Sameer name by grep command.
+
+`grep -iRl Sameer /home 2>/dev/null`
+
+![image](https://github.com/user-attachments/assets/fae8b8b6-6350-4d63-87ec-edf4089f0b39)
+
+Checking the contents of all three files in which the LpnQ is already done.
+
+The KfnP contains the SSH password `thegreatestpasswordever000`
+
+![image](https://github.com/user-attachments/assets/98bc72df-47d0-4300-920a-4d7f2ab45108)
+
+3. What is the password for the sql database back-up copy
+
+The KfnP hints that there is a file in the home/shared/sql/conf of size 50mb which contains the location of the wordlist which can be helpful for bruteforcing the password of the backup sql as it is encrypted but we need to first be as a user Sameer.
+
+Logging in as Sameer meaning changing the user
+
+First going to the home directory and use the su command
+
+`su sameer`
+
+![image](https://github.com/user-attachments/assets/b75cce10-d933-42db-8de6-61364211823e)
+
+Finding the file which has size 50 MB in the /home/shared/sql/conf `find /home/shared/sql/ -type f -size 50M`
+
+Going to the directory and checking the contents with the less command
+
+![image](https://github.com/user-attachments/assets/7e441d20-00f7-4678-8df9-3ced40a8bc69)
+
+![image](https://github.com/user-attachments/assets/e59a9ead-453a-4873-979a-1c7409460fa2)
+
+Wordlist directory: `aG9tZS9zYW1lZXIvSGlzdG9yeSBMQi9sYWJtaW5kL2xhdGVzdEJ1aWxkL2NvbmZpZ0JEQgo=`
+
+The wordlist is encoded in base64 so decoding it with base64 command
+
+`echo "aG9tZS9zYW1lZXIvSGlzdG9yeSBMQi9sYWJtaW5kL2xhdGVzdEJ1aWxkL2NvbmZpZ0JEQgo=" > wordlist_encoded.txt`
+
+`cat wordlist_encoded.txt | base64 -d`
+
+We get the location of wordlist home/sameer/History LB/labmind/latestBuild/configBDB
+
+![image](https://github.com/user-attachments/assets/946bd1e7-c651-48c8-a111-8376515c6635)
+
+Now finding the wordlist that the password starts with ebq in home/sameer/History LB/labmind/latestBuild/configBDB
+
+![image](https://github.com/user-attachments/assets/11af8bd8-8242-4c5a-84a0-8dc4506bd205)
+
+These are three wordlist, we will combine these wordlists to make one wordlist
+
+`cat "/home/sameer/History LB/labmind/latestBuild/configBDB/pLmjwi" \
+    "/home/sameer/History LB/labmind/latestBuild/configBDB/LmqAQl" \
+    "/home/sameer/History LB/labmind/latestBuild/configBDB/Ulpsmt" \
+    > combined_wordlist.txt`
+
+![image](https://github.com/user-attachments/assets/6a5bd5f9-236c-400b-9380-50edea86ae59)
+
+We got the wordlist now we find the actual sql backup, which wash hinted that it will be in /home/shared/sql/ according to Sameer previous message. The backup would be named with the date of the message(2020–08–13).
+
+Finding the backup file `find / -type f -name *2020-08-13* 2>/dev/null`
+
+![image](https://github.com/user-attachments/assets/6dec1033-5bd3-4e9b-850a-2198418903aa)
+
+First one is the encrypted sql backup
+
+Getting both the encrypted sql backup file and wordlist in Linux machine
+
+`scp "sameer@10.10.81.150:/home/shared/sql/2020-08-13.zip.gpg" ~/Downloads`
+
+`scp "sameer@10.10.81.150:/home/shared/sql/conf/combined_wordlist.txt" ~/Downloads`
+
+![image](https://github.com/user-attachments/assets/7d2e7392-0963-42e9-8ca1-11aa79f559c2)
+
+We know that the password starts from ebq so we get the words in the wordlist starting from ebq and checking the password in the encrypted sql file.
+
+`grep -e ebq combined_wordlist.txt`
+
+![image](https://github.com/user-attachments/assets/817e6d81-0b7a-4975-8da3-e9cf3c9a2513)
+
+The password is decrypted with the `ebqattle`.
+
+4. Find the SSH password of the user James. What is the password?
+
+![image](https://github.com/user-attachments/assets/e090070e-b4a8-47dd-a711-3cf291ea65fa)
+
+We decrypted with the Linux machine, we need to have the decrypted file in Sameer machine so decrypting the file in Sameer machine
+
+`gpg /home/shared/sql/2020-08-13.zip.gpg`
+
+Unzip the file `unzip 2020-08-13.zip`
+
+![image](https://github.com/user-attachments/assets/28d1585d-b437-453e-aa76-d16f598abe5d)
+
+![image](https://github.com/user-attachments/assets/5b374eca-4c42-4734-99cc-8d8046c6cd86)
+
+We have the employees.sql which may have the password for the root user James
+
+Lets open the employees.sql by user sarah
+
+`mysql -u sarah -p` (enter password for password)
+
+![image](https://github.com/user-attachments/assets/a09cc79b-1828-4dea-8122-2cbe16975490)
+
+Connecting to the employees.sql, checking the databases
+
+`SOURCE employees.sql`
+
+`SHOW DATABASES;`
+
+`USE employees;`
+
+`DESCRIBE employees;`
+
+![image](https://github.com/user-attachments/assets/1a129955-f373-4dce-98bf-3746f8a9d4a4)
+
+The first_name and last_name may contain password for James as datatype is varchar. We know that first name is James so it will be in the last name.
+
+`SELECT * FROM employees WHERE first_name = 'James';`
+
+![image](https://github.com/user-attachments/assets/9c89db85-c6ae-49b2-b1bd-63487bfd6bef)
+
+5. SSH as james and change the user to root?
+
+`su james`
+
+`sudo su`
+
+ ![image](https://github.com/user-attachments/assets/40b23925-ba4a-45d4-b447-f57489dad846)
+
+Check the root directory /root and check the contents of root.txt
+
+ ![image](https://github.com/user-attachments/assets/0639ef26-fb73-4116-a544-775c47048315)
