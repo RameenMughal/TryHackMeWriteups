@@ -17,3 +17,21 @@ The string command gives us readable characters but using these also gives Try a
 As it is a binary file so we need to obtain a readable source code to understand the program and get the password which will be done by Reverse Engineering.
 
 Ghidra is a powerful, open-source software reverse engineering (SRE). It's used to analyze compiled programs (binaries) when the source code is not available.
+
+Open Ghidra, choose File with new Project
+
+Name your project, I am naming GhidraCompiled
+
+Move the Compiled file into the project and analyze the file
+
+Check the Functions in the left side, click the main function
+
+![image](https://github.com/user-attachments/assets/1a556d20-984c-47a9-b597-c6bf7c314f7d)
+
+You will see the code in C language, by checking the code, we see that any string is accepted with "_init"
+
+![image](https://github.com/user-attachments/assets/60f046d2-e684-4ee0-a01d-b1c953a43aaf)
+
+So when using any string, I am using DoYouEven_init, its accepts!
+
+![image](https://github.com/user-attachments/assets/bca7ab01-c437-4269-bc67-d43c2781b985)
