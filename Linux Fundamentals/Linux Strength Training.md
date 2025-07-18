@@ -618,7 +618,7 @@ These are three wordlist, we will combine these wordlists to make one wordlist
 
 ![image](https://github.com/user-attachments/assets/6a5bd5f9-236c-400b-9380-50edea86ae59)
 
-We got the wordlist now we find the actual sql backup, which wash hinted that it will be in /home/shared/sql/ according to Sameer previous message. The backup would be named with the date of the message(2020–08–13).
+We got the wordlist now we find the actual sql backup, which was hinted that it will be in /home/shared/sql/ according to Sameer previous message. The backup would be named with the date of the message(2020–08–13).
 
 Finding the backup file `find / -type f -name *2020-08-13* 2>/dev/null`
 
