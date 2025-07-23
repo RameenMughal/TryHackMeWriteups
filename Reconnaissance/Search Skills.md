@@ -1,6 +1,6 @@
 # Search Skills
 
-## Evaluationof Search Results
+## Evaluation of Search Results
 
 **DevSecOps**: Fosters the same culture and principles as Devops with the addition of security into the development process, ensuring security is integrated from an early stage.
 
@@ -78,3 +78,69 @@ Search the file hash in VirusTotal, you see BitDefenderFalx in Security Vendors'
 We can think of the Common Vulnerabilities and Exposures (CVE) program as a dictionary of vulnerabilities. It provides a standardized identifier for vulnerabilities and security issues in software and hardware products. 
 
 Each vulnerability is assigned a CVE ID with a standardized format like CVE-2024-29988. This unique identifier (CVE ID) ensures that everyone from security researchers to vendors and IT professionals is referring to the same vulnerability, CVE-2024-29988 in this case.
+
+The MITRE Corporation maintains the CVE system. For more information and to search for existing CVEs, visit the CVE Program website. Alternatively, visit the National Vulnerability Database (NVD) website.
+
+MITRE: MITRE Adversarial Tactics, Techniques, and Common Knowledge (ATT&CK)
+
+### Exploit Database
+
+There are many reasons why you would want to exploit a vulnerable application; one would be assessing a company’s security as part of its red team.
+
+Now that we have permission to exploit a vulnerable system, we might need to find a working exploit code. One resource is the Exploit Database. The Exploit Database lists exploit codes from various authors; some of these exploit codes are tested and marked as verified.
+
+GitHub, a web-based platform for software development, can contain many tools related to CVEs, along with proof-of-concept (PoC) and exploit codes.
+
+### Answer the questions below
+
+What utility does CVE-2024-3094 refer to?
+
+Searching the CVE in Github we get the first repository as xz backdoor 
+
+**Answer**: xz
+
+## Technical Documentation
+
+### Linux Manual Pages
+
+On Linux and every Unix-like system, each command is expected to have a man page. In fact, man pages also exist for system calls, library functions, and even configuration files.
+
+Let’s say we want to check the manual page for the command `ip`. We issue the command `man ip`.
+
+### Microsoft Windows
+
+Microsoft provides an official [Technical Documentation](https://learn.microsoft.com/en-us/) page for its products.
+
+### Product Documentation
+
+Every popular product is expected to have well-organized documentation. This documentation provides an official and reliable source of information about the product features and functions. 
+
+Examples include [Snort Official Documentation](https://www.snort.org/documents), [Apache HTTP Server Documentation](https://httpd.apache.org/docs/), [PHP Documentation](https://www.php.net/manual/en/index.php), and [Node.js Documentation](https://nodejs.org/docs/latest/api/).
+
+### Answer the questions below
+
+1. What does the Linux command `cat` stand for?
+
+Type in command `man cat`, you see the first word concatenate
+
+**Answer**: Concatenate
+
+2. What is the netstat parameter in MS Windows that displays the executable associated with each active connection and listening port?
+
+Searching netstat in Microsoft Learn, we see the parameters used in this command
+
+**Answer**: `-b`
+
+## Social Media
+
+The power of social media is that it allows you to connect with companies and people you are interested in. Furthermore, social media offers a wealth of information for cyber security professionals, whether they are searching for people or technical information.
+
+### Answer the questions below
+
+1. You are hired to evaluate the security of a particular company. What is a popular social media website you would use to learn about the technical background of one of their employees?
+
+LinkedIn
+
+2. Continuing with the previous scenario, you are trying to find the answer to the secret question, “Which school did you go to as a child?”. What social media website would you consider checking to find the answer to such secret questions?
+
+Facebook
