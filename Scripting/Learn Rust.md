@@ -97,6 +97,190 @@ Stable is the latest stable release of Rust (stable releases are usually shipped
 
 let's install some Rust tools to aid our development.
 
-The command we just ran also installs `Cargo`,
+The command we just ran also installs `cargo`,
 
 Cargo is the package manager for Rust. All the packages get uploaded to https://crates.io and does a lot of cool things.
+
+The 3 core Cargo commands are:
+- `cargo install`: Install a package from Crates.io
+- `cargo publish`: Publish a package to crates.io
+- `cargo update`: Updates all of the local packages
+
+But, since we are developing RustCode there are 3 more important commands
+- `cargo test`: Run the tests for our code
+- `cargo fmt`: Runs the formatting tool. This tool automatically formats your code (apply the argument `--all` to format all code). Similar to Python's Black but built in.
+- `cargo clippy`: Microsoft Clippy but for Rust! Clippy will point out common errors in your code and help you correct them.
+
+There is one tool, that is a community based tool — that is seen as absolutely essential to the Rust ecosystem.
+
+That tool is Rust-Analyzer. Imagine an IDE but smarter and more advanced. Rust-Analyzer will analyse your code as you write it, spot errors before you compile & provide an auto-fix option to automatically fix the errors.
+
+Rust-Analyzer states that their most supported version is VS Code, but they are available on many other platforms.
+
+Something cool to note is that the main tools of Rust are written by the Rust developers themselves. 
+
+### Answer the questions below
+
+1. What is the tool we used to install Rust called?
+
+`rustup`
+
+2. How do we install the package `rustscan` using cargo?
+
+`cargo install rustscan`
+
+3. What command do we run to format our code?
+
+`cargo fmt`
+
+## Hello, World!
+
+Create a new folder, and in the terminal type: `cargo init`
+
+If the error says that it does not recognize this command then update your environment by `source $HOME/.cargo/env`
+
+Then check the version of cargo `cargo --version`
+
+This makes Cargo initialise a new Rust repository. Cargo will take care of most of the work for you.
+
+The file structure is as follows:
+
+```
+- Cargo.toml
+- src/
+    - main.rs
+```
+
+`cargo.toml` is the configuration file for our Rust project. It includes our dependencies, project name, authors, the version of Rust we are using and more.
+
+When we have just ran `cargo init`, our file `Cargo.toml` will look like this:
+
+```
+[package]
+name = "Learn_Rust"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+```
+
+Our `main.rs` file in the folder src is the main file where we write our code. Every single Rust project must have a main file, and every main file must have a main function.
+
+```
+fn main() {
+    println!("Hello, world!");
+}
+```
+
+In Rust, we use curly braces to denote blocks of code. And a semi-colon to express the end of an expression.
+
+To print in Rust, we use the macro `println!`.
+
+We know `println` is a macro, as it is called with an exclamation mark. Macros, in a nutshell, allow us to write code that writes more code. To put it even simpler, we can create our own syntax that translate to different code.
+
+To run this program, we execute: `cargo run`
+
+This should result in:
+
+```
+➜ cargo run
+   Compiling hello_world v0.1.0 (/tmp/hello_world)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.21s
+     Running `target/debug/hello_world`
+Hello, world!
+```
+
+This command:
+- Compiles the code with the unoptimised build (to increase the speed of compilation)
+- Runs the code
+
+You'll also notice a new folder has been created, `target`.
+
+`target` contains the binaries for our project.
+
+```
+- Cargo.toml
+- src/
+    - main.rs
+- target/
+    - debug/
+        = build/
+        - deps/
+        - examples/
+        - hello_world
+        - hello_world.d
+        - incremental/
+```
+
+Right now, the only important file is `hello_world`. This file is actually the binary for our program.
+
+To build our project without running it, run: `cargo build`
+
+And now we can run the binary directly. `./target/debug/hello_world`, mine is the file name Learn_Rust so my command is `./target/debug/Learn_Rust`
+
+This is exactly the same as `cargo run`, but 2 commands.
+
+When we want to build our project and optimise it, run it with the release profile: `cargo build --release`
+
+Use the normal cargo build for quick checking of the code. Use the release argument to optimise the code to the maximum possible that the Rust compiler will allow.
+
+We call `--release` a profile, specifically the release profile. The Rust compiler has different levels of optimisation depending on what you want.
+
+### Answer the questions below
+
+1. How do we initialise a new Rust project?
+
+`cargo init`
+
+2. What character represents a macro?
+
+`!`
+
+3. What does every Rust project need as a file?
+
+`main.rs`
+
+4. If we wanted to add a dependency to our Rust project, what file would we edit?
+
+`Cargo.toml`
+
+5. How do we run our Rust project?
+
+`cargo run`
+
+6. How do we build the project RustScan with the release profile (most optimised)?
+
+`cargo build --release`
+
+7. What folder are the release binaries stored in?
+
+`target/release/`
+
+8. How many release profiles does Rust have using optimisation level?
+
+4
+
+## Variables
+
+All variables, by default, are immutable in Rust.
+
+This is a safety feature, but also a productivity feature. Variables that don't change mean you don't have to track down when the value changed, and immutable variables are great for concurrency
+
+Let's see this in action.
+
+```
+fn main() {
+    let x = 5;
+    println!("The value of x is: {}", x);
+    x = 1;
+    println!("The value of x is: {}", x);
+}
+```
+
+This code does not compile. It returns with the error: `error[E0384]: cannot assign twice to immutable variable x`
+
+The error tells us everything we need to know.
+
+cannot assign twice to immutable variable
+
+This is telling us that we are assigning a value to an immutable variable (a variable that cannot be changed), twice. Which cannot happen.
