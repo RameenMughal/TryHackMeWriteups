@@ -281,6 +281,150 @@ This code does not compile. It returns with the error: `error[E0384]: cannot ass
 
 The error tells us everything we need to know.
 
-cannot assign twice to immutable variable
+`cannot assign twice to immutable variable`
 
 This is telling us that we are assigning a value to an immutable variable (a variable that cannot be changed), twice. Which cannot happen.
+
+To make a variable mutable, we place the `mut` keyword in front of it like so:
+
+```
+fn main() {     
+     let mut x = 9;     
+     println!("The value of x is: {}", x);     
+     let x = 4;     
+     println!("The value of x is: {}", x); 
+}
+```
+
+Constants are values that are bound to a name and are not allowed to change
+
+### Answer the questions below
+
+1. In question 1, does this code compile? T(rue) or F(alse)
+
+F
+
+2. What is the error code returned by question 1?
+
+Edit the `main.rs` by `nano` command and run the file by `cargo run`
+
+<img width="373" height="112" alt="image" src="https://github.com/user-attachments/assets/34a30809-9c02-407e-ae97-d6bb35c4ceeb" />
+
+**Answer**: E0308
+
+3. Does the code in question 2 compile? T(rue) or F(alse)
+
+F
+
+4. What is the error message returned?
+
+<img width="374" height="157" alt="image" src="https://github.com/user-attachments/assets/65561550-0526-40b8-b5cd-6fd7d28630df" />
+
+**Answer**: `cannot assign twice to immutable variable`
+
+## Constant Variables
+
+Rust also has constants. These are values that aren't just immutable by default, but are always immutable.
+
+Constants can be declared in any scope, including the global scope. This means that we can use their value in any part of our code, or in multiple places at once.
+
+Constants can only be constant, they cannot be set to a function call or any other value that may change at runtime.
+
+We declare constants with the `const` keyword like so: `const HUNDRED_THOUSAND: u32 = 100_000`;
+
+Notice how in Rust, we can use the _ character to denote a space in number without it affecting the value itself. This is purely for readability. We can also use 100000
+
+`u32` means unsigned 32 bit integer
+
+Also note that it is tradition to name a constant in all uppercase.
+
+### Shadowing
+
+I'm going to show you something that might not make sense at first.
+
+```
+fn main(){
+    let x = 6;
+    let x = x + 1;
+    println!("{}", x)
+}
+```
+
+This is called shadowing. 
+
+Here's an explanation from the official Rust docs about this principle (edited to match the example)
+
+"This program first binds x to a value of 6. Then it shadows x by repeating let x =, taking the original value and adding 1 so the value of x is then 7."
+
+By using let, we can perform transformations on the variable but have the variable still be immutable after all the transformations have completed.
+
+We're effectively creating a new variable with the `let` keyword, which means we can change the type of the value.
+
+```
+let word = "hello";
+let word = word.len();
+```
+
+Which is allowed.
+
+However, if we tried to use `mut`, it wouldn't be allowed — as `mut` cannot change types.
+
+```
+let mut word = "hello";
+word = word.len();
+```
+
+### Answer the questions below
+
+1. How do we define a constant in Rust?
+
+`const`
+
+2. Can we shadow a constant? T(rue) or F(alse)
+
+F
+
+3. What do we use to change the type of an immutable variable once it has been defined?
+
+shadowed
+
+4. Will the code "CONST word = "yes"" compile? T(rue) or F(alse)
+
+F
+
+5. We have "let word = "hello"", how do we get the length of the variable?
+
+`word.len();`
+
+## Data Structures
+
+A type hint defines what the data type of a variable is at compile time.
+
+`let ports: u32 = 65535`
+
+The `: u32` states that the variable `ports` is of size `u32`.
+
+The `u` in the integer means unsigned, and the 32 is how many bits it has.
+
+Unsigned integers can only ever be positive, signed integers can be both positive and negative represented by `i`
+
+Integers range from 16 bits up to 128 bits. Some operating systems can't use integers higher than `u32`, and using such large integer types may slow down the program on some systems.
+
+| 8-bit       | i8           | u8        |
+|-------------|--------------|-----------|
+| 16-bit      | i16          | u16       |
+| 32-bit      | i32          | u32       |
+| 64-bit      | i64          | u64       |
+| 128-bit     | i128         | u128      |
+| arch        | isize        | usize     |
+
+`isize` and `usize` are pointer-sized integer types. That means their size depends on the architecture of the system your program is running on (i.e., 32-bit vs 64-bit)
+
+### Strings
+
+There are two types of strings in Rust. `String` and `&str`.
+
+`String` is a growable allocated data structure whereas `str` is an immutable fixed-length string somewhere in memory.
+
+`&str` is a string slice of `string`.
+
