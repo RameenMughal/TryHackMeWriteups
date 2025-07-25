@@ -632,5 +632,58 @@ Let’s talk about the 2 parts of this sentence.
 
 The language shouldn’t have a global cost for a feature that isn’t used. Let’s say to use a for loop, the language needs to have some massive 1gb file that slows down everything else. If we never use a for loop, we still pay for the for loop!
 
+"And what you do use, you couldn’t do any better if you coded by hand."
+
+Say you wrote some code, a function that calculated Fibonacci numbers. And you compiled this code down into assembly.
+
+Now let’s say you hand-write assembly to do the same function — calculate Fibonacci numbers but this time in assembly.
+
+Handwriting it in assembly would mean we would either gain no performance, or we would lose performance.
+
+If you write a function (like calculating Fibonacci numbers), and Rust compiles it to machine code — Even if you tried to write that machine code by hand, you wouldn’t make it any faster.
+
+So you get the convenience of writing safe, readable code, but the speed of hand-tuned low-level code.
+
+Now, let's explore iterators.
+
+Iterators are a way of processing a series of items with Rust, much like a for loop.
+
+We saw earlier a.iter(). This code turns the variable a into an iterator over the items of a. But this code by itself doesn't do anything useful.
+
+This is because iterators are lazy. You have to tell them to do something to get values from them.
+
+We make the iterator do something by calling it in this for loop.
+
+Now we can make the code do something and consume the iter using some nifty functional programming skills. To square every number in an iterator, and then to sum it we can do:
+
+```
+let a = vec![1, 2, 3];
+a.iter()
+.map(|&i| i * i
+.sum()
+```
+
+Note, in Rust, we can separate applications of methods with new lines.
+
+Iterators are zero cost abstractions in Rust. For loops are not.
+
+### Answer the questions below
+
+1. Iterators are lazy. T(rue) or F(alse).
+
+T
+
+2. For loops are explicitly mentioned in the Rust book as zero cost abstractions. T(rue) or F(alse).
+
+F
+
+3. Zero Cost Abstractions are common in high level languages like Python or JavaScript T(rue) or F(alse).
+
+F
+
+## Rayon
+
+Rayon is an external crate for Rust. Rayon makes multi threading easy. 
+
 
 
