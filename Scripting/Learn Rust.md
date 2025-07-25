@@ -428,3 +428,209 @@ There are two types of strings in Rust. `String` and `&str`.
 
 `&str` is a string slice of `string`.
 
+### Answer the questions below
+
+1. Given the number -6, is this signed or unsigned?
+
+Signed
+
+2. Given the number 65536, what is the smallest unsigned datatype we can fit this into?
+
+With 16 bits 2^16 is 65,535 which does fit 65536 so it will fit in 32 bits
+
+**Answer**: `u32`
+
+3. What's the smallest sized signed integer in rust?
+
+It is `i8` but it accepted `i16`
+
+**Answer**: `i16`
+
+4. Create a mutable u32 variable called "tryhackme" and assign it the number 9
+
+`let mut tryhackme: u32 = 9;`
+
+5. What data type is used to represent a string slice?
+
+`&str`
+
+6. Let's say you had a variable, X. You wanted to typehint the variable as a string. What would you write? Include X in the variable but not the `let` or `=` parts.
+
+`X: string`
+
+## Functions
+
+The main function is the first function called of the main file, which is the first file called.
+
+Every binary file written in Rust needs a main file, and every main file needs a main function.
+
+Functions in Rust are defined as:
+
+```
+fn hello() -> u16{
+    println!("hello!");
+    6
+}
+```
+
+The main function is the same as this, but in a binary file it doesn't return anything.
+
+```
+fn main(){
+    println!("I do not return!")
+}
+```
+
+Well, Rust returns the final expression of the function.
+
+Alternatively, we can use the return statement to return earlier. However, it's not very nice to use it to return the value at the end of the function
+
+Let's add some arguments to our functions.
+
+```
+fn print_name(name: String){
+    println!("{}", name);
+}
+```
+
+Our function arguments have to include the type of each argument.
+
+Now let's try to make this function return something.
+
+```
+fn print_name(name: String) -> u16{
+    println!("{}", name);
+    6;
+}
+```
+
+When we return data, we have to type hint the type of data that is being returned.
+
+### Answer the questions below
+
+1. Will question 1 return 8172192? T(rue) or F(alse)
+
+F
+
+2. Will example 2 run? T(rue) or F(alse)
+
+F
+
+3. What type should we give to the argument for question 3?
+
+`&str`
+
+4. The last expression in a function (the return) needs to have a semicolon. T(rue) or F(alse)
+
+F
+
+5. Every function need to return something. T(rue) or F(alse)
+
+F
+
+6. Functions in Rust can be nested within other functions. T(rue) or F(alse)
+
+T
+
+7. What keyword do we use to return early from a function?
+
+`return`
+
+8. You nest a function named main, inside another function named main. Will this run? T(rue) or F(alse)
+
+T
+
+## Loops
+
+There are 3 loops in Rust.
+
+### loop
+
+The loop keyword loops forever or until we explicitly tell it to stop.
+
+```
+fn main(){
+    loop {
+        println!("TryHackMe Rocks!");
+    }
+}
+```
+
+We can either break with ctrl+c or we can tell Rust to break with break
+
+```
+fn main(){
+    loop {
+        println!("TryHackMe Rocks!");
+        break;
+    }
+}
+```
+
+### Conditional While Loops
+
+Rust also has while loops, which loop while a condition is true.
+
+Look at this example for some code, taken from the Rust Book:
+
+```
+fn main() {
+    let mut number = 3;
+    
+    while number != 0 {
+        println!("{}!", number);
+        number -= 1;
+    }
+
+    println!("LIFTOFF!!!");
+}
+```
+
+### For Loops
+
+Rust also has for loops, which we can use to iterate over elements of a collection.
+
+```
+fn main() {
+    let a = [10, 20, 30, 40, 50];
+
+    for element in a.iter() {
+        println!("the value is: {}", element);
+    }
+}
+```
+
+### Answer the questions below
+
+1. How do we break out of a loop?
+
+`break`
+
+2. Simplest keyword to make an infinite loop?
+
+`loop`
+
+3. Turn `let a = [10, 20];` into something we can iterate over.
+
+`a.iter()`
+
+4. While loops can also be infinite. T(rue) or F(alse).
+
+T
+
+## Zero Cost Abstractions
+
+Rust has this really cool thing called Zero Cost Abstractions. It’s also a thing in other low level languages.
+
+Zero cost abstraction is:
+
+"What you don’t use, you don’t pay for. And what you do use, you couldn’t do any better if you coded by hand."
+
+Let’s talk about the 2 parts of this sentence.
+
+"What you don’t use, you don’t pay for."
+
+The language shouldn’t have a global cost for a feature that isn’t used. Let’s say to use a for loop, the language needs to have some massive 1gb file that slows down everything else. If we never use a for loop, we still pay for the for loop!
+
+
+
