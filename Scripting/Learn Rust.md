@@ -685,5 +685,53 @@ F
 
 Rayon is an external crate for Rust. Rayon makes multi threading easy. 
 
+Go to Crates.io and copy the command to install rayon.
 
+<img width="208" height="170" alt="image" src="https://github.com/user-attachments/assets/626ed6e6-3d4f-4c42-bc9f-bb7d68b43ac9" />
 
+Run the `cargo add rayon` or add `rayon = "1.10.0"` under dependencies in `Cargo.toml`
+
+This way you can add Rayon external library used for multi threading.
+
+Okay, now let's take our iter in the last task and make it multi threaded.
+
+```
+fn sum_of_squares(input: &[i32]) -> i32 {
+    input.iter()
+         .map(|&i| i * i)
+         .sum()
+}
+```
+
+This is our previous code.
+
+```
+use rayon::prelude::*;
+fn sum_of_squares(input: &[i32]) -> i32 {
+    input.par_iter() // <-- just change that!
+         .map(|&i| i * i)
+         .sum()
+}
+```
+
+This is our multi-threaded code.
+
+### Answer the questions below
+
+1. What crate do we use to easily make an iter multi threaded?
+
+Rayon
+
+2. How do we tell Rust to include an external crate into our program? What file do we place this information in?
+
+`Cargo.toml`
+
+3. Turn a.iter() into a multi threaded parallel iter using Rayon
+
+`a.par_iter()`
+
+4. What website do we go to for Crates?
+
+Crates.io
+
+## if Statements
