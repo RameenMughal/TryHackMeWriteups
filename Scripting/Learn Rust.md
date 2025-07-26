@@ -810,7 +810,7 @@ If we assigned `let f: u32 = File::open("hello.txt");` the compiler will tell us
 
 So now we know that we have to handle the error, but the question is how.
 
-### Unwrap
+### 1. Unwrap
 
 Unwrap is the easiest to implement. It tells Rust "I'm pretty sure this won't fail so just go ahead and take the value". If it does fail, well, Rust panics!
 
@@ -822,7 +822,7 @@ fn main() {
 }
 ```
 
-### Match
+### 2. Match
 
 We do one thing for an Ok, and we do another for an Error.
 
@@ -841,3 +841,92 @@ fn main() {
 If the result is `Ok`, that means the result is successful and we can just take the file.
 
 If it's an `Err` that means an error occurred and we need to do something about it. In this case, the program panics.
+
+### 3. ?
+
+The ? operator states "if the result is Ok, carry on in this function. Else if it is an Err, propagate it back up the stack to the function that called me. "
+
+To illustrate this, let's look at this example I took from a Rust blog post.
+
+```
+fn read_username_from_file() -> Result<String, io::Error> {
+    let f = File::open("username.txt");
+
+    let mut f = match f {
+        Ok(file) => file,
+        Err(e) => return Err(e),
+    };
+
+    let mut s = String::new();
+
+    match f.read_to_string(&mut s) {
+        Ok(_) => Ok(s),
+        Err(e) => Err(e),
+    }
+}
+```
+
+We have 2 matches in this code. A bit unruly. Ideally if we fail to open the file, or fail to read to string we propagate a single error back up the stack saying that this function failed.
+
+If it didn't, we should return the Ok result. That way, the function that called us will receive a Result type that it can more easily handle, and without us dealing with multiple match statements.
+
+```
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut f = File::open("username.txt")?;
+    let mut s = String::new();
+
+    f.read_to_string(&mut s)?;
+
+    Ok(s)
+}
+```
+
+### Answer the questions below
+
+1. What is the data type returned from opening a file?
+
+Result
+
+2. Write the datatype of a generic Result with type hints
+
+Answer is `Result<T,E>` but due to XSS Protection one < is replaced with space
+
+`Result T,E>`
+
+3. We're in a function and we get given a Result enum. If the Result is okay we want to continue working on it in this function. If the result is Err we want to return to the parent function with Err. What should we use?
+
+`?`
+
+4. We're certain our result will always return Ok, what should we use?
+
+Unwrap
+
+## Challenge
+
+"M3I6r2IbMzq9" is the text.
+
+The text is encrypted with:
+
+plaintext -> ROT13 -> base64 -> rot13
+
+Go the opposite way and decrypt the file.
+
+rot13 -> base64 -> ROT13 -> plaintext
+
+Understand like the pliantext is covered with three layers, top is rot13 then middle base64 and last rot13.
+
+So we will remove it one by one. Going to the CyberChe website, place the text in the Input field
+
+As the top layer is rot13, search ROT13 and place it in the Recipe.
+
+Then middle one is BASE 64, as the text was converted to base64, we need the FROM BASE64 so we convert the text to original text that it was encrypted from base64 and convert it into the original.
+
+And the last layer is again ROT13 so place it in the recipe an you get the flag
+
+<img width="418" height="278" alt="image" src="https://github.com/user-attachments/assets/a4b90a44-c89c-421f-ae8a-b7d0527ec843" />
+
+## Conclusion
+
+Rust does not support inheritance. That means we have to individually implement behaviour for each data type we create.
+
+However, this is also an advantage for security reasons. As it gives us time to think about what we are doing. 
