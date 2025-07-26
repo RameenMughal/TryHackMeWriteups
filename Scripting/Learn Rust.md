@@ -735,3 +735,109 @@ Rayon
 Crates.io
 
 ## if Statements
+
+If statements work exactly like how you'd expect.
+
+```
+let var =  6;
+if var == 6{
+    println!("oh no the var is 6");
+}
+else {
+    println!("yay the var isn't 6");
+}
+```
+
+But, Rust lets us do cool things with if statements. Such as assigning to a variable based on an if statement.
+
+```
+fn func() -> i8{
+9
+}
+
+let var = 6 + func();
+
+let result = if var == 6 {15} else {200};
+
+let output =
+if var == 15 {
+    println!("it is 15");
+    9;
+}else {
+    println!("it is not 15");
+    10;
+};
+```
+
+### Answer the questions below
+
+We can assign variables based on an if statement on one line T(rue) or F(alse)
+
+T
+
+## Error Handling
+
+In Rust, anything that can error will return a result. Specifically `Result<T, E>`. `T` is the result you are looking for, `E` is the error.
+
+```
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
+
+But in Rust, no matter what (unless you explicitly tell the compiler to ignore it) errors must be handled.
+
+Let's look at an example.
+
+```
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt");
+}
+```
+
+Here we go to open a file. The file isn't stored in f, what is stored is actually a Result enum.
+
+There are 2 ways to check if something returns an result.
+
+1. Rust Analyzer will tell us what the return type is.
+
+2. We assign a type we know is wrong, and the compiler will tell us.
+
+If we assigned `let f: u32 = File::open("hello.txt");` the compiler will tell us that the datatype is Result meaning it is causing error to open the file
+
+So now we know that we have to handle the error, but the question is how.
+
+### Unwrap
+
+Unwrap is the easiest to implement. It tells Rust "I'm pretty sure this won't fail so just go ahead and take the value". If it does fail, well, Rust panics!
+
+```
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt").unwrap();
+}
+```
+
+### Match
+
+We do one thing for an Ok, and we do another for an Error.
+
+```
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello);
+    match f {
+        Ok(file) => file,
+        Err(_) => panic!("Couldn't open file."),
+    }
+}
+```
+
+If the result is `Ok`, that means the result is successful and we can just take the file.
+
+If it's an `Err` that means an error occurred and we need to do something about it. In this case, the program panics.
