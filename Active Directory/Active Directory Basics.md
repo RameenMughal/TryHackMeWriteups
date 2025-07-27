@@ -113,6 +113,94 @@ Domain Admins
 
 Organizational Units
 
+## Managing Users in AD
+
+Your first task as the new domain administrator is to check the existing AD OUs and users, as some recent changes have happened to the business. You have been given the following organisational chart and are expected to make changes to the AD to match it:
+
+<img width="1542" height="702" alt="image" src="https://github.com/user-attachments/assets/939ffbe4-7d56-4281-a7cc-02569d997a74" />
+
+Deleting extra OUs and users
+
+The first thing you should notice is that there is an additional department OU in your current AD configuration that doesn't appear in the chart. We've been told it was closed due to budget cuts and should be removed from the domain. If you try to right-click and delete the OU, you will get the following error:
+
+<img width="404" height="159" alt="image" src="https://github.com/user-attachments/assets/26ef0eaa-cc34-4a82-acab-fceb93094ccf" />
+
+By default, OUs are protected against accidental deletion. To delete the OU, we need to enable the Advanced Features in the View menu
+
+This will show you some additional containers and enable you to disable the accidental deletion protection. To do so, right-click the OU and go to Properties. You will find a checkbox in the Object tab to disable the protection
+
+<img width="420" height="472" alt="image" src="https://github.com/user-attachments/assets/d18ba9a9-189c-404f-a86a-693931aa893a" />
+
+Be sure to uncheck the box and try deleting the OU again. You will be prompted to confirm that you want to delete the OU, and as a result, any users, groups or OUs under it will also be deleted.
+
+After deleting the extra OU, you should notice that for some of the departments, the users in the AD don't match the ones in our organisational chart. Create and delete users as needed to match them.
+
+Delete the Research and Development OU as it is not in the chart and delete two users in the Sales department.
+
+### Delegation
+
+One of the nice things you can do in AD is to give specific users some control over some OUs. This process is known as delegation and allows you to grant users specific privileges to perform advanced tasks on OUs without needing a Domain Administrator to step in.
+
+One of the most common use cases for this is granting IT support the privileges to reset other low-privilege users' passwords. According to our organisational chart, Phillip is in charge of IT support, so we'd probably want to delegate the control of resetting passwords over the Sales, Marketing and Management OUs to him.
+
+For this example, we will delegate control over the Sales OU to Phillip. To delegate control over an OU, you can right-click it and select Delegate Control
+
+This should open a new window where you will first be asked for the users to whom you want to delegate control as Delegation of Control Wizard
+
+**Note**: To avoid mistyping the user's name, write "phillip" and click the Check Names button. Windows will autocomplete the user for you.
+
+<img width="583" height="570" alt="image" src="https://github.com/user-attachments/assets/4f432c0f-f87d-432a-8025-4d82ffe4ba37" />
+
+Click OK, and on the next step, select the following option to Reset password
+
+<img width="531" height="414" alt="image" src="https://github.com/user-attachments/assets/edf3b1a2-c0f8-48e9-a8b3-1dc9ea573142" />
+
+Click next a couple of times, and now Phillip should be able to reset passwords for any user in the sales department.
+
+Now let's use Phillip's account to try and reset Sophie's password.
+
+While you may be tempted to go to Active Directory Users and Computers to try and test Phillip's new powers, he doesn't really have the privileges to open it, so you'll have to use other methods to do password resets. In this case, we will be using Powershell to do so and set the password to Claire2008:
+
+<img width="458" height="66" alt="image" src="https://github.com/user-attachments/assets/e5c9956e-fdc9-4380-aff2-6088b2e7a64f" />
+
+Since we wouldn't want Sophie to keep on using a password we know, we can also force a password reset at the next logon with the following command:
+
+<img width="400" height="35" alt="image" src="https://github.com/user-attachments/assets/0c93784b-4616-49bb-8afd-cba68ae8e009" />
+
+## Managing Computers in AD
+
+By default, all the machines that join a domain (except for the DCs) will be put in the container called "Computers".
+
+We can see some servers, some laptops and some PCs corresponding to the users in our network. Having all of our devices there is not the best idea since it's very likely that you want different policies for your servers and the machines that regular users use on a daily basis.
+
+In general, you'd expect to see devices divided into at least the three following categories:
+
+### 1. Workstations
+
+Workstations are one of the most common devices within an Active Directory domain. Each user in the domain will likely be logging into a workstation. This is the device they will use to do their work or normal browsing activities. These devices should never have a privileged user signed into them.
+
+### 2. Servers
+
+Servers are the second most common device within an Active Directory domain. Servers are generally used to provide services to users or other servers.
+
+### 3. Domain Controllers
+
+Domain Controllers are the third most common device within an Active Directory domain. Domain Controllers allow you to manage the Active Directory Domain. These devices are often deemed the most sensitive devices within the network as they contain hashed passwords for all user accounts within the environment.
+
+Now, move the personal computers and laptops to the Workstations OU and the servers to the Servers OU from the Computers container. Doing so will allow us to configure policies for each OU later.
+
+### Answer the questions below
+
+1. After organising the available computers, how many ended up in the Workstations OU?
+
+7
+
+2. Is it recommendable to create separate OUs for Servers and Workstations? (yay/nay)
+
+yay
+
+
+
 
 
 
