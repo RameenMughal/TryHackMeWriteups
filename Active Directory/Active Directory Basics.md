@@ -199,6 +199,12 @@ Now, move the personal computers and laptops to the Workstations OU and the serv
 
 yay
 
+## Group Policies
+
+So far, we have organised users and computers in OUs just for the sake of it, but the main idea behind this is to be able to deploy different policies for each OU individually. That way, we can push different configurations and security baselines to users depending on their department.
+
+Windows manages such policies through Group Policy Objects (GPO). GPOs are simply a collection of settings that can be applied to OUs. GPOs can contain policies aimed at either users or computers, allowing you to set a baseline on specific machines and identities.
+
 
 
 
