@@ -106,6 +106,105 @@ TermService
 
 `255.255.0.0`
 
+## File and Disk Management
+
+### Working with Directories
+
+You can use `cd` without parameters to display the current drive and directory. It is the equivalent of asking the system, where am I?
+
+You can view the child directories using `dir`.
+
+<img width="245" height="236" alt="image" src="https://github.com/user-attachments/assets/d7fcb172-a909-4163-b86a-ebbf6bc90c93" />
+
+Note that you can use the following options with `dir`:
+- `dir /a` - Displays hidden and system files as well.
+- `dir /s` - Displays files in the current directory and all subdirectories.
+
+You can type `tree` to visually represent the child directories and subdirectories.
+
+<img width="223" height="148" alt="image" src="https://github.com/user-attachments/assets/04070e01-c2bf-48dc-b6a5-2ad8648b387c" />
+
+You can change to any directory by using the command `cd target_directory`; this is equivalent to double-clicking the target_directory on your desktop. Furthermore, you can use `cd ..` to go up one level.
+
+To create a directory, use `mkdir directory_name`; `mkdir` stands for make directory. To delete a directory, use `rmdir directory_name`; `rmdir` stands for remove directory.
+
+### Working with Files
+
+You can easily view text files with the command `type`. This command will dump the contents of the text file on the screen; this is convenient for files that fit within your terminal window. 
+
+You might want to consider more for longer text files. This command will display enough text file contents to fill your terminal window. In other words, for long text files, `more` will display a single page and wait for you to press Spacebar to move by one page (flip the page) or Enter to move by one line.
+
+The `copy` command allows you to copy files from one location to another. Example: `copy test.txt test2.txt`
+
+It copies the contents of `test.txt` to `test2.txt`
+
+You can move files using the `move` command. Example: `move test2.txt ..`
+
+It moves the file in one level up directory
+
+We can delete a file using `del` or `erase`. Example: `del test2.txt`
+
+We can use the wildcard character * to refer to multiple files. For example, `copy *.md C:\Markdown` will copy all files with the extension `md` to the directory `C:\Markdown`.
+
+### Answer the questions below
+
+What are the file’s contents in C:\Treasure\Hunt?
+
+Go to the directory `Hunt` where consist the `flag.txt` and by `type` command see the text
+
+<img width="260" height="254" alt="image" src="https://github.com/user-attachments/assets/4ad40981-11a9-4d32-9f8b-511f4f58eb6c" />
+
+## Task and Process Management
+
+We can list the running processes using `tasklist`
+
+<img width="359" height="238" alt="image" src="https://github.com/user-attachments/assets/9fc62621-f50f-48ac-90f5-3c460da0c893" />
+
+Some filtering is helpful because the output is expected to be very long. You can check all available filters by displaying the help page using `tasklist /?`
+
+Let’s say that we want to search for tasks related to `sshd.exe`, we can do that with the command `tasklist /FI "imagename eq sshd.exe"`. Note that `/FI` is used to set the filter image name equals `sshd.exe`.
+
+<img width="358" height="96" alt="image" src="https://github.com/user-attachments/assets/76fb4e33-2374-43bb-aa33-cdf5f65f6f23" />
+
+With the process ID (PID) known, we can terminate any task using `taskkill /PID target_pid`. For example, if we want to kill the process with PID 4567, we would issue the command `taskkill /PID 4567`.
+
+### Answer the questions below
+
+1. What command would you use to find the running processes related to notepad.exe?
+
+`tasklist /FI "imagename eq notepad.exe"`
+
+2. What command can you use to kill the process with PID 1516?
+
+`taskkill /PID 1516`
+
+## Conclusion
+
+We intentionally omitted a few common commands as we didn’t see a real value for including them in a beginner room. 
+
+We mention them below so that you know that the command line can be used for other tasks.
+- `chkdsk`: checks the file system and disk volumes for errors and bad sectors.
+- `driverquery`: displays a list of installed device drivers.
+- `sfc /scannow`: scans system files for corruption and repairs them if possible.
+
+It is equally important to know that `/?` can be used with most commands to display a help page.
+
+In this room, we used the command `more` in two ways:
+- Display text files: `more file.txt`
+- Pipe long output to view it page by page: `some_command | more`
+
+### Answer the questions below
+
+1. The command `shutdown /s` can shut down a system. What is the command you can use to restart a system?
+
+`shutdown /r`
+
+2. What command can you use to abort a scheduled system shutdown?
+
+`shutdown /a`
+
+
+
 
 
 
