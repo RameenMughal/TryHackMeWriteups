@@ -18,6 +18,12 @@ In school/university networks, you will often be provided with a username and pa
 
 Active Directory is also the component that allows your school/university to restrict you from accessing the control panel on your school/university machines. Policies will usually be deployed throughout the network so that you don't have administrative privileges over those computers.
 
+Connecting to the Windows machine through RDP (Remote Desktop Protocol), install `xfreerdp3` in Kali Linux
+
+The Remote Desktop Protocol (RDP) is a protocol, or technical standard, for using a desktop computer remotely.
+
+Connect to the machine by `xfreerdp3 MACHINE_IP` and then the windows login appears. Login with given credentials.
+
 ### Answer the questions below
 
 1. In a Windows domain, credentials are stored in a centralised repository called...
