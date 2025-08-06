@@ -298,12 +298,47 @@ Datagram
 
 Segment
 
+## Telnet
 
+The TELNET (Teletype Network) protocol is a network protocol for remote terminal connection. 
 
+In simpler words, `telnet`, a TELNET client, allows you to connect to and communicate with a remote system and issue text commands. 
 
+Although initially it was used for remote administration, we can use `telnet` to connect to any server listening on a TCP port number.
 
+On the target virtual machine, different services are running. We will experiment with three of them:
+- Echo server: This server echoes everything you send it. By default, it listens on port 7.
+- Daytime server: This server listens on port 13 by default and replies with the current day and time.
+- Web (HTTP) server: This server listens on TCP port 80 by default and serves web pages.
 
+In the terminal below, we connect to the target VM at the echo server’s TCP port number 7. To close the connection, press the `CTRL + ]` keys simultaneously.
 
+<img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/3e291f1c-a40a-452c-8fea-4abdedc82765" />
 
+In the terminal below, we use `telnet` to connect to the daytime server listening at port 13. We noticed that the connection closes once the current date and time are returned.
 
+<img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/39125f9e-4ed0-447b-8173-cd9eb7aa40d6" />
 
+Let’s request a web page using `telnet`. After connecting to port 80, you need to issue the command `GET / HTTP/1.1` and identify the host where anything goes, such as `Host: telnet.thm`. Next, you need to press Enter twice so your last input line is a blank line. The output below shows the exchange. (The page has been redacted.)
+
+Note: You may have to press Enter after sending the information in case you don’t get a response.
+
+<img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/b1261dc7-bec1-4b2c-8297-a1200e379e72" />
+
+I checked more ports available with `nmap` scan and tried other ports also
+
+<img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/6c61e746-ea65-47bb-83d5-9795b20b1cd1" />
+
+I tried, ftp, ssh and telnet 
+
+<img width="300" height="500" alt="image" src="https://github.com/user-attachments/assets/a913fd89-5aba-4fe3-8ee8-6b17a0f84742" />
+
+### Answer the questions below
+
+1. Use `telnet` to connect to the web server on `10.201.42.12`. What is the name and version of the HTTP server?
+
+lighttpd/1.4.63
+
+2. What flag did you get when you viewed the page?
+
+<img width="300" height="100" alt="image" src="https://github.com/user-attachments/assets/1ece4655-8adb-48dd-9083-88c63782a75b" />
