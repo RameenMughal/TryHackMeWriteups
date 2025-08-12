@@ -112,3 +112,156 @@ Segments
 
 UDP
 
+## Encapsulation
+
+As the data is passed down each layer of the model, more information containing details specific to the layer in question is added on to the start of the transmission.
+
+As an example, the header added by the Network Layer would include things like the source and destination IP addresses, and the header added by the Transport Layer would include (amongst other things) information specific to the protocol being used. 
+
+The data link layer also adds a piece on at the end of the transmission, which is used to verify that the data has not been corrupted on transmission; this also has the added bonus of increased security, as the data can't be intercepted and tampered with without breaking the trailer. 
+
+At the Data Link Layer, when data is prepared for transmission, a trailer is added at the end — usually something like a Frame Check Sequence (FCS) or CRC (Cyclic Redundancy Check).
+
+If someone tried to intercept the frame and change even a single bit of the payload, the CRC/FCS in the trailer would no longer match, and the receiver would detect the alteration and reject the frame.
+
+This whole process is referred to as encapsulation; the process by which data can be sent from one computer to another.
+
+<img width="1718" height="822" alt="image" src="https://github.com/user-attachments/assets/81d88ece-abfe-46ca-b9e5-519caac09100" />
+
+Notice that the encapsulated data is given a different name at different steps of the process. 
+
+In layers 7,6 and 5, the data is simply referred to as data. 
+
+In the transport layer the encapsulated data is referred to as a segment or a datagram (depending on whether TCP or UDP has been selected as a transmission protocol). 
+
+At the Network Layer, the data is referred to as a packet. When the packet gets passed down to the Data Link layer it becomes a frame, and by the time it's transmitted across a network the frame has been broken down into bits.
+
+When the message is received by the second computer, it reverses the process - starting at the physical layer and working up until it reaches the application layer, stripping off the added information as it goes. This is referred to as de-encapsulation.
+
+### Answer the questions below
+
+1. How would you refer to data at layer 2 of the encapsulation process (with the OSI model)?
+
+Frames
+
+2. How would you refer to data at layer 4 of the encapsulation process (with the OSI model), if the UDP protocol has been selected?
+
+Datagrams
+
+3. What process would a computer perform on a received message?
+
+De-Encapsulation
+
+4. Which is the only layer of the OSI model to add a trailer during encapsulation?
+
+Data Link
+
+5. Does encapsulation provide an extra layer of security (Aye/Nay)?
+
+Aye
+
+## The TCP/IP Model
+
+The TCP/IP model is, in many ways, very similar to the OSI model. It's a few years older, and serves as the basis for real-world networking. 
+
+The TCP/IP model consists of four layers: Application, Transport, Internet and Network Interface. Between them, these cover the same range of functions as the seven layers of the OSI Model.
+
+<img width="153" height="176" alt="image" src="https://github.com/user-attachments/assets/94137c7e-0100-435c-b196-1327a9089417" />
+
+**Note**: Some recent sources split the TCP/IP model into five layers - breaking the Network Interface layer into Data Link and Physical layers (as with the OSI model). This is accepted and well-known; however, it is not officially defined (unlike the original four layers which are defined in RFC1122). It's up to you which version you use - both are generally considered valid.
+
+The two models match up something like this:
+
+<img width="259" height="279" alt="image" src="https://github.com/user-attachments/assets/8ec1c917-481f-4226-b0b2-aa720d42992b" />
+
+The processes of encapsulation and de-encapsulation work in exactly the same way with the TCP/IP model as they do with the OSI model. At each layer of the TCP/IP model a header is added during encapsulation, and removed during de-encapsulation.
+
+TCP/IP takes its name from the two most important of these: the Transmission Control Protocol (which we touched upon earlier in the OSI model) that controls the flow of data between two endpoints, and the Internet Protocol, which controls how packets are addressed and sent. 
+
+TCP is a connection-based protocol. In other words, before you send any data via TCP, you must first form a stable connection between the two computers. The process of forming this connection is called the three-way handshake
+
+When you attempt to make a connection, your computer first sends a special request to the remote server indicating that it wants to initialise a connection. This request contains something called a SYN (short for synchronise) bit, which essentially makes first contact in starting the connection process. The server will then respond with a packet containing the SYN bit, as well as another "acknowledgement" bit, called ACK. Finally, your computer will send a packet that contains the ACK bit by itself, confirming that the connection has been setup successfully. With the three-way handshake successfully completed, data can be reliably transmitted between the two computers. Any data that is lost or corrupted on transmission is re-sent, thus leading to a connection which appears to be lossless.
+
+<img width="613" height="439" alt="image" src="https://github.com/user-attachments/assets/4c5e29a5-50e2-4069-872d-340c47029a8d" />
+
+**Hitsory**: To begin with there was no standardisation - different manufacturers followed their own methodologies, and consequently systems made by different manufacturers were completely incompatible when it came to networking. The TCP/IP model was introduced by the American DoD (Department of Defense) in 1982 to provide a standard. This sorted out the inconsistency problems. Later the OSI model was also introduced by the International Organisation for Standardisation (ISO); however, it's mainly used as a more comprehensive guide for learning, as the TCP/IP model is still the standard upon which modern networking is based.
+
+### Answer the questions below
+
+1. Which model was introduced first, OSI or TCP/IP?
+
+TCP/IP
+
+2. Which layer of the TCP/IP model covers the functionality of the Transport layer of the OSI model (Full Name)?
+
+Transport
+
+3. Which layer of the TCP/IP model covers the functionality of the Session layer of the OSI model (Full Name)?
+
+Application
+
+4. The Network Interface layer of the TCP/IP model covers the functionality of two layers in the OSI model. These layers are Data Link, and?.. (Full Name)?
+
+Physical
+
+5. Which layer of the TCP/IP model handles the functionality of the OSI network layer?
+
+Internet
+
+6. What kind of protocol is TCP?
+
+Connection-based
+
+7. What is SYN short for?
+
+Synchronise
+
+8. What is the second step of the three way handshake?
+
+SYN/ACK
+
+9. What is the short name for the "Acknowledgement" segment in the three-way handshake?
+
+ACK
+
+## Ping
+
+The `ping` command is used when we want to test whether a connection to a remote resource is possible. Usually this will be a website on the internet, but it could also be for a computer on your home network if you want to check if it's configured correctly. 
+
+Ping works using the ICMP (nternet Control Message Protocol), which is one of the slightly less well-known TCP/IP protocols that were mentioned earlier. The ICMP protocol works on the Network layer of the OSI Model, and thus the Internet layer of the TCP/IP model. 
+
+The basic syntax for ping is `ping <target>`
+
+<img width="423" height="99" alt="image" src="https://github.com/user-attachments/assets/6ac51070-3135-4f30-9691-a3b164fcb413" />
+
+Notice that the `ping` command actually returned the IP address for the Google server that it connected to, rather than the URL that was requested. This is a handy secondary application for ping, as it can be used to determine the IP address of the server hosting a website.
+
+### Answer the questions below
+
+1. What command would you use to ping the bbc.co.uk website?
+
+`ping bbc.co.uk`
+
+2. Ping muirlandoracle.co.uk, What is the IPv4 address?
+
+Command `ping muirlandoracle.co.uk` to get the IPv4 address
+
+`217.160.0.152`
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
