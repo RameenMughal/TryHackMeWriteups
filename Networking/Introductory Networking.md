@@ -248,20 +248,149 @@ Command `ping muirlandoracle.co.uk` to get the IPv4 address
 
 `217.160.0.152`
 
+3. What switch lets you change the interval of sent ping requests?
 
+`-i`
 
+4. What switch would allow you to restrict requests to IPv4?
 
+`-4`
 
+5. What switch would give you a more verbose output?
 
+`-v`
 
+## Traceroute
 
+Traceroute can be used to map the path your request takes as it heads to the target machine.
 
- 
+The internet is made up of many, many different servers and end-points, all networked up to each other. This means that, in order to get to the content you actually want, you first need to go through a bunch of other servers. Traceroute allows you to see each of these connections - it allows you to see every intermediate step between your computer and the resource that you requested. 
 
+The basic syntax for traceroute on Linux is this: `traceroute <destination>`
 
+By default, the Windows `tracert` command finds the path to a destination by sending ICMP Echo Request packets, similar to how `ping` works. On the other hand, the Unix/Linux `traceroute` command normally uses UDP packets to high, unused port numbers. 
 
+In both cases, routers along the path reply when the packet’s TTL runs out, allowing the tool to list each hop. You can change the default protocol in either tool by using special command switches, such as making Unix `traceroute` use ICMP or TCP instead of UDP.
 
+### Answer the questions below
 
+1. What switch would you use to specify an interface when using Traceroute?
 
+`-i`
 
+2. What switch would you use if you wanted to use TCP SYN requests when tracing the route?
+
+`-T`
+
+3. [Lateral Thinking] Which layer of the TCP/IP model will traceroute run on by default (Windows)?
+
+Internet
+
+## WHOIS
+
+Domain Names - the unsung saviours of the internet.
+
+A domain translates into an IP address so that we don't need to remember it (e.g. you can type tryhackme.com, rather than the TryHackMe IP address). 
+
+Domains are leased out by companies called Domain Registrars. If you want a domain, you go and register with a registrar, then lease the domain for a certain length of time.
+
+Whois essentially allows you to query who a domain name is registered to.
+
+Whois lookups are very easy to perform. Just use `whois <domain>` to get a list of available information about the domain registration
+
+### Answer the questions below
+
+1. What is the registrant postal code for facebook.com?
+
+94025
+
+2. When was the facebook.com domain first registered (Format: DD/MM/YYYY)?
+
+29/03/1997
+
+3. Which city is the registrant based in?
+
+Redmond
+
+4. [OSINT] What is the name of the golf course that is near the registrant address for microsoft.com?
+
+The Registrant Street is One Microsoft Way, so I searched in the Google Maps "Golf course One Microsoft Way". Got some results, tried each name and got the right one.
+
+Bellevue Golf Course
+
+5. What is the registered Tech Email for microsoft.com?
+
+msnhst@microsoft.com
+
+## Dig
+
+Ever wondered how a URL gets converted into an IP address that your computer can understand? The answer is a TCP/IP protocol called DNS (Domain Name System).
+
+At the most basic level, DNS allows us to ask a special server to give us the IP address of the website we're trying to access. 
+
+For example, if we made a request to www.google.com, our computer would first send a request to a special DNS server (which your computer already knows how to find). The server would then go looking for the IP address for Google and send it back to us. Our computer could then send the request to the IP of the Google server.
+
+You make a request to a website. The first thing that your computer does is check its local "Hosts File" to see if an explicit IP->Domain mapping has been created. This is an older system than DNS and much less commonly used in modern environments; however, it still takes precedence in the search order of most operating systems. 
+
+If no mapping has been manually created, the computer then checks its local DNS cache to see if it already has an IP address stored for the website; if it does, great. If not, it goes to the next stage of the process.
+
+Assuming the address hasn't already been found, your computer will then send a request to what is known as a recursive DNS server. These will automatically be known to the router on your network. Many Internet Service Providers (ISPs) maintain their own recursive servers, but companies such as Google and OpenDNS also control recursive servers. This is how your computer automatically knows where to send the request for information: details for a recursive DNS server are stored in your router or computer. 
+
+This server will also maintain a cache of results for popular domains; however, if the website you've requested isn't stored in the cache, the recursive server will pass the request on to a root name server.
+
+Before 2004 there were precisely 13 root name DNS servers in the world. These days there are many more; however, they are still accessible using the same 13 IP addresses assigned to the original servers (balanced so that you get the closest server when you make a request). 
+
+The root name servers essentially keep track of the DNS servers in the next level down, choosing an appropriate one to redirect your request to. These lower level servers are called Top-Level Domain servers.
+
+Top-Level Domain (TLD) servers are split up into extensions. 
+
+So, for example, if you were searching for tryhackme.com your request would be redirected to a TLD server that handled .com domains. If you were searching for bbc.co.uk your request would be redirected to a TLD server that handles .co.uk domains. 
+
+As with root name servers, TLD servers keep track of the next level down: Authoritative name servers. When a TLD server receives your request for information, the server passes it down to an appropriate Authoritative name server.
+
+Authoritative name servers are used to store DNS records for domains directly. 
+
+In other words, every domain in the world will have its DNS records stored on an Authoritative name server somewhere or another; they are the source of the information. When your request reaches the authoritative name server for the domain you're querying, it will send the relevant information back to you, allowing your computer to connect to the IP address behind the domain you requested.
+
+When you visit a website in your web browser this all happens automatically, but we can also do it manually with a tool called `dig` . Like `ping` and `traceroute`, `dig` should be installed automatically on Linux systems.
+
+Dig allows us to manually query recursive DNS servers of our choice for information about domains: `dig <domain> @<dns-server-ip>`
+
+<img width="319" height="181" alt="image" src="https://github.com/user-attachments/assets/07076af6-10cd-45f4-8125-5b1dbab99fa5" />
+
+In summary, that information is telling us that we sent it one query and successfully (i.e. No Errors) received one full answer -- which, as expected, contains the IP address for the domain name that we queried.
+
+Another interesting piece of information that dig gives us is the TTL (Time To Live) of the queried DNS record. As mentioned previously, when your computer queries a domain name, it stores the results in its local cache. The TTL of the record tells your computer when to stop considering the record as being valid -- i.e. when it should request the data again, rather than relying on the cached copy.
+
+This means that when your computer looks up a website’s IP address, it saves that information for a certain amount of time — called the TTL (Time To Live).
+
+The TTL can be found in the second column of the answer section
+
+It's important to remember that TTL (in the context of DNS caching) is measured in seconds
+
+### Answer the questions below
+
+1. What is DNS short for?
+
+Domain Name System
+
+2. What is the first type of DNS server your computer would query when you search for a domain?
+
+Recursive
+
+3. What type of DNS server contains records specific to domain extensions (i.e. .com, .co.uk*, etc)*? Use the long version of the name.
+
+Top-Level Domain
+
+4. Where is the very first place your computer would look to find the IP address of a domain?
+
+Hosts File
+
+5. [Research] Google runs two public DNS servers. One of them can be queried with the IP `8.8.8.8`, what is the IP address of the other one?
+
+`8.8.4.4`
+
+6. If a DNS query has a TTL of 24 hours, what number would the dig query show?
+
+86400
 
