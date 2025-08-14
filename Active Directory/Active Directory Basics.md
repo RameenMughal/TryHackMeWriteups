@@ -382,3 +382,53 @@ Note that the user's password (or hash) is never transmitted through the network
 **Note**: The described process applies when using a domain account. If a local account is used, the server can verify the response to the challenge itself without requiring interaction with the domain controller since it has the password hash stored locally on its SAM.
 
 The SAM stands for Security Accounts Manager. In Windows, the SAM is basically a database that stores local user accounts and their password hashes for a specific computer.
+
+## Trees, Forests and Trusts
+
+So far, we have discussed how to manage a single domain, the role of a Domain Controller and how it joins computers, servers and users.
+
+As companies grow, so do their networks. Having a single domain for a company is good enough to start, but in time some additional needs might push you into having more than one.
+
+### Trees
+
+Imagine, for example, that suddenly your company expands to a new country. The new country has different laws and regulations that require you to update your GPOs to comply. In addition, you now have IT people in both countries, and each IT team needs to manage the resources that correspond to each country without interfering with the other team. While you could create a complex OU structure and use delegations to achieve this, having a huge AD structure might be hard to manage and prone to human errors.
+
+Luckily for us, Active Directory supports integrating multiple domains so that you can partition your network into units that can be managed independently. If you have two domains that share the same namespace (thm.local in our example), those domains can be joined into a Tree.
+
+If our thm.local domain was split into two subdomains for UK and US branches, you could build a tree with a root domain of thm.local and two subdomains called uk.thm.local and us.thm.local, each with its AD, computers and users:
+
+<img width="1218" height="963" alt="image" src="https://github.com/user-attachments/assets/1ab1d2f4-34a5-47b4-80e4-ece99a6bae1c" />
+
+This partitioned structure gives us better control over who can access what in the domain. The IT people from the UK will have their own DC that manages the UK resources only. For example, a UK user would not be able to manage US users. In that way, the Domain Administrators of each branch will have complete control over their respective DCs, but not other branches' DCs. Policies can also be configured independently for each domain in the tree.
+
+In a Windows domain setup with multiple domains (a tree or forest), there are two main types of top-level administrators. Domain Admins have full control, but only over their own single domain. Enterprise Admins, on the other hand, are like the “super admins” of the entire forest — they have full administrative rights across all domains in the enterprise. This means while each domain manages itself with its Domain Admins, the Enterprise Admins can manage and make changes anywhere in the whole network.
+
+### Forests
+
+The domains you manage can also be configured in different namespaces. Suppose your company continues growing and eventually acquires another company called MHT Inc. When both companies merge, you will probably have different domain trees for each company, each managed by its own IT department. The union of several trees with different namespaces into the same network is known as a forest.
+
+<img width="2778" height="1119" alt="image" src="https://github.com/user-attachments/assets/5ebf34cf-6bcb-4943-8070-38386a7b8c6c" />
+
+### Trust Relationships
+
+Having multiple domains organised in trees and forest allows you to have a nice compartmentalised (divided into sections) network in terms of management and resources. But at a certain point, a user at THM UK might need to access a shared file in one of MHT ASIA servers. For this to happen, domains arranged in trees and forests are joined together by trust relationships.
+
+In simple terms, having a trust relationship between domains allows you to authorise a user from domain THM UK to access resources from domain MHT EU.
+
+The simplest trust relationship that can be established is a **one-way trust relationship**. In a one-way trust, if Domain AAA trusts Domain BBB, this means that a user on BBB can be authorised to access resources on AAA:
+
+<img width="963" height="386" alt="image" src="https://github.com/user-attachments/assets/91a16862-a995-41cd-9b36-c00f406db6dd" />
+
+Two-way trust relationships can also be made to allow both domains to mutually authorise users from the other. By default, joining several domains under a tree or a forest will form a two-way trust relationship.
+
+It is important to note that having a trust relationship between domains doesn't automatically grant access to all resources on other domains. Once a trust relationship is established, you have the chance to authorise users across different domains, but it's up to you what is actually authorised or not.
+
+### Answer the questions below
+
+1. What is a group of Windows domains that share the same namespace called?
+
+Tree
+
+2. What should be configured between two domains for a user in Domain A to access a resource in Domain B?
+
+1 Trust Relationship
