@@ -22,7 +22,7 @@ Connecting to the Windows machine through RDP (Remote Desktop Protocol), install
 
 The Remote Desktop Protocol (RDP) is a protocol, or technical standard, for using a desktop computer remotely.
 
-Connect to the machine by `xfreerdp3 MACHINE_IP` and then the windows login appears. Login with given credentials.
+Connect to the machine by `xfreerdp3 /v:MACHINE_IP /u:'THM\Administrator' /p:Password321 ` and then the windows login appears. Login with given credentials.
 
 ### Answer the questions below
 
@@ -125,7 +125,7 @@ Your first task as the new domain administrator is to check the existing AD OUs 
 
 <img width="1542" height="702" alt="image" src="https://github.com/user-attachments/assets/939ffbe4-7d56-4281-a7cc-02569d997a74" />
 
-Deleting extra OUs and users
+### Deleting extra OUs and users
 
 The first thing you should notice is that there is an additional department OU in your current AD configuration that doesn't appear in the chart. We've been told it was closed due to budget cuts and should be removed from the domain. If you try to right-click and delete the OU, you will get the following error:
 
@@ -165,13 +165,35 @@ Click next a couple of times, and now Phillip should be able to reset passwords 
 
 Now let's use Phillip's account to try and reset Sophie's password.
 
-While you may be tempted to go to Active Directory Users and Computers to try and test Phillip's new powers, he doesn't really have the privileges to open it, so you'll have to use other methods to do password resets. In this case, we will be using Powershell to do so and set the password to Claire2008:
+Login to the Phillip's account by `xfreerdp3 /v:MACHINE_IP /u:'THM\phillip' /p:Claire2008` 
 
-<img width="458" height="66" alt="image" src="https://github.com/user-attachments/assets/e5c9956e-fdc9-4380-aff2-6088b2e7a64f" />
+While you may be tempted to go to Active Directory Users and Computers to try and test Phillip's new powers, he doesn't really have the privileges to open it, so you'll have to use other methods to do password resets. In this case, we will be using Powershell to do so
+
+The password should not be too short or simple, I used Sunset!42
+
+<img width="600" height="300" alt="image" src="https://github.com/user-attachments/assets/107dccd3-4213-4a05-b294-bb19741cf614" />
 
 Since we wouldn't want Sophie to keep on using a password we know, we can also force a password reset at the next logon with the following command:
 
-<img width="400" height="35" alt="image" src="https://github.com/user-attachments/assets/0c93784b-4616-49bb-8afd-cba68ae8e009" />
+<img width="600" height="300" alt="image" src="https://github.com/user-attachments/assets/eb36461f-1fb8-4dc6-8bad-54cb36a809df" />
+
+Then Login to the Sophie account to get the flag `xfreerdp3 /v:MACHINE_IP /u:'THM\sophie' /p:'Sunset!42'`
+
+I used '' with the password as the shell was not accepting number 42 with the password
+
+It asks us to give it a new password as the password needs to be changed before logging in. So give it a new password and then you get the access
+
+### Answer the questions below
+
+1. What was the flag found on Sophie's desktop?
+
+Logging in to the Sophie account, you see flag.txt at the Desktop
+
+<img width="300" height="100" alt="image" src="https://github.com/user-attachments/assets/f702d6fd-6d60-4b28-83fa-7eeabf23979b" />
+
+2. The process of granting privileges to a user over some OU or other AD Object is called...
+
+Delegation
 
 ## Managing Computers in AD
 
@@ -210,6 +232,113 @@ yay
 So far, we have organised users and computers in OUs just for the sake of it, but the main idea behind this is to be able to deploy different policies for each OU individually. That way, we can push different configurations and security baselines to users depending on their department.
 
 Windows manages such policies through Group Policy Objects (GPO). GPOs are simply a collection of settings that can be applied to OUs. GPOs can contain policies aimed at either users or computers, allowing you to set a baseline on specific machines and identities.
+
+To configure GPOs, you can use the Group Policy Management tool, available from the start menu
+
+The first thing you will see when opening it is your complete OU hierarchy, as defined before. To configure Group Policies, you first create a GPO under Group Policy Objects and then link it to the OU where you want the policies to apply
+
+<img width="954" height="577" alt="image" src="https://github.com/user-attachments/assets/c2bed534-fbaf-49e5-a86c-75eb287f8d86" />
+
+We can see in the image above that 3 GPOs have been created. From those, the Default Domain Policy and RDP Policy are linked to the thm.local domain as a whole, and the Default Domain Controllers Policy is linked to the Domain Controllers OU only. Something important to have in mind is that any GPO will apply to the linked OU and any sub-OUs under it. For example, the Sales OU will still be affected by the Default Domain Policy.
+
+Let's examine the Default Domain Policy to see what's inside a GPO. The first tab you'll see when selecting a GPO shows its scope, which is where the GPO is linked in the AD. For the current policy, we can see that it has only been linked to the thm.local domain:
+
+<img width="954" height="577" alt="image" src="https://github.com/user-attachments/assets/f50b734a-d149-4b69-9d8d-1f6d4b1d4225" />
+
+As you can see, you can also apply Security Filtering to GPOs so that they are only applied to specific users/computers under an OU. By default, they will apply to the Authenticated Users group, which includes all users/PCs.
+
+The Settings tab includes the actual contents of the GPO and lets us know what specific configurations it applies. As stated before, each GPO has configurations that apply to computers only and configurations that apply to users only. In this case, the Default Domain Policy only contains Computer Configurations:
+
+<img width="954" height="598" alt="image" src="https://github.com/user-attachments/assets/bcbe599d-08be-463b-9c97-b7ece669a891" />
+
+Since this GPO applies to the whole domain, any change to it would affect all computers. Let's change the minimum password length policy to require users to have at least 10 characters in their passwords. To do this, right-click the GPO and select Edit
+
+<img width="418" height="374" alt="image" src="https://github.com/user-attachments/assets/1368bc08-818a-4522-a6a9-cce15c40c56e" />
+
+This will open a new window where we can navigate and edit all the available configurations. To change the minimum password length, go to Computer Configurations -> Policies -> Windows Setting -> Security Settings -> Account Policies -> Password Policy and change the required policy value:
+
+<img width="787" height="565" alt="image" src="https://github.com/user-attachments/assets/3c3609dd-daf0-4960-8dfa-4b180aca05bb" />
+
+### GPO Distribution
+
+GPOs are distributed to the network via a network share called `SYSVOL`, which is stored in the DC. All users in a domain should typically have access to this share over the network to sync their GPOs periodically. The SYSVOL share points by default to the `C:\Windows\SYSVOL\sysvol\` directory on each of the DCs in our network.
+
+Once a change has been made to any GPOs, it might take up to 2 hours for computers to catch up. If you want to force any particular computer to sync its GPOs immediately, you can always run the following command on the desired computer: `gpupdate /force`
+
+### Creating some GPOs for THM Inc.
+
+As part of our new job, we have been tasked with implementing some GPOs to allow us to:
+
+1. Block non-IT users from accessing the Control Panel.
+
+2. Make workstations and servers lock their screen automatically after 5 minutes of user inactivity to avoid people leaving their sessions exposed.
+
+#### Restrict Access to Control Panel
+
+We want to restrict access to the Control Panel across all machines to only the users that are part of the IT department. Users of other departments shouldn't be able to change the system's preferences.
+
+Let's create a new GPO called Restrict Control Panel Access and open it for editing. Since we want this GPO to apply to specific users, we will look under User Configuration for the following policy:
+
+Create New GPO, then Edit then User Configuration -> Administrative Templates -> Control Panel -> Click the Policy and click Enabled
+
+<img width="919" height="565" alt="image" src="https://github.com/user-attachments/assets/29fc6d5f-7801-4d07-ba78-10a2ac61de23" />
+
+Once the GPO is configured, we will need to link it to all of the OUs corresponding to users who shouldn't have access to the Control Panel of their PCs. In this case, we will link the Marketing, Management and Sales OUs by dragging the GPO to each of them:
+
+<img width="923" height="619" alt="image" src="https://github.com/user-attachments/assets/a6020217-7e63-45d8-ba0a-18e7a6c80d84" />
+
+#### Auto Lock Screen GPO
+
+For the first GPO, regarding screen locking for workstations and servers, we could directly apply it over the Workstations, Servers and Domain Controllers OUs we created previously.
+
+While this solution should work, an alternative consists of simply applying the GPO to the root domain, as we want the GPO to affect all of our computers. Since the Workstations, Servers and Domain Controllers OUs are all child OUs of the root domain, they will inherit its policies.
+
+**Note**: You might notice that if our GPO is applied to the root domain, it will also be inherited by other OUs like Sales or Marketing. Since these OUs contain users only, any Computer Configuration in our GPO will be ignored by them.
+
+Let's create a new GPO, call it Auto Lock Screen, and edit it. The policy to achieve what we want is located in the following route:
+
+Create, Edit then Computer Configuration -> Policies -> Windows Settings -> Security Settings -> Local Policies -> Security Options -> Interactive logon: Machine inactivity limit
+
+<img width="787" height="565" alt="image" src="https://github.com/user-attachments/assets/d4cb0fce-4349-457b-9222-ff5d2e0fee8b" />
+
+We will set the inactivity limit to 5 minutes so that computers get locked automatically if any user leaves their session open. After closing the GPO editor, we will link the GPO to the root domain by dragging the GPO to it:
+
+<img width="923" height="579" alt="image" src="https://github.com/user-attachments/assets/42f30c18-7ef8-4cc1-aec3-9e62ded19b2c" />
+
+Once the GPOs have been applied to the correct OUs, we can log in as any users in either Marketing, Sales or Management for verification. For this task, let's connect via RDP using Mark's credentials
+
+If we try opening the Control Panel, we should get a message indicating this operation is denied by the administrator. You can also wait 5 minutes to check if the screen is automatically locked if you want.
+
+Since we didn't apply the control panel GPO on IT, you should still be able to log into the machine as any of those users and access the control panel. 
+
+Note: If you created and linked the GPOs, but for some reason, they still don't work, remember you can run `gpupdate /force` to force GPOs to be updated.
+
+### Answer the questions below
+
+1. What is the name of the network share used to distribute GPOs to domain machines?
+
+SYSVOL
+
+2. Can a GPO be used to apply settings to users and computers? (yay/nay)
+
+yay
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
