@@ -1,4 +1,4 @@
-# Networking Services
+# Network Services
 
 ## Understanding SMB
 
