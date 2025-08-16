@@ -118,8 +118,8 @@ One common issue is anonymous SMB share access, where shared folders are left op
 ### Method Breakdown
 
 So, from our enumeration stage, we know:
-- The SMB share location
-- The name of an interesting SMB share
+- The SMB share location -> `//MACHINE_IP/`
+- The name of an interesting SMB share  -> profiles
 
 ### SMBClient
 
@@ -150,6 +150,63 @@ Once inside the share, you can view the available commands by typing "help". The
 - and not supplying a password.
 
 Does the share allow anonymous access? Y/N?
+
+Y 
+
+`smbclient //MACHINE_IP/profiles -U Anonymous -p 445`
+
+When it asks the passsword, just Enter and see it is accepted.
+
+<img width="365" height="185" alt="image" src="https://github.com/user-attachments/assets/cf0c2748-e1aa-4647-b69b-13c90120cb2f" />
+
+3. Great! Have a look around for any interesting documents that could contain valuable information. Who can we assume this profile folder belongs to?
+
+John Cactus
+
+From the `ls` command we see files and interesting one is 'Working From Home Information.txt'
+
+So downloading this file in local machine `get "Working From Home Information.txt"`
+
+Seeing the contents of this file.
+
+<img width="448" height="131" alt="image" src="https://github.com/user-attachments/assets/25e9342c-178f-4c6c-8285-c8ce82e1ec77" />
+
+4. What service has been configured to allow him to work from home?
+
+`ssh`
+
+5. Okay! Now we know this, what directory on the share should we look in?
+
+`.ssh`
+
+6. This directory contains authentication keys that allow a user to authenticate themselves on, and then access, a server. Which of these keys is most useful to us?
+
+`id_rsa`
+
+Going to the `.ssh` directory it contains:
+- `id_rsa` -> The private key. This is the secret part of the SSH key pair.
+- `id_rsa.pub` -> The public key. This is the part that gets copied to servers (in authorized_keys).
+- `authorized_keys` -> The list of public keys allowed to log into this account. When someone connects via SSH, the server checks if their public key is in this file.
+
+7. Download this file to your local machine, and change the permissions to "600" using "chmod 600 [file]".
+
+Now, use the information you have already gathered to work out the username of the account. Then, use the service and key to log-in to the server.
+
+What is the smb.txt flag?
+
+By `more id_rsa` and `more id_rsa.pub` we see that it contains the private key that can be used when logging in through `ssh` and username as `cactus@POLOSMB`
+
+Getting this file in local machine `get id_rsa`
+
+Giving read and write permissions `chmod 600 id_rsa` and logging in ssh `ssh -i id_rsa cactus@MACHINE_IP`
+
+<img width="269" height="100" alt="image" src="https://github.com/user-attachments/assets/6ba1a50b-542d-4a33-9c1e-78978e4d9b3d" />
+
+
+
+
+
+
 
 
 
