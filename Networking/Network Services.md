@@ -202,6 +202,48 @@ Giving read and write permissions `chmod 600 id_rsa` and logging in ssh `ssh -i 
 
 <img width="269" height="100" alt="image" src="https://github.com/user-attachments/assets/6ba1a50b-542d-4a33-9c1e-78978e4d9b3d" />
 
+## Understanding Telnet
+
+### What is Telnet?
+
+Telnet is an application protocol which allows you, with the use of a telnet client, to connect to and execute commands on a remote machine that's hosting a telnet server.
+
+“With the use of a Telnet client” means you need a Telnet program on your computer to connect to the remote Telnet server.
+
+### Replacement
+
+Telnet sends all messages in clear text and has no specific security mechanisms. 
+
+Thus, in many applications and services, Telnet has been replaced by SSH where transmitted data is encrypted.
+
+Secure Shell (SSH) refers to a cryptographic network protocol used in secure communication between devices. SSH encrypts data using cryptographic algorithms, such as Advanced Encryption System (AES) and is often used when logging in remotely to a computer or server.
+
+### How does Telnet work?
+
+The user connects to the server by using the Telnet protocol, which means entering `telnet` into a command prompt. 
+
+The user then executes commands on the server by using specific Telnet commands in the Telnet prompt. 
+
+You can connect to a telnet server with the following syntax: `telnet [ip] [port]`
+
+### Answer the questions below
+
+1. Is Telnet a client-server protocol (Y/N)?
+
+Y
+
+2. What has slowly replaced Telnet?
+
+SSH
+
+3. How would you connect to a Telnet server with the IP 10.10.10.3 on port 23?
+
+`telnet 10.10.10.3 23`
+
+4. The lack of what, means that all Telnet communication is in plaintext?
+
+Encryption
+
 
 
 
