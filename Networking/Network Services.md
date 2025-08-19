@@ -244,6 +244,16 @@ SSH
 
 Encryption
 
+## Enumerating Telnet
+
+The MACHINE_IP at my time is `10.201.105.163`
+
+### Answer the questions below
+
+1. How many ports are open on the target machine? Note: you may need to scan non-standard ports too.
+
+
+
 ## Understanding FTP
 
 ### What is FTP?
