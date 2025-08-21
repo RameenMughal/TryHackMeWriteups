@@ -37,6 +37,103 @@ What was the original target of Stuxnet?
 
 The Iran Nuclear Programme
 
+## Social Engineering: Phishing
+
+### Overview
+
+Phishing is one of the most common cyber attack types employed by scammers and bad actors, targeting individuals and businesses indiscriminately. 
+
+In many cases, phishing is the initial attack vector used to gain access to a company's infrastructure before performing further attacks against the corporate network. 
+
+### What is Phishing?
+
+Phishing is a sub-section of social engineering. Whereas social engineering is a very general term used to describe any attack that takes advantage of a human rather than a computer system, phishing specifically describes attacks whereby a scammer or other attacker tricks a victim into opening a malicious webpage by sending them a text message, email, or another form of online correspondence. 
+
+Traditionally, "phishing" simply referred to emails; however, in the days of instant messaging, text messages, and voice/video calling, the term has evolved to blanket these other categories. 
+
+These other forms are sometimes referred to individually as "smishing" — phishing over SMS — and "vishing" — phishing over voice chat — respectively.
+
+Phishing messages usually deploy psychological trickery (for example, inducing a false sense of urgency to make victims act rashly) and nearly always involve getting a victim to click on a link to a web application owned by the attacker. The victim is then often asked to enter sensitive information — for example, login details or credit card information — at which point the malicious site stores the information and the attack is complete. 
+
+Alternatively, the victim may inadvertently install malware from the malicious page, thus giving an attacker an entry point into their device and network.
+
+There are three primary types of phishing attacks:
+
+| **Attack Type**   | **Definition (Summary)** |
+|-------------------|---------------------------|
+| **General Phishing** | Mass attack targeting large groups (e.g., PayPal or Amazon users). Often poorly crafted and easier to detect. |
+| **Spearphishing**   | Targeted attack on specific individuals or groups (e.g., company employees). Better crafted and harder to spot. |
+| **Whaling**         | Highly targeted attack on high-value individuals (e.g., executives). Extremely well crafted and very difficult to detect. |
+
+Phishing attacks work best when the malicious web page mimics an existing (usually well-known) web page. For this reason, attackers/scammers will usually use one of many freely available tools to simply clone an existing page, which can then be edited at their leisure.
+
+### Identifying Phishing Attacks
+
+Many generic phishing attacks are relatively easy to spot; they frequently have poor grammar and often do not address their victims by name (instead leaving the greetings generic — e.g., "Dear customer"). That said, other instances can be extremely difficult to spot, with some attacks being thorough enough to fool cybersecurity professionals.
+
+The domain name for the malicious site will usually be similar (but never identical) to the domain name used by the legitimate website. 
+
+As a real-world example from 2021, a group of scammers sent out a mass phishing campaign over SMS, mimicking the British Royal Mail service and using the domain name `https://royalmai1.co.uk` (as opposed to `https://royalmail.co.uk`). By exchanging the final "L" for the number one, the scammers were able to successfully register a domain name that looked almost identical to the domain name of their cloned website; this is a very common tactic.
+
+HTML emails can also be used to mask the real domain name in use. For example, the text in the email may be `https://amazon.co.uk`; however, the link actually goes to `https://am4zon.co.uk`. You can see this by hovering your mouse over the link in a desktop application — the real link should appear at the bottom of the screen as in this graphic:
+
+<img width="778" height="318" alt="image" src="https://github.com/user-attachments/assets/f9cbf986-e3f1-4d0d-8d18-8e789ee79846" />
+
+In a similar vein, the "From" email address in an email-based phishing campaign will often be suspicious. Many generic mass phishing campaigns will simply use Gmail addresses — not bothering to use a domain name associated with the company they are spoofing. This is a dead giveaway that the email is suspicious.
+
+The best way to identify a phishing email is simply to keep your eyes open and look for anything suspicious — all but the best will have a mistake somewhere.
+
+### Answer the questions below
+
+What is the flag?
+
+<img width="422" height="179" alt="image" src="https://github.com/user-attachments/assets/dd00fa6f-476b-4b35-93bf-9ca44f2fb75a" />
+
+## Malware and Ransomware
+
+### Overview
+
+Malware (short for "malicious software") can be defined as any software designed to perform malicious actions on behalf of an attacker. There are many different kinds of malware: we will be focussing on generic malware and ransomware specifically in this task.
+
+Once installed, attackers commonly use malware to steal information, cause damage, or execute arbitrary commands on the infected system. 
+
+Malware is often used to perform a set of tasks referred to as "Command and Control" (or C2/C&C). C2 malware connects back to a waiting server and allows an attacker to control the infected system remotely, often incorporating many simple tasks such as keylogging as built-in parts of the malicious software.
+
+### Ransomware
+
+A specialised class of malware: ransomware is used to infect as many systems as possible, encrypting the data on the devices and holding it to ransom. If the victims pay the attackers within a set timeframe (usually via a cryptocurrency such as Bitcoin), the data is theoretically returned.
+
+Ransomware usually spreads by exploiting known vulnerabilities in commonly installed software (e.g. the Microsoft Windows operating system); it can be extremely fast-spreading once an infection begins, and can demand millions in ransom money. 
+
+The goal of a ransomware attack is to infect as many systems as possible, then make as much data inaccessible as possible by encrypting it with a key known only to the attacker. Once the attack is complete, the malware usually displays a window that looks something like this:
+
+<img width="1200" height="897" alt="image" src="https://github.com/user-attachments/assets/1fc75fd1-4013-44ce-88c4-91e40dc4efc2" />
+
+With the ransom paid, the malware may or may not decrypt the data and self-destruct, depending entirely on how nice the attackers are.
+
+### Delivery Methods
+
+There are various ways that an attacker can infect a target with malware — many of these revolve around social engineering or phishing attacks. 
+
+For example, an attacker may send a victim an email containing a Microsoft Word or Excel file that contains a malicious macro (code that is embedded inside the document set to run when a user opens the file). These will not run by default unless the user clicks the "Enable Content" button at the top of the screen to enable macros:
+
+<img width="1052" height="217" alt="image" src="https://github.com/user-attachments/assets/8e25fca4-6156-446d-842f-b6ccda1b1821" />
+
+However, there are situations in which a user may genuinely wish to execute macros, and a good attacker will capitalise on these pretexts to convince the victim to click the button.
+
+A macro is basically a small program or script that automates tasks.
+
+In applications like Microsoft Word or Excel, macros are written in a language called VBA (Visual Basic for Applications). They can be very useful for automating repetitive actions — for example:
+- Formatting a document with one click
+- Running calculations in a spreadsheet
+- Generating reports automatically
+
+
+
+
+
+
+
 
 
 
