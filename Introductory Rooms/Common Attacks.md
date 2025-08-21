@@ -128,8 +128,73 @@ In applications like Microsoft Word or Excel, macros are written in a language c
 - Running calculations in a spreadsheet
 - Generating reports automatically
 
+Similarly, the attacker may send the file as a compiled `.exe`, a PDF, a `.ps1` PowerShell Script or `.bat` Batch script, an HTML application file (`.hta`), or even a `.js` JavaScript file to be executed by the JavaScript interpreter built into Windows.
 
+In short, there are many different ways and formats in which an attacker can send code to a victim. Once the code is executed, the infection begins.
 
+### Answer the questions below
+
+[Research] What currency did the Wannacry attackers request payment in?
+
+Bitcoin
+
+## Passwords and Authentication
+
+### What Makes A Strong Password?
+
+Current best practices lean more towards length than complexity. For example:
+
+`Vim is _obviously_, indisputably the best text editor in existence!`
+
+By using a passphrase rather than a traditional password, the password is significantly longer whilst still retaining some of the more complex elements — despite not looking quite so obfuscated. This has the advantage of being easier to remember whilst still being incredibly difficult to brute-force.
+
+Ideally, however, you should use long, completely random passwords. For example:
+
+`w41=V1)S7KIJGPN,dII>cHEh>FRVQsj3M^]CB`
+
+These take millions of years to crack and are objectively the most secure option available. The drawback is usability; however, this is largely mitigated by using a password manager.
+
+### What Makes A Weak Password?
+
+People often go for simple passwords that mean something to them, often following one of a few "simple" patterns. For example, a commonly used pattern is a name/location, followed by a year, followed by an exclamation mark. For example:
+
+`Gareth2012!`
+
+Equally, short passwords (especially those that don't contain any non-alphanumeric characters) are weak against brute-force attacks.
+
+Of equal importance to password strength is password reuse. You can have the strongest password in the world, but if you use it across numerous accounts and it gets leaked, an attacker can simply use the same strong password on all affected accounts. Equally, if you find out that your password has been exposed, you will have a lot of work to do changing all of your account passwords!
+
+The industry-standard password storage method is referred to as password hashing. Password hashing (or simply "hashing") involves using complicated mathematical algorithms to take any input and turn it into a unique, fixed-length output in a way that is impossible to reverse. This means that when you sign up, your password will be hashed and stored in the database in a way that stops everyone (including server administrators) from being able to read it!
+
+When you try to sign in, the same algorithm is applied to the password that you supply: if the stored hash matches the hash of the password you are trying to log in with (remembering that the same input will always create the same unique output), then you are considered to have successfully authenticated.
+
+Ideally, every service would hash user passwords with a secure algorithm. Even if the entire database were leaked, the attackers would still need to waste valuable time and computational power attempting to brute-force the (otherwise useless) hashes to find the plaintext passwords. 
+
+This is why it is so important that passwords are long and preferably of a decent level of complexity: the longer the password and the larger the number of potential characters involved, the more power it takes to effectively guess the password input used to generate a hash.
+
+As a worst-case scenario, your plaintext password is either immediately available, or is easy for an attacker to find. If this happens then both your username and password are known to the attacker, allowing them to take over your account or perform "credential stuffing" attacks — using your stolen username and password pair against other services to see if you reused them elsewhere. 
+
+These leaked databases containing credentials frequently appear on the dark web, which leads us to our final point in this section: data exposure notification services.
+
+The largest and most well-known data exposure checker is called [Have I Been Pwned?](https://haveibeenpwned.com/). It exists as a free online service that scours data dumps and catalogues all of the information found, allowing users to enter their email addresses to see if they have been included in any breaches. 
+
+Have I Been Pwned also allows you to add yourself to a notification list, meaning that you will receive an email notifying you if your email address appears in any data breaches.
+
+### Password Attacks
+
+An attacker has a few options when it comes to attacking passwords and authentication systems. Some attacks are entirely local (i.e. working entirely on a device owned by the attacker without interacting with the target service at all), others are remote attacks involving the original server.
+
+Local attacks require a stolen copy of the credentials in question. The attacker will take a file full of stolen usernames/emails and hashed passwords, then use software to effectively try to guess the input that created the hash either using randomly generated sequences of characters (slower but more thorough) or by using a pre-generated wordlist of possible passwords (faster but much more likely to miss things).
+
+Hybrid types are also very widely used; these are when an attacker takes an existing wordlist and mutates it to add new characters, symbols, or random elements. Local password attacks will be demonstrated in the interactive element for this task.
+
+Remote attacks tend to be one of two categories; they either involve attempting to brute-force known usernames by sending requests to the server and seeing what it responds with, or they use known username and password pairs from previous breaches to see if they are valid on the target site — this is the aforementioned credential stuffing.
+
+### Answer the questions below
+
+What is the password?
+
+<img width="402" height="211" alt="image" src="https://github.com/user-attachments/assets/06252d45-449c-4b66-9eab-2d3028b10c60" />
 
 
 
