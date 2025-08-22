@@ -226,10 +226,95 @@ These vaults are accessed using a master password — the only password you need
 
 Some password managers are free, whilst others require a paid subscription. That said, the features and usability provided by paid offerings often make them well worth the expense!
 
+### Answer the questions below
 
+Where you have the option, which should you use as a second authentication factor between SMS based TOTPs or Authenticator App based TOTPs (SMS or App)?
 
+App
 
+## Public Network Security
 
+### The Problem 
 
+Public WiFi, whilst incredibly handy, also gives an attacker ideal opportunities to attack other users' devices or simply intercept and record traffic to steal sensitive information. This latter technique can be as simple as exploiting the fact that most people expect to see public networks available. The attacker can quickly set up a network of their own and monitor the traffic of everyone who connects; this is referred to as a "man-in-the-middle" attack and is very easy to carry out. 
 
+For example, if you were to connect to a network belonging to an attacker then logged into an account for a website that doesn't use an encrypted (HTTPS) connection, the attacker could simply pluck your credentials out of the network traffic and use them to log into your account for themselves. 
 
+However, it is fortunately significantly less likely to occur with modern websites which implement T ransport L ayer S ecurity (TLS) to encrypt traffic between their servers and users as standard.
+
+Equally, being connected to any network (regardless of whether you trust it or not) makes your device visible to others on the network. You never know who else is on a public network or what their intentions might be!
+
+### The Solutions
+
+The ideal solution to this problem is simply not connecting to untrusted networks. Beneficial though public wireless connections are, it will always be safer to use a mobile hotspot or private network. 
+
+V irtual P rivate N etworks (VPNs) encrypt all traffic leaving and re-entering your machine, rendering any interception techniques useless as the intercepted data will simply look like gibberish. Whilst it is possible to host your own VPN server for free, most people prefer to use one of the many online solutions. 
+
+Some of these commercial solutions are free, but be warned: free VPNs tend not to provide the best security and often harvest your data themselves to make a profit. That said, the price of a good VPN is more than worth it for the increased safety when operating on untrusted networks.
+
+### Website Connection Security
+
+All websites should now only serve information in the safety of an encrypted connection. As with using a VPN, this prevents an attacker from reading, or modifying your web traffic if they intercept it. 
+
+The encrypted connection used to create HTTPS (H yper T ext T ransfer P rotocol S ecure) is referred to as TLS (T ransport L ayer S ecurity), and in most browsers is represented by a padlock to the left of the search bar, which indicates that the connection is secure:
+
+<img width="268" height="38" alt="image" src="https://github.com/user-attachments/assets/e9e51028-e928-4e52-a2a9-8a370a31f4cc" />
+
+With this in place, your traffic can only be decrypted in very select circumstances: namely, if it is a work or school managed device and you are connected to a work/school network.
+
+**Note**: The presence of the padlock indicates that the connection is secure; it does not guarantee that the website itself is safe . In other words, a malicious website can still easily have a TLS cert (meaning that your traffic with the server is encrypted), but that doesn't stop the site from having a malicious purpose.
+
+In some instances, you may also see a padlock with a cross through it or an exclamation mark over it; this indicates that the connection is theoretically secure but that there is something wrong with the certificate in use by the server. 
+
+The presence of this altered padlock icon can mean anything from the server administrator simply letting the certificate go out of date to an attacker actively meddling with the security of your connection. In other words: if the icon is anything other than a regular padlock, do not trust that connection is secure.
+
+You may also encounter full-page errors related to certificate security when trying to access web pages; these can look something like this:
+
+<img width="1150" height="551" alt="image" src="https://github.com/user-attachments/assets/dce85f8d-3a2e-4365-8f1f-dcfb86a7a577" />
+
+## Backups
+
+### Overview
+
+Backups are arguably the single most important defensive measure you can take to protect your data.
+
+### The Golden 3,2,1 Rule
+
+The golden standard for taking backups is relatively simple and is often called the "3,2,1 rule".
+
+The 3,2,1 rule specifies that:
+- You should always keep at least **three** up-to-date copies of your data; this can include the original copy, but all copies must be maintained.
+- Backups should be stored on at least **two** different storage mediums; for example: a cloud backup and a USB device. This can include a hard drive on your PC.
+- **One** (or more) backups should be stored "off-site". Cloud services such as Google Drive are ideal for personal use in this regard.
+
+How frequently you backup your data is up to you and usually depends on the sensitivity of the data, compared to the risk of compromise and the amount of backup space available. 
+
+For example, a multi-billion pound corporation handling sensitive data is at high risk of a ransomware attack and may wish to take full backups two or three times a day. By comparison, a home user may only feel the need to take backups once or twice a week.
+
+### Answer the questions below
+
+1. What is the minimum number of up-to-date backups you should make?
+
+3
+
+2. Of these, how many (at minimum) should be stored in another location?
+
+1
+
+## Updates and Patches
+
+### Software Updates
+
+When vulnerabilities are discovered in software, the developers usually release special updates called patches that contain a fix for the vulnerability or otherwise "patch" the security issue.
+
+Unfortunately, all software eventually loses support from its maintainers, becoming deprecated and no longer receiving updates (e.g. Windows 7) — this is referred to as the software being EOL (End Of Life). At this point, the software must be replaced as soon as possible. 
+
+If replacing the software is not possible then the device should be segregated as far as is possible to prevent exploitation of the vulnerabilities that will inevitably be found and left unpatched.
+
+### Antivirus Updates
+
+Most antivirus software packages receive very frequent updates; this is because they largely work using a local database of known exploit signatures, which must be kept up-to-date.
+
+In other words: when new malware is discovered, it gets sent around antivirus vendors who generate a "signature" that identifies this particular piece of malicious software. These signatures are then distributed to every device on the planet that uses the antivirus software, ensuring that your installed antivirus solution is kept up-to-date on all the latest (known) malware.
+
+In other words: when new malware is discovered, it gets sent around antivirus vendors who generate a "signature" that identifies this particular piece of malicious software. These signatures are then distributed to every device on the planet that uses the antivirus software, ensuring that your installed antivirus solution is kept up-to-date on all the latest (known) malware.
