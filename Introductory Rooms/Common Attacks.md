@@ -196,6 +196,37 @@ What is the password?
 
 <img width="402" height="211" alt="image" src="https://github.com/user-attachments/assets/06252d45-449c-4b66-9eab-2d3028b10c60" />
 
+## Multi-Fcator Authentication and Password Managers
+
+### Overview
+
+This task will cover some of the extra steps that you can take to enhance your password security through the use of password managers and multi-factor authentication.
+
+### Multi-Factor Authentication
+
+Multi-Factor Authentication (or MFA) is a term used to describe any authentication process where you need more than one thing to log in. 
+
+The most common example of this is when you enter the password for an account, then get asked for a six-digit code that is sent to your phone and usually expires after fifteen minutes or so. 
+
+This particular second authentication factor is referred to as a Time-based One Time Password (or TOTP) and is one of the most common second factors currently in use.
+
+Unfortunately, most individuals do not have access to a smart card reader, an expensive hardware authenticator (e.g. YubiKey) or a fingerprint scanner. They do have access to a smartphone which can be used to receive or access time-based one time passwords. As such, mobile-based MFA is amongst the most common multi-factor authentication methods implemented for personal use. Whilst not ideal, two factors are better than one.
+
+You should always activate multi-factor authentication where available. Doing so means that an attacker must obtain more than one factor if they wish to compromise any of your accounts — for example, they must have both the password and your phone (or the ability to intercept your text messages).
+
+Although SMS-based TOTP (getting your one-time login codes by text) is the most widely used form of two-factor authentication, it isn’t very secure. Attackers have found ways to hijack or reroute a victim’s text messages — for example, through SIM swapping or exploiting weaknesses in mobile networks — which lets them receive the codes instead of the victim and break into accounts.
+
+Instead of relying on SMS, you can use an authenticator app (like Authy or Google Authenticator) for MFA. The service gives you a QR code or secret key, which you add to the app. After that, the app generates TOTP codes directly on your phone, offline, making it safer since attackers can’t intercept them through the network or hijack your texts.
+
+### Password Managers and Generating Strong Passwords
+
+At the most basic level, password managers provide a safe space to store your passwords. They store passwords in "vaults": encrypted storage either locally on your own device, or as an online service (which also usually allows you to access your passwords from any device). 
+
+These vaults are accessed using a master password — the only password you need to remember —  or (more commonly in recent years) biometric data such as a fingerprint. 
+
+Some password managers are free, whilst others require a paid subscription. That said, the features and usability provided by paid offerings often make them well worth the expense!
+
+
 
 
 
