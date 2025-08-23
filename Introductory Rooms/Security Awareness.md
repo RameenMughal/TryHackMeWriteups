@@ -34,9 +34,28 @@ Names, Addresses, E-mail, Birth Dates
 
 ## Check if you've ever been part of cyber breach
 
-Criminals can use the information found in data breaches of companies to perform targeted social engineer attacks or phishing campaigns (more on this in future security awareness rooms). Have I Been Pwned is a service that keeps track of data breaches leaked information, giving you the ability to find out if you've been a victim of a previous data breach. Search your email or phone number, and it will reveal if your personal information has ever been leaked.
+Criminals can use the information found in data breaches of companies to perform targeted social engineer attacks or phishing campaigns. 
 
+[Have I Been Pwned](https://haveibeenpwned.com/) is a service that keeps track of data breaches leaked information, giving you the ability to find out if you've been a victim of a previous data breach. Search your email or phone number, and it will reveal if your personal information has ever been leaked.
 
+## Cyber Threat Actors
 
+A cyber threat is the possibility of a malicious attempt to damage or disrupt a computer network or system. Cyber threat actors are individuals or groups of people who maliciously aim to take advantage of system security weaknesses to compromise and gain unauthorized access to victim data, computers, or networks.
+
+<img width="665" height="441" alt="image" src="https://github.com/user-attachments/assets/60016d6c-a6ed-4eea-9419-5e062c21f656" />
+
+### Answer the questios below
+
+1. Who would most likely be interested in exploiting a business?
+
+Cybercriminals
+
+2. Who would most likely be interested in exploiting a personal computer for fun?
+
+Thrill-Seekers
+
+3. Who would most likely be interested in exploiting a website to deliver a message?
+
+Hacktivists
 
 
