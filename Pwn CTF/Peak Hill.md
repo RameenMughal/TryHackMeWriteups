@@ -26,6 +26,8 @@ Checking the contents of `.creds` by `more .creds` it is a binary file
 
 Downloading the `.creds` file into the local Linux machine to decode this file, `get .creds`
 
+Decoding this file by CyberChef by selecting 
+
 
 
 
