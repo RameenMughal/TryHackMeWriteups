@@ -26,7 +26,51 @@ Checking the contents of `.creds` by `more .creds` it is a binary file
 
 Downloading the `.creds` file into the local Linux machine to decode this file, `get .creds`
 
-Decoding this file by CyberChef by selecting 
+Decoding this file by CyberChef by selecting 'From Binary' we get words like ssh and pass
+
+<img width="765" height="413" alt="image" src="https://github.com/user-attachments/assets/3570407d-8584-4b3b-992d-9c3bdaba59b6" />
+
+This type of decoded content hints that the file is a Python pickle serialized object.
+
+Pickle is Python’s built-in way of converting Python objects (like strings, lists, or dictionaries) into a byte stream so they can be stored or transferred, and then reconstructed later. Pickle uses Python-specific opcodes like `N` for `None`, `q` for references, and S'...' for strings, which is why the decoded text shows patterns such as `ssh_pass15q` and `NULL` values. These are strong indicators that the file is a pickle object created using the text-based (protocol 0) serialization format.
+
+So using the `pickle` and `pickletool` library in Python to reverse the code and get the exact information
+
+```
+import pickle
+import pickletools
+
+with open(".creds", "rb") as f:
+    bits = f.read().strip()
+
+# Convert ASCII "0"/"1" to real bytes
+data_bytes = int(bits.decode(), 2).to_bytes(len(bits) // 8, byteorder="big")
+
+# (Optional) Disassemble safely first
+print("=== Pickle Disassembly ===")
+print(pickletools.dis(data_bytes))
+
+# Actually load the object
+creds = pickle.loads(data_bytes)
+print("\n=== Extracted Credentials ===")
+print(creds)
+```
+
+<img width="452" height="179" alt="image" src="https://github.com/user-attachments/assets/80d17930-bbd4-4628-9f90-9aaa0a934fa7" />
+
+It’s in an array format and each number represents a character,number or letter and when put together we get a username and password.
+
+Using this information to SSH login in the target machine.
+
+We see a `cmd_service.pyc` which is compiled Python file. We can also see by `nano` command that this file is not readable as it is compiled and contain language that only machine can understand. These type of files are often use to make execution faster so Python does not have to compile the original code file every time.
+
+We can use the `decompyle3` (A native Python cross-version decompiler and fragment decompiler).
+
+Copying the file `cmd_service.pyc` in local Linux machine. `scp gherkin@MACHINE_IP:/home/gherkin/cmd_service.pyc  ~/Downloads/cmd_service.pyc`
+
+De-compiling the `cmd_service.pyc` to get the original code. 
+
+
 
 
 
