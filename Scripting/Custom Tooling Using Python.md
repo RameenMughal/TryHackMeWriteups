@@ -73,3 +73,61 @@ Go
 3. Which scripting language is best suited for web-based exploits?
 
 Javascript
+
+## Developing a Brute-Forcing Tool
+
+Let’s explore how we can develop a brute-forcing tool to bypass authentication.
+
+Brute-force attacks involve trying multiple username-password combinations until the correct credentials are found. While these attacks are commonly mitigated by rate limiting and account lockout mechanisms, they still remain an easy-to-do job for hackers.
+
+### Essential Commands
+
+Before we start coding, let's go over some essential functions and techniques used in brute-forcing:
+- **Requests library**: A Python library that facilitates sending HTTP requests and receiving responses from web apps. It has built-in functions to send custom headers like user-agent, HTTP method, and more. 
+- **Handling responses**: Identifying successful logins based on HTTP status codes, redirects, or content patterns, which further helps to identify valid credentials.
+- **String library**: Built-in functions from the String module make it easy to generate letter sequences, perform text formatting and manipulation, and more.
+
+### Practical
+
+In order to understand the essence of custom tooling using Python, consider a web application hosted at `http://python.thm/labs/lab1`. Visit the application, and you will see the following login panel. 
+
+As a pentester, your task is to bypass the authentication mechanism and get access to the main dashboard. Suppose you discover that the username is `admin` and the password is a 4-digit numeric value from the system logs or the frontend. 
+
+One option is to manually try different combinations, but this is inefficient. A more viable approach is to use Python to automate the brute-force attack and try to attempt all possible 4-digit passwords.
+
+Now, we will write a simple Python script to automate brute-force attacks. This script will attempt different password combinations against the server and, based on the response, determine whether a combination is valid. In the AttackBox, create a new script called `bruteforce.py` with the following code:
+
+```
+import requests
+
+url = "http://python.thm/labs/lab1/index.php"
+
+username = "admin"
+
+# Generating 4-digit numeric passwords (0000-9999)
+password_list = [str(i).zfill(4) for i in range(10000)]
+
+def brute_force():
+    for password in password_list:
+        data = {"username": username, "password": password}
+        response = requests.post(url, data=data)
+        
+        if "Invalid" not in response.text:
+            print(f"[+] Found valid credentials: {username}:{password}")
+            break
+        else:
+            print(f"[-] Attempted: {password}")
+
+brute_force()
+```
+
+### Key Areas in the Code 
+
+- **Target URL**: The above code sends `POST` requests to `http://python.thm/labs/lab1/index.php`, simulating login attempts. The endpoint information is stored in the `url` variable.
+- **Generating password list**: It creates a list of 4-digit numeric passwords (0000-9999) using Python’s `zfill()` function. If you need to iterate over characters, you can use `string.ascii_uppercase` for A-Z and `string.ascii_lowercase` for a-z. This is carried out through the code `password_list = [str(i).zfill(4) for i in range(10000)]`.
+- **Brute-force function**: The brute_force function iterates through the password list, sending different username and password combinations to the server.
+- **Response handling**: If the response does not contain the word "Invalid", the script assumes the login is successful and prints the valid credentials.
+
+### Executing the Script
+
+Navigate to the terminal and execute the following command python3 bruteforce.py. Upon execution, the script will try all possible 4-digit numeric passwords. Once it finds the correct password, it will display the valid credentials.
