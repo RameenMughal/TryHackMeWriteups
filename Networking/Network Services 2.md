@@ -174,7 +174,9 @@ Logging to the machine by `ssh -i id_rsa cappucino@MACHINE_IP`
 
 <img width="340" height="290" alt="image" src="https://github.com/user-attachments/assets/f3d72385-7b13-47c2-8be8-6afd29c91cad" />
 
+### Exploiting NFS
 
+If you have a low privilege shell on any machine and you found that a machine has an NFS share you might be able to use that to escalate privileges, depending on how it is configured.
 
 
 
