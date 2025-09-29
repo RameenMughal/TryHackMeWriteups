@@ -178,6 +178,31 @@ Logging to the machine by `ssh -i id_rsa cappucino@MACHINE_IP`
 
 If you have a low privilege shell on any machine and you found that a machine has an NFS share you might be able to use that to escalate privileges, depending on how it is configured.
 
+**What is root_squash?**
+
+Remote users are assigned the user 'nfsnobody' with the least local privileges to enhance security. This practice ensures that even if a remote user connects as root, they cannot perform actions that could compromise the host system. Not what we want. However, if this is turned off, it can allow the creation of SUID bit files, allowing a remote user root access to the connected system.
+
+**SUID**
+
+Files with the SUID (Set User ID) bit set allow users to execute the file with the privileges of the file's owner. This means that if a file is owned by the super-user (root), any user running this file will execute it with root permissions.
+
+**Method**
+
+We're able to upload files to the NFS share, and control the permissions of these files. We can set the permissions of whatever we upload, in this case a bash shell executable. We can then log in through SSH, as we did in the previous task- and execute this executable to gain a root shell!
+
+**The Executable**
+
+Due to compatibility reasons,  we will obtain the bash executable directly from the target machine.
+With the key obtained in the previous task, we can use SCP with the command `scp -i key_name username@MACHINE_IP:/bin/bash ~/Downloads/bash` to download it onto our attacking machine.
+
+Another method to overcome compatibility issues is to obtain a standard Ubuntu Server 18.04 bash executable, the same as the server's- as we know from our nmap scan. You can download it [here](https://github.com/polo-sec/writing/blob/master/Security%20Challenge%20Walkthroughs/Networks%202/bash). If you want to download it via the command line, be careful not to download the github page instead of the raw script. You can use `wget https://github.com/polo-sec/writing/raw/master/Security%20Challenge%20Walkthroughs/Networks%202/bash`. 
+
+**Mapped Out Pathway:**
+
+If this is still hard to follow, here's a step by step of the actions we're taking, and how they all tie together to allow us to gain a root shell:
+
+NFS Access -> Gain Low Privilege Shell -> Upload Bash Executable to the NFS share -> Set SUID Permissions Through NFS Due To Misconfigured Root Squash -> Login through SSH -> Execute SUID Bit Bash Executable -> ROOT ACCESS
+
 
 
 
