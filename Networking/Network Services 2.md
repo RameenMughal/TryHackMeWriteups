@@ -203,6 +203,90 @@ If this is still hard to follow, here's a step by step of the actions we're taki
 
 NFS Access -> Gain Low Privilege Shell -> Upload Bash Executable to the NFS share -> Set SUID Permissions Through NFS Due To Misconfigured Root Squash -> Login through SSH -> Execute SUID Bit Bash Executable -> ROOT ACCESS
 
+## Understanding SMTP
+
+**What is SMTP?**
+
+SMTP stands for "Simple Mail Transfer Protocol". It is utilised to handle the sending of emails. In order to support email services, a protocol pair is required, comprising of SMTP and POP/IMAP. Together they allow the user to send outgoing mail and retrieve incoming mail, respectively.
+
+The SMTP server performs three basic functions:
+- It verifies who is sending emails through the SMTP server.
+- It sends the outgoing mail
+- If the outgoing mail can't be delivered it sends the message back to the sender
+
+Most people will have encountered SMTP when configuring a new email address on some third-party email clients, such as Thunderbird; as when you configure a new email client, you will need to configure the SMTP server configuration in order to send outgoing emails.
+
+A third-party email client is a program that helps you send and receive emails using your email account from a different company than your email provider. For example, if you have a Gmail account, you can use a third-party email client like Microsoft Outlook to check your emails instead of using the Gmail website. These clients often have extra features for organizing your emails and managing multiple accounts in one place.
+
+**POP and IMAP**
+
+POP (Post Office Protocol) and IMAP (Internet Message Access Protocol) are two protocols used for retrieving email from a mail server. POP downloads emails from the server to the user's device and typically removes them from the server, allowing offline access to messages. IMAP, on the other hand, keeps emails on the server, enabling users to access their messages from multiple devices while maintaining synchronization. 
+
+**How does SMTP work?**
+
+Email delivery functions much the same as the physical mail delivery system. The user will supply the email (a letter) and a service (the postal delivery service), and through a series of steps- will deliver it to the recipients inbox (postbox). 
+
+The role of the SMTP server in this service, is to act as the sorting office, the email (letter) is picked up and sent to this server, which then directs it to the recipient.
+
+We can map the journey of an email from your computer to the recipient’s like this:
+
+<img width="1042" height="519" alt="image" src="https://github.com/user-attachments/assets/4e9f117a-fafc-439b-a51b-a3c928294526" />
+
+1. The mail user agent, which is either your email client or an external program. connects to the SMTP server of your domain, e.g. smtp.google.com. This initiates the SMTP handshake. This connection works over the SMTP port- which is usually 25. Once these connections have been made and validated, the SMTP session starts.
+
+2. The process of sending mail can now begin. The client first submits the sender, and recipient's email address- the body of the email and any attachments, to the server.
+
+3. The SMTP server then checks whether the domain name of the recipient and the sender is the same.
+
+4. The SMTP server of the sender will make a connection to the recipient's SMTP server before relaying the email. If the recipient's server can't be accessed, or is not available- the Email gets put into an SMTP queue.
+
+5. Then, the recipient's SMTP server will verify the incoming email. It does this by checking if the domain and user name have been recognised. The server will then forward the email to the POP or IMAP server, as shown in the diagram above.
+
+6. The E-Mail will then show up in the recipient's inbox.
+
+If the domain name of the recipient and the sender is not the same, the SMTP server may still allow the email to be sent, but it will depend on the server's configuration and policies. The server will check for proper authentication and may require the sender to verify their identity.
+
+This is a very simplified version of the process, and there are a lot of sub-protocols, communications and details that haven't been included. 
+
+**What runs SMTP?**
+
+SMTP Server software is readily available on Windows server platforms, with many other variants of SMTP being available to run on Linux.
+
+### Answer the questions below
+
+1. What does SMTP stand for?
+
+Simple Mail Transfer Protocol
+
+2. What does SMTP handle the sending of? (answer in plural)
+
+Emails
+
+3. What is the first step in the SMTP process?
+
+SMTP Hnadshake
+
+4. What is the default SMTP port?
+
+25
+
+5. Where does the SMTP server send the email if the recipient's server is not available?
+
+SMTP Queue
+
+6. On what server does the Email ultimately end up on?
+
+POP/IMAP
+
+7. Can a Linux machine run an SMTP server? (Y/N)
+
+Y
+
+8. Can a Windows machine run an SMTP server? (Y/N)
+
+Y
+
+
 
 
 
