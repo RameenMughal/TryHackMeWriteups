@@ -184,7 +184,7 @@ When you attempt to make a connection, your computer first sends a special reque
 
 <img width="613" height="439" alt="image" src="https://github.com/user-attachments/assets/4c5e29a5-50e2-4069-872d-340c47029a8d" />
 
-**Hitsory**: To begin with there was no standardisation - different manufacturers followed their own methodologies, and consequently systems made by different manufacturers were completely incompatible when it came to networking. The TCP/IP model was introduced by the American DoD (Department of Defense) in 1982 to provide a standard. This sorted out the inconsistency problems. Later the OSI model was also introduced by the International Organisation for Standardisation (ISO); however, it's mainly used as a more comprehensive guide for learning, as the TCP/IP model is still the standard upon which modern networking is based.
+**History**: To begin with there was no standardisation - different manufacturers followed their own methodologies, and consequently systems made by different manufacturers were completely incompatible when it came to networking. The TCP/IP model was introduced by the American DoD (Department of Defense) in 1982 to provide a standard. This sorted out the inconsistency problems. Later the OSI model was also introduced by the International Organisation for Standardisation (ISO); however, it's mainly used as a more comprehensive guide for learning, as the TCP/IP model is still the standard upon which modern networking is based.
 
 ### Answer the questions below
 
