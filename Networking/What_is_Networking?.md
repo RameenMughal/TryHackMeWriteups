@@ -124,13 +124,24 @@ The time taken for ICMP packets travelling between devices is measured by ping. 
 
 Pings can be performed against devices on a network, such as your home network or resources like websites. 
 
-This tool can be easily used and comes installed on Operating Systems (OSs) such as Linux and Windows. The syntax to do a simple ping is ping IP address or website URL
+This tool can be easily used and comes installed on Operating Systems (OSs) such as Linux and Windows. The syntax to do a simple ping is `ping IP address or website URL`
 
+<img width="577" height="263" alt="image" src="https://github.com/user-attachments/assets/a9e6f0d4-39c4-46ce-bc32-77858117b77c" />
 
+Here we are pinging a device that has the private address of `192.168.1.254`. Ping informs us that we have sent six ICMP packets, all of which were received with an average time of 4.16 milliseconds.
 
+### Answer the questions below
 
+1. What protocol does ping use?
 
+ICMP
 
+2. What is the syntax to ping 10.10.10.10?
 
+`ping 10.10.10.10`
+
+3. What flag do you get when you ping 8.8.8.8?
+
+<img width="943" height="489" alt="image" src="https://github.com/user-attachments/assets/94902155-d977-4458-8ef6-7c0509063b39" />
 
 
