@@ -98,9 +98,112 @@ Star Topology
 
 <img width="457" height="399" alt="image" src="https://github.com/user-attachments/assets/f0e11036-3251-4fc4-bc11-5b71369c886d" />
 
+## A Primer on Subnetting
 
+Subnetting is the term given to splitting up a network into smaller, miniature networks within itself. 
 
+Take a business, for example; You will have different departments such as:
+- Accounting
+- Finance
+- Human Resources
 
+<img width="908" height="801" alt="image" src="https://github.com/user-attachments/assets/9de86b53-7c8a-4258-aece-f1da5e048b27" />
 
+Whilst you know where to send information in real life to the correct department, networks need to know as well. Network administrators use subnetting to categorise and assign specific parts of a network to reflect this.
 
+Subnetting is achieved by splitting up the number of hosts that can fit within the network, represented by a number called a subnet mask. Let's refer back to our diagram from the first room in this module:
 
+<img width="1140" height="488" alt="image" src="https://github.com/user-attachments/assets/eee90d0d-0efb-4789-8f04-c21b004438b6" />
+
+As we can recall, an IP address is made up of four sections called octets. The same goes for a subnet mask which is also represented as a number of four bytes (32 bits), ranging from 0 to 255 (0-255).
+
+Subnets use IP addresses in three different ways:
+1. Identify the network address
+2. Identify the host address
+3. Identify the default gateway
+
+<img width="913" height="311" alt="image" src="https://github.com/user-attachments/assets/f553e6dd-36f5-4ff9-b367-4f96115f660e" />
+
+### Answer the questions below
+
+1. What is the technical term for dividing a network up into smaller pieces?
+
+Subnetting
+
+2. How many bits are in a subnet mask?
+
+32
+
+3. What is the range of a section (octet) of a subnet mask?
+
+0-255
+
+4. What address is used to identify the start of a network?
+
+Network Address
+
+5. What address is used to identify devices within a network?
+
+Host Address
+
+6. What is the name used to identify the device responsible for sending data to another network?
+
+Default Gateway
+
+## ARP
+
+Devices can have two identifiers: A MAC address and an IP address, the Address Resolution Protocol or ARP for short, is the technology that is responsible for allowing devices to identify themselves on a network.
+
+Simply, ARP allows a device to associate its MAC address with an IP address on the network. Each device on a network will keep a log of the MAC addresses associated with other devices.
+
+When devices wish to communicate with another, they will send a broadcast to the entire network searching for the specific device. Devices can use ARP to find the MAC address (and therefore the physical identifier) of a device for communication.
+
+### How does ARP Work?
+
+Each device within a network has a ledger to store information on, which is called a cache. In the context of ARP, this cache stores the identifiers of other devices on the network.
+
+In order to map these two identifiers together (IP address and MAC address), ARP sends two types of messages:
+1. ARP Request
+2. ARP Reply
+
+When an ARP request is sent, a message is broadcasted on the network to other devices asking, "What is the mac address that owns this IP address?" When the other devices receive that message, they will only respond if they own that IP address and will send an ARP reply with its MAC address. The requesting device can now remember this mapping and store it in its ARP cache for future use.
+
+### Answer the questions below
+
+1. What does ARP stand for?
+
+Address Resolution Protocol
+
+2. What category of ARP Packet asks a device whether or not it has a specific IP address?
+
+Request
+
+3. What address is used as a physical identifier for a device on a network?
+
+MAC Address
+
+4. What address is used as a logical identifier for a device on a network?
+
+IP Address
+
+## DHCP
+
+IP addresses can be assigned either manually, by entering them physically into a device, or automatically and most commonly by using a DHCP (Dynamic Host Configuration Protocol) server. 
+
+When a device connects to a network, if it has not already been manually assigned an IP address, it sends out a request (DHCP Discover) to see if any DHCP servers are on the network. The DHCP server then replies back with an IP address the device could use (DHCP Offer). The device then sends a reply confirming it wants the offered IP Address (DHCP Request), and then lastly, the DHCP server sends a reply acknowledging this has been completed, and the device can start using the IP Address (DHCP ACK).
+
+<img width="636" height="870" alt="image" src="https://github.com/user-attachments/assets/7305a139-bdf9-41e7-b387-ad8227c4b8e5" />
+
+### Answer the questions below
+
+1. What type of DHCP packet is used by a device to retrieve an IP address?
+
+DHCP Discover
+
+2. What type of DHCP packet does a device send once it has been offered an IP address by the DHCP server?
+
+DHCP Request
+
+3. Finally, what is the last DHCP packet that is sent to a device from a DHCP server?
+
+DHCP ACK
