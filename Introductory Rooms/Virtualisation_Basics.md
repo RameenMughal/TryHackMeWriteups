@@ -29,3 +29,15 @@ This is virtualization:
 - The building manager = the hypervisor (the software that divides the building safely)
 
 Each virtual computer, known as a Virtual Machine (VM), acts as an independent system with its own operating system, apps, and settings, even though they all share the same physical hardware underneath.
+
+### Answer the questions below
+
+1. What does virtualization enable multiple applications to share?
+
+Physical Server
+
+2. What is the name of the software that manages the resources for each virtual machine?
+
+Hypervisor
+
+
