@@ -169,3 +169,13 @@ The companies and communities that develop these operating systems also have the
 3. Navigate to Alex's `home` directory and explore the Documents folder. What is the flag value contained in `note.txt`?
 
 <img width="979" height="331" alt="image" src="https://github.com/user-attachments/assets/1ebc4f22-5e15-4cb8-b3dd-5bd314a250bc" />
+
+## Conclusion
+
+### Key Terminology
+
+- **Operating system (OS)**: The core software that manages hardware, applications, and all system resources.
+- **Kernel space**: The OS’s highly privileged area with direct hardware access, and the home of the kernel, which directly manages hardware and system resources.
+- **User space**: The area where regular applications run with limited permissions for safety and system stability.
+- **Graphical user interface (GUI)**: The visual part of the OS, windows, icons, and menus, that lets you interact through clicking and tapping.
+- **Command-line interface (CLI)**: A text-based interface where you type commands to control the system with precision and speed.
