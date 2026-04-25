@@ -50,7 +50,7 @@ At a basic level, your operating system handles
 
 ### Getting Hands-on
 
-<img width="1132" height="883" alt="image" src="https://github.com/user-attachments/assets/80ec0119-cbfc-4566-b087-4575c898d701" />
+<img width="1919" height="882" alt="image" src="https://github.com/user-attachments/assets/4e6357d6-7a08-4cd6-921f-fd1e25218021" />
 
 
 ### Answer the questions below
@@ -72,3 +72,100 @@ User Management
 4. Check out the `Hardware` section of the System tab. How much memory is allocated to your machine?
 
 1.9 GiB
+
+## OS Interaction and Landscape
+
+### OS Interfaces
+
+Let's look at how we interact with the OS. Interaction with the OS can be divided into two main parts: the graphical user interface (GUI) and the command-line interface (CLI).
+
+#### Graphical User Interface
+
+The GUI is what you're most likely used to interacting with. It provides a graphical representation of all the information you want to access on your computer. Think of folder icons, windows for your applications, and menus for settings.
+
+#### Command-line Interface
+
+The CLI is where you enter specific text-based commands to retrieve or manipulate information. Instead of clicking on icons, you tell the computer exactly what you want using words and syntax that the system understands. This gives you far more precision, control, and speed, especially for advanced tasks, but it requires familiarity with the commands. 
+
+In the screenshot below, you can see that the GUI and CLI are both used to retrieve the same information. In this case, to display the contents of the ubuntu user's `home` directory. The GUI requires a few clicks for folder navigation, whereas the CLI requires a command to list the directory contents.
+
+<img width="1816" height="485" alt="image" src="https://github.com/user-attachments/assets/dfc33d5d-d0ac-4019-8102-1494e60e566d" />
+
+---
+
+### The Operating System Landscape
+
+<img width="1806" height="599" alt="image" src="https://github.com/user-attachments/assets/7b64665d-c40b-46ad-973c-76ac4bc2f1b1" />
+
+---
+
+### Real World Operating Systems
+
+To keep things organized, we’ll highlight the common versions or distributions you’ll see in each and follow the same categories as above: Desktop, Server, Mobile, Embedded, and Virtual/Cloud.
+
+#### Desktop
+
+- **Windows**: The most widely used operating system on personal computers
+  - Windows 10 (end-of-life), Windows 11
+- **macOS**: Apple's desktop OS, known for its polished GUI and integration with other Apple devices
+  - Sonoma (14), Sequoia (15), Tahoe (26)
+- **Linux**: Not a single OS but a family of open-source operating systems called distributions
+  - Ubuntu, Debian, Fedora
+
+#### Server
+
+- **Windows**: Used in large networks, data centers, and corporate environments
+  - Server 2016, 2019, 2022, 2025
+- **Linux**: The vast majority of web servers, trusted for its reliability and open-source nature
+  - Ubuntu Server, Debian, CentOS, Red Hat
+- **Unix**: Large enterprises, finance, telecom, government
+  - IBM AIX, Oracle Solaris
+
+#### Mobile
+
+- **Android**: The most widely used mobile OS, which runs on phones, tablets, and smart devices
+  - Android 14 - 16, Manufacturer versions
+- **iOS**: Apple's mobile OS running on iPhones, iPads, and other devices
+  - iOS 17, 18, 26
+
+#### Embedded and IoT Devices
+
+- **Embedded Linux**: Specialized OS built into devices with dedicated functions
+  - OpenWrt, Ubuntu Core, Yocto Project
+- **Real-Time OS**: Designed for apps where tasks need guaranteed response times (aircraft controls)
+  - FreeRTOS, VxWorks, QNX
+
+#### Virtual and Cloud
+
+- **Cloud/VM**: Massive data centers that host websites, apps, and streaming services
+  - Ubuntu LTS, Amazon Linux, Rocky Linux
+- **Container-optimized**: Lightweight alternatives to VMs that package just the app and its dependencies
+  - Alpine Linux, Bottlerocket AWS, Flatcar Linux
+
+---
+
+### Why So Many Operating Systems?
+
+Different devices and environments require different capabilities from an OS. A laptop must be user-friendly and support multitasking. Servers require stability, security, and must be able to run continuously without interruption. Mobile devices need power efficiency and hardware integration to extend battery life. Embedded systems use lightweight operating systems designed for a specialized purpose.
+
+The companies and communities that develop these operating systems also have their own goals. Some focus on ease of use, performance, security, openness, or customization. Because each environment values different capabilities, no single OS is the perfect fit for every situation. Instead, an ecosystem of operating systems has evolved.
+
+---
+
+### Answer the questions below
+
+1. Open the `File Systems` tab in `System Monitor`. What `Type` is listed for the `/dev/root` device?
+
+`ext4`
+
+<img width="1645" height="269" alt="image" src="https://github.com/user-attachments/assets/83c6c8f4-8990-4efa-b2d3-28048a31d8f4" />
+
+2. After opening the `Home` directory on the Desktop, how many user directories exist?
+
+3
+
+<img width="756" height="219" alt="image" src="https://github.com/user-attachments/assets/58e9ae01-2652-442c-ac55-ef9d5c26efef" />
+
+3. Navigate to Alex's `home` directory and explore the Documents folder. What is the flag value contained in `note.txt`?
+
+<img width="979" height="331" alt="image" src="https://github.com/user-attachments/assets/1ebc4f22-5e15-4cb8-b3dd-5bd314a250bc" />
