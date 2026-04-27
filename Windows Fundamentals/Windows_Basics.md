@@ -242,23 +242,29 @@ Administrator
 
 <img width="736" height="282" alt="image" src="https://github.com/user-attachments/assets/484d6db8-5a66-4a6d-b933-1642e08b6d73" />
 
+4. After performing your custom scan, click `Virus:DOS/EICAR_Test_File` and select See details. What is the file name shown in the Affected items section?
 
+`tryhatmemaldoc.txt`
 
+<img width="1388" height="826" alt="image" src="https://github.com/user-attachments/assets/b4ad83af-8c72-47b6-acf4-abbc4aff9cee" />
 
+## Conclusion
 
+### Key Terminology
 
-
-
-
-
-
-
-
-
-
-
-
-
+Let’s recap the core terminology and applications you’ve learned about in this room. These definitions will help solidify your understanding before moving on to further learning.
+- **Desktop**: The main workspace where files, folders, and shortcuts live
+- **Taskbar**: A control strip that provides access to applications, tools, settings, and notifications
+- **Start Menu**: The primary way to access applications, settings, and power options, signified by the Windows logo
+- **Search**: A quick access method of locating applications, settings, and files by entering search terms
+- **File Explorer**: The built-in Windows tool to browse, manage, and organize files and folders
+- **Windows Update**: A built-in update tool that helps keep your OS, native apps, and security features up to date
+- **Microsoft Store**: The native Windows application for installing trusted applications
+- **Windows Settings**: A centralized location for configuring system, device, personalization, and security settings
+- **Control Panel**: The legacy management interface that provides access to system configuration options
+- **Task Manager**: A Windows tool for monitoring what is happening on your system in real time
+- **Windows Security**: The central dashboard for managing Windows built-in security tools
+- **Windows Defender Firewall**: The firewall designed to help protect your system from unauthorized network traffic
 
 
 
