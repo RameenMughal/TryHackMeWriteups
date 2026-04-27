@@ -118,6 +118,141 @@ TryHatMe
 
 <img width="1000" height="700" alt="image" src="https://github.com/user-attachments/assets/fd16b089-a1fe-4188-a8bd-fd6205dcd8c7" />
 
+## Configuring and Securing Windows
+
+Applications are the programs and tools you use to perform tasks on your computer, from browsing the web and editing photos to managing settings on your PC. We already discussed a few of the built-in applications Windows provides, but knowing how to install, update, and remove applications is a core skill for everyday Windows use. These three processes enable you to make the necessary changes to your system, ensuring you have exactly what you need and that your system remains secure.
+
+### Updating Your Applications
+
+Keeping your operating system and applications up to date is an important part of maintaining a secure and stable system. Updates will often include security patches, performance updates, and bug fixes.
+
+#### Windows Updates
+
+Windows includes a built-in update tool called Windows Update, which keeps the OS and some native applications and security features up to date. Windows Update can be accessed through the Settings app and may install updates automatically, depending on your configuration.
+
+<img width="740" height="254" alt="image" src="https://github.com/user-attachments/assets/3327e327-7abb-40bf-93e3-e47a7ff7747b" />
+
+#### Updating Applications
+
+Application updates work differently depending on how the software is installed.
+- Built-in applications may update automatically in the background
+- Third-party applications often include their own update mechanisms
+- Some applications will prompt you to update upon launch
+- Some require you to check for updates or download a new installer manually
+
+---
+
+### Installing Applications
+
+Now that you've seen how updates work within the Windows OS and for applications, let's take a look at installing new ones.
+- **Microsoft Store**: Provides a curated and safe option for installing apps to Windows, although it is not available by default on Windows Server
+- **From the Internet**: In many environments, apps are installed by downloading an installer directly from a trusted vendor's website. They usually come in an `.exe` or `.msi` file and guide the user through the installation process
+
+<img width="879" height="283" alt="image" src="https://github.com/user-attachments/assets/04152dfa-0c0c-4156-aa21-631aeadef37d" />
+
+---
+
+### Uninstalling Applications
+
+In a Windows environment, there are multiple ways to uninstall programs.
+- Using the Microsoft Store for installed applications
+- Add or remove programs feature in system settings
+- Uninstall a program section of the Control Panel
+- Using an application's built-in uninstaller
+
+<img width="408" height="230" alt="image" src="https://github.com/user-attachments/assets/cbdde902-6bb0-49b0-bf07-9488a25a1e7e" />
+
+---
+
+### Diving Into Settings
+
+Now, we will take a closer look at the abundance of configurations available to us. There are two primary ways in which a Windows user can modify their environment. There are existing shortcuts for each of the tools below placed on your Desktop.
+- **Windows Settings**: A modern, centralized location for configuring system, device, personalization, and security settings in Windows
+- **Control Panel**: A legacy management interface that provides access to older system configuration tools still required for specific administrative tasks
+
+Windows Settings and the Control Panel enable you to view and modify how your Windows system operates. From these two applications, you can manage system preferences, including display and audio settings, user accounts, apps, network options, accessibility features, and security configurations.
+
+<img width="959" height="289" alt="image" src="https://github.com/user-attachments/assets/c4b3e616-82c9-4164-b2b0-4af7f27438db" />
+
+---
+
+### The Task Manager
+
+Task Manager is a built-in Windows tool that allows you to monitor what is happening on your system in real time. It allows you to view running applications and background processes, as well as check system performance, including CPU and memory usage. 
+
+Task Manager has five tabs to help you keep track of your system.
+- **Processes**: Currently running apps and background processes, and their resource usage
+- **Performance**: Graphs and statistics for system resources such as CPU, memory, and network
+- **Users**: Currently logged-in users and used resources 
+- **Details**: A more technical view of running processes, including process IDs (PIDs)
+- **Services**: Windows services and their current status (running or stopped)
+
+<img width="520" height="400" alt="image" src="https://github.com/user-attachments/assets/10d8fe13-c315-48ee-8188-a0f110e1fded" />
+
+---
+
+### Native Windows Security
+
+Windows offers built-in security tools designed to help protect your system from threats such as malware, insecure applications, and unauthorized network access. These are enabled by default and allow the monitoring and control of your system's security. 
+
+#### Windows Security
+
+The Windows Security application is your central dashboard for managing Windows' built-in protection measures. It is divided into four main sections, each focusing on a different area of system security.
+- **Virus & threat protection**: Helps detect and remove malicious software using real-time protection and customizable scans
+- **Firewall & network protection**: Controls incoming and outgoing network traffic to help prevent unauthorized access
+- **App & browser control**: Protects users from potentially unsafe apps, files, and websites
+- **Device security**: Provides hardware-based protections that help secure the system
+
+---
+
+### Windows Defender Firewall
+
+Windows Defender Firewall is a built-in firewall designed to help protect your computer from unauthorized network traffic. It monitors network connections and applies rules that determine whether the connections are allowed or denied. The firewall operates on different network profiles, allowing you to create custom rules or specify applications that are permitted.
+- **Domain**: Used when a system is connected to an organization’s domain network
+- **Private**: Intended for trusted networks, such as a home or lab environment 
+- **Public**: Used for untrusted networks, such as public Wi-Fi
+
+<img width="1048" height="424" alt="image" src="https://github.com/user-attachments/assets/5cecc218-5eb4-463d-a41c-39cf239b6b71" />
+
+
+Checking out the Advanced settings of Windows Defender Firewall, you can view
+- An overview of your firewall's inbound, outbound, and connection rules
+- A detailed view of each rule, including name, group, network profile, status, and action
+- Create new rules or filter your current view
+
+<img width="520" height="185" alt="image" src="https://github.com/user-attachments/assets/14590098-361e-48f5-9f84-645c97a948b4" />
+
+---
+
+### Answer the questions below
+
+1. Use the `TryHatMeWelcome` installer located within the `TryHatMe Onboarding` folder. What is the flag value you receive after installing and running the application?
+
+<img width="1603" height="889" alt="image" src="https://github.com/user-attachments/assets/c5a26e1d-d2bd-48be-a4ad-e88ff09615b7" />
+
+2. Investigate the Time & Language section of the Windows Settings app. Which country or region is your computer currently set to?
+
+United States
+
+<img width="1268" height="824" alt="image" src="https://github.com/user-attachments/assets/71dbc5f8-ac26-43c8-9740-a02ea8003dda" />
+
+3. Open the Task Manager on your workstation's Desktop and navigate to the Users tab. Which account is currently logged in?
+
+Administrator
+
+<img width="736" height="282" alt="image" src="https://github.com/user-attachments/assets/484d6db8-5a66-4a6d-b933-1642e08b6d73" />
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
