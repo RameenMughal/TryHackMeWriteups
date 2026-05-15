@@ -85,3 +85,106 @@ Green
 
 212 216 223
 
+## Numbers: From Decimal to Hexadecimal
+
+In the previous task, we saw that we can use a set of bits to fine-tune the steps. For instance, 1 bit can represent 2 states, while 8 bits can represent 256 states. In this task, we will learn a bit more about the math behind it.
+
+### Binary Numbers
+
+The binary system is limited to two digits, 0 and 1, and that everything is a power of 2. Let’s consider a couple of examples.
+
+The binary number `1001` can be expressed as follows: 1001 = 1 × 23 + 0 × 22 + 0 × 21 + 1 × 20 = 1 × 8 + 0 × 4 + 0 × 2 + 1 × 1 = 8 + 0 + 0 + 1 = 9. We just demonstrated how to write 9 in binary.
+
+Following the same approach, it won’t be challenging to convert the binary numbers `0000`, `0001`, `0010`, `0011` to the decimal system. Let’s go through these four conversions.
+
+`0000` = 0 × 23 + 0 × 22 + 0 × 21 + 0 × 20 = 0 × 8 + 0 × 4 + 0 × 2 + 0 × 1 = 0
+
+`0001` = 0 × 23 + 0 × 22 + 0 × 21 + 1 × 20 = 0 × 8 + 0 × 4 + 0 × 2 + 1 × 1 = 1
+
+`0010` = 0 × 23 + 0 × 22 + 1 × 21 + 0 × 20 = 0 × 8 + 0 × 4 + 1 × 2 + 0 × 1 = 2
+
+`0011` = 0 × 23 + 0 × 22 + 1 × 21 + 1 × 20 = 0 × 8 + 0 × 4 + 1 × 2 + 1 × 1 = 3
+
+The rightmost digit is multiplied by 2^0 in the case of the binary (base-2) system and multiplied by 10^0 in the case of the decimal (base-10) system. Then, the next digit is multiplied by 2^1 in the base-2 system and by 10^1 in the base-10 system. And so forth till we reach the leftmost digit. 
+
+As an exercise, we will convert four more binary numbers, `1100`, `1101`, `1110`, and `1111`, to the decimal system.
+
+`1100` = 1 × 23 + 1 × 22 + 0 × 21 + 0 × 20 = 1 × 8 + 1 × 4 + 0 × 2 + 0 × 1 = 8 + 4 + 0 + 0 = 12
+
+`1101` = 1 × 23 + 1 × 22 + 0 × 21 + 1 × 20 = 1 × 8 + 1 × 4 + 0 × 2 + 1 × 1 = 8 + 4 + 0 + 1 = 13
+
+`1110` = 1 × 23 + 1 × 22 + 1 × 21 + 0 × 20 = 1 × 8 + 1 × 4 + 1 × 2 + 0 × 1 = 8 + 4 + 2 + 0 = 14
+
+`1111` = 1 × 23 + 1 × 22 + 1 × 21 + 1 × 20 = 1 × 8 + 1 × 4 + 1 × 2 + 1 × 1 = 8 + 4 + 2 + 1 = 15
+
+---
+
+### Hexadecimal Numbers
+
+In Task 2, we grouped every 4 bits into a single hexadecimal digit. As we’ve seen earlier, a hexadecimal digit ranges between `0` and `F`. A hexadecimal digit ranges between 0 and 15 in the decimal system. To replace 10, 11, 12, 13, 14, and 15 each with a single letter/digit, A, B, C, D, E, and F are chosen.
+
+| Decimal Number | Hexadecimal Digit | Binary Representation |
+|----------------|-------------------|----------------------|
+| 0  | 0 | 0000 |
+| 1  | 1 | 0001 |
+| 2  | 2 | 0010 |
+| 3  | 3 | 0011 |
+| 4  | 4 | 0100 |
+| 5  | 5 | 0101 |
+| 6  | 6 | 0110 |
+| 7  | 7 | 0111 |
+| 8  | 8 | 1000 |
+| 9  | 9 | 1001 |
+| 10 | A | 1010 |
+| 11 | B | 1011 |
+| 12 | C | 1100 |
+| 13 | D | 1101 |
+| 14 | E | 1110 |
+| 15 | F | 1111 |
+
+#### Converting From Hexadecimal to Decimal System
+
+If you are curious about converting a hexadecimal number to a decimal number, you would follow the same approach we used for binary conversion. Let’s say that we want to convert the hexadecimal number `9B DF` to decimal.
+
+`9BDF` = 9 × 163 + 11 × 162 + 13 × 161 + 15 × 160 = 9 × 4096 + 11 × 256 + 13 × 16 + 15 × 1 = 39,903
+
+---
+
+### Octal Numbers
+
+The octal system refers to base 8. In other words, it uses the digits between 0 and 7. While the hexadecimal system uses base 16 and groups 4 bits, the octal system uses base 8 and groups 3 bits. The table below shows how the octal digits relate to their binary counterparts.
+
+| Decimal Number | Octal Digit | Binary Representation |
+|----------------|-------------|----------------------|
+| 0 | 0 | 000 |
+| 1 | 1 | 001 |
+| 2 | 2 | 010 |
+| 3 | 3 | 011 |
+| 4 | 4 | 100 |
+| 5 | 5 | 101 |
+| 6 | 6 | 110 |
+| 7 | 7 | 111 |
+
+#### Converting From Octal to Decimal System
+
+Converting an octal number to its decimal equivalent follows the steps of the previous conversions. Consider the octal number `357`.
+
+`357` = 3 × 82 + 5 × 81 + 7 × 80 = 3 × 64 + 5 × 8 + 7 × 1 = 239
+
+---
+
+### Answer the questions below
+
+1. What is the hexadecimal `FF` in binary?
+
+`1111 1111`
+
+2. What is the hexadecimal `AB` in decimal?
+
+`171`
+
+3. Convert the hexadecimal `FF FF FF` to decimal. After you round up the decimal value to the nearest million, how many millions is that?
+
+17
+
+16,777,215 ≈ 17,000,000
