@@ -1,5 +1,9 @@
 # Search Skills
 
+Room: [Search Skills](https://tryhackme.com/room/searchskills)
+
+<img width="943" height="200" alt="image" src="https://github.com/user-attachments/assets/d72c655b-930a-4655-afe7-e957c8450d3d" />
+
 ## Evaluation of Search Results
 
 **DevSecOps**: Fosters the same culture and principles as Devops with the addition of security into the development process, ensuring security is integrated from an early stage.
