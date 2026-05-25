@@ -1,5 +1,9 @@
 # Networking Concepts
 
+Room: [Networking Concepts](https://tryhackme.com/room/networkingconcepts)
+
+<img width="947" height="193" alt="image" src="https://github.com/user-attachments/assets/dc8f29f2-fd58-4fdb-93eb-7d53f45f96b3" />
+
 ## OSI Model
 
 The OSI (Open Systems Interconnection) model is a conceptual model developed by the International Organization for Standardization (ISO) that describes how communications should occur in a computer network. 
