@@ -1,6 +1,8 @@
 # Cryptography Basics
 
-<img width="908" height="173" alt="image" src="https://github.com/user-attachments/assets/5c0e7b69-7529-442a-9b0d-48f7b25ebd81" />
+Room: [Cryptography Basics](https://tryhackme.com/room/cryptographybasics)
+
+<img width="935" height="198" alt="image" src="https://github.com/user-attachments/assets/62be8c27-16e1-47be-bf2a-dd9fe0422cee" />
 
 ## Introduction
 
