@@ -1,5 +1,9 @@
 # Metasploit: Introduction
 
+Room: [Metasploit: Introduction](https://tryhackme.com/room/metasploitintro)
+
+<img width="1873" height="386" alt="image" src="https://github.com/user-attachments/assets/2144cff7-b2a2-4c31-8e45-4d19d71a88d2" />
+
 ## Introduction to Metasploit
 
 Metasploit is the most widely used exploitation framework. Metasploit is a powerful tool that can support all phases of a penetration testing engagement, from information gathering to post-exploitation.
