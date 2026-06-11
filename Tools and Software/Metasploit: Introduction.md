@@ -27,8 +27,6 @@ We will cover `msfvenom` within this module, but `pattern_create` and `pattern_o
 
 While using the Metasploit Framework, you will primarily interact with the Metasploit console. You can launch it from the AttackBox terminal or your Machine using the `msfconsole` command. The console will be your main interface to interact with the different modules of the Metasploit Framework. 
 
-<img width="367" height="349" alt="image" src="https://github.com/user-attachments/assets/aea2b88c-1e51-4bc9-a34e-0047b6c0165a" />
-
 Modules are small components within the Metasploit framework that are built to perform a specific task, such as exploiting a vulnerability, scanning a target, or performing a brute-force attack.
 
 Before diving into modules, it would be helpful to clarify a few recurring concepts: vulnerability, exploit, and payload.
@@ -160,6 +158,24 @@ Singles
 4. Is "windows/x64/pingback_reverse_tcp" among singles or staged payload?
 
 Singles
+
+## Msfconsole
+
+The console will be your main interface to the Metasploit Framework. You can launch it using the `msfconsole` command on your AttackBox terminal or any system the Metasploit Framework is installed on.
+
+<img width="367" height="349" alt="image" src="https://github.com/user-attachments/assets/aea2b88c-1e51-4bc9-a34e-0047b6c0165a" />
+
+It will support most Linux commands, including `clear` (to clear the terminal screen), but will not allow you to use some features of a regular command line (e.g. does not support output redirection).
+
+The `help` command can be used on its own or for a specific command.
+
+You can use the `history` command to see commands you have typed earlier.
+
+Msfconsole is managed by context; this means that unless set as a global variable, all parameter settings will be lost if you change the module you have decided to use. 
+
+In the example below, we have used the `ms17_010_eternalblue` exploit, and we have set parameters such as `RHOSTS`. If we were to switch to another module (e.g. a port scanner), we would need to set the `RHOSTS` value again as all changes we have made remained in the context of the `ms17_010_eternalblue` exploit. 
+
+
 
 
 
