@@ -1,4 +1,4 @@
-<img width="320" height="148" alt="image" src="https://github.com/user-attachments/assets/0fc2436a-2f2d-4b81-b8da-4f67f664a8e7" /># Metasploit: Introduction
+# Metasploit: Introduction
 
 Room: [Metasploit: Introduction](https://tryhackme.com/room/metasploitintro)
 
