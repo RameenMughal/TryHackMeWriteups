@@ -141,6 +141,26 @@ Checking the options for Post module: `tree -L 1 /usr/share/metasploit-framework
 
 <img width="298" height="167" alt="image" src="https://github.com/user-attachments/assets/8df6c953-7453-47c7-a568-6d71015c064b" />
 
+---
+
+### Answer the questions below
+
+1. What is the name of the code taking advantage of a flaw on the target system?
+
+Exploit
+
+2. What is the name of the code that runs on the target system to achieve the attacker's goal?
+
+Payload
+
+3. What are self-contained payloads called?
+
+Singles
+
+4. Is "windows/x64/pingback_reverse_tcp" among singles or staged payload?
+
+Singles
+
 
 
 
