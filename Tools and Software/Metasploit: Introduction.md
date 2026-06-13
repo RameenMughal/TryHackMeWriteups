@@ -1,4 +1,4 @@
-<img width="854" height="309" alt="image" src="https://github.com/user-attachments/assets/00ff36c5-4698-409d-83ad-d0dbaa8eae0a" /># Metasploit: Introduction
+# Metasploit: Introduction
 
 Room: [Metasploit: Introduction](https://tryhackme.com/room/metasploitintro)
 
@@ -399,6 +399,26 @@ For example, if we wanted our search results to only include auxiliary modules, 
 Please remember that exploits take advantage of a vulnerability on the target system and may always show unexpected behavior. A low-ranking exploit may work perfectly, and an excellent ranked exploit may not, or worse, crash the target system.
 
 ---
+
+### Answer the questions below
+
+1. How would you search for a module related to Apache?
+
+`search apache`
+
+<img width="851" height="283" alt="image" src="https://github.com/user-attachments/assets/b622c722-b19c-4bec-aa8a-7b5dcb13c784" />
+
+2. Who provided the auxiliary/scanner/ssh/ssh_login module?
+
+todb
+
+Write `info auxiliary/scanner/ssh/ssh_login` to get information about this
+
+<img width="259" height="134" alt="image" src="https://github.com/user-attachments/assets/50f65a17-ca15-437a-bc02-754a863a887c" />
+
+
+
+
 
 
 
