@@ -181,6 +181,198 @@ Once you type the `use exploit/windows/smb/ms17_010_eternalblue` command, you wi
 
 The "EternalBlue" is an exploit allegedly developed by the U.S. National Security Agency (N.S.A.) for a vulnerability affecting the SMBv1 server on numerous Windows systems. The SMB (Server Message Block) is widely used in Windows networks for file sharing and even for sending files to printers. EternalBlue was leaked by the cybercriminal group "Shadow Brokers" in April 2017. In May 2017, this vulnerability was exploited worldwide in the WannaCry ransomware attack.
 
+<img width="396" height="41" alt="image" src="https://github.com/user-attachments/assets/d674aa41-610c-4189-b019-f20d90170e85" />
+
+The module to be used can also be selected with the `use` command followed by the number at the beginning of the search result line.
+
+<img width="851" height="254" alt="image" src="https://github.com/user-attachments/assets/eb7923a1-2b2e-4e93-b5a1-27c56ebbcab6" />
+
+<img width="593" height="74" alt="image" src="https://github.com/user-attachments/assets/dea01330-a781-41bc-b31f-6bcbeedc0281" />
+
+While the prompt has changed, you will notice we can still run the commands previously mentioned. This means we did not "enter" a folder as you would typically expect in an operating system command line.
+
+The prompt tells us we now have a context set in which we will work. You can see this by typing the show options command.
+
+```
+msf exploit(windows/smb/ms17_010_eternalblue) > show options
+
+Module options (exploit/windows/smb/ms17_010_eternalblue):
+
+   Name           Current Setting  Required  Description
+   ----           ---------------  --------  -----------
+   RHOSTS                          yes       The target host(s), see https://docs.metasploit.com/docs/using-metasploit/basics/using-metasploit.html
+   RPORT          445              yes       The target port (TCP)
+   SMBDomain                       no        (Optional) The Windows domain to use for authentication. Only affects Windows Server 2008 R2, Windows 7, Windows Embedded
+                                             Standard 7 target machines.
+   SMBPass                         no        (Optional) The password for the specified username
+   SMBUser                         no        (Optional) The username to authenticate as
+   VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target. Only affects Windows Server 2008 R2, Windows 7, Windows Embedded Stan
+                                             dard 7 target machines.
+   VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target. Only affects Windows Server 2008 R2, Windows 7, Windows Embedded Standard 7 tar
+                                             get machines.
+
+
+Payload options (windows/x64/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh, thread, process, none)
+   LHOST     192.168.50.128   yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic Target
+
+
+
+View the full module info with the info, or info -d command.
+
+msf exploit(windows/smb/ms17_010_eternalblue) > 
+```
+
+This will print options related to the exploit we have chosen earlier. The show options command will have different outputs depending on the context it is used in. The example above shows that this exploit will require we set variables like RHOSTS and RPORT. 
+
+On the other hand, a post-exploitation module may only need us to set a SESSION ID. A session is an existing connection to the target system that the post-exploitation module will use.
+
+The `show` command can be used in any context followed by a module type (auxiliary, payload, exploit, etc.) to list available modules. The example below lists payloads that can be used with the ms17-010 Eternalblue exploit.
+
+<img width="845" height="305" alt="image" src="https://github.com/user-attachments/assets/e0ded24b-6a84-4147-ab09-5a4aeea53fb4" />
+
+You can leave the context using the `back` command.
+
+<img width="281" height="38" alt="image" src="https://github.com/user-attachments/assets/f4dc093c-4951-4ad3-93bc-576d1bbc3a26" />
+
+Further information on any module can be obtained by typing the `info` command within its context.
+
+```
+msf exploit(windows/smb/ms17_010_eternalblue) > info
+
+       Name: MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption
+     Module: exploit/windows/smb/ms17_010_eternalblue
+   Platform: Windows
+       Arch: x64
+ Privileged: Yes
+    License: Metasploit Framework License (BSD)
+       Rank: Average
+  Disclosed: 2017-03-14
+
+Provided by:
+  Equation Group
+  Shadow Brokers
+  sleepya
+  Sean Dillon <sean.dillon@risksense.com>
+  Dylan Davis <dylan.davis@risksense.com>
+  thelightcosine
+  wvu <wvu@metasploit.com>
+  agalway-r7
+  cdelafuente-r7
+  cdelafuente-r7
+  agalway-r7
+
+Module side effects:
+ unknown-side-effects
+
+Module stability:
+ unknown-stability
+
+Module reliability:
+ unknown-reliability
+
+Available targets:
+      Id  Name
+      --  ----
+  =>  0   Automatic Target
+      1   Windows 7
+      2   Windows Embedded Standard 7
+      3   Windows Server 2008 R2
+      4   Windows 8
+      5   Windows 8.1
+      6   Windows Server 2012
+      7   Windows 10 Pro
+      8   Windows 10 Enterprise Evaluation
+
+Check supported:
+  Yes
+
+Basic options:
+  Name           Current Setting  Required  Description
+  ----           ---------------  --------  -----------
+  RHOSTS                          yes       The target host(s), see https://docs.metasploit.com/docs/using-metasploit/basics/using-metasploit.html
+  RPORT          445              yes       The target port (TCP)
+  SMBDomain                       no        (Optional) The Windows domain to use for authentication. Only affects Windows Server 2008 R2, Windows 7, Windows Embedded S
+                                            tandard 7 target machines.
+  SMBPass                         no        (Optional) The password for the specified username
+  SMBUser                         no        (Optional) The username to authenticate as
+  VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target. Only affects Windows Server 2008 R2, Windows 7, Windows Embedded Stand
+                                            ard 7 target machines.
+  VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target. Only affects Windows Server 2008 R2, Windows 7, Windows Embedded Standard 7 targ
+                                            et machines.
+
+Payload information:
+  Space: 2000
+
+Description:
+  This module is a port of the Equation Group ETERNALBLUE exploit, part of
+  the FuzzBunch toolkit released by Shadow Brokers.
+
+  There is a buffer overflow memmove operation in Srv!SrvOs2FeaToNt. The size
+  is calculated in Srv!SrvOs2FeaListSizeToNt, with mathematical error where a
+  DWORD is subtracted into a WORD. The kernel pool is groomed so that overflow
+  is well laid-out to overwrite an SMBv1 buffer. Actual RIP hijack is later
+  completed in srvnet!SrvNetWskReceiveComplete.
+
+  This exploit, like the original may not trigger 100% of the time, and should be
+  run continuously until triggered. It seems like the pool will get hot streaks
+  and need a cool down period before the shells rain in again.
+
+  The module will attempt to use Anonymous login, by default, to authenticate to perform the
+  exploit. If the user supplies credentials in the SMBUser, SMBPass, and SMBDomain options it will use
+  those instead.
+
+  On some systems, this module may cause system instability and crashes, such as a BSOD or
+  a reboot. This may be more likely with some payloads.
+
+References:
+  https://docs.microsoft.com/en-us/security-updates/SecurityBulletins/2017/MS17-010
+  https://nvd.nist.gov/vuln/detail/CVE-2017-0143
+  https://nvd.nist.gov/vuln/detail/CVE-2017-0144
+  https://nvd.nist.gov/vuln/detail/CVE-2017-0145
+  https://nvd.nist.gov/vuln/detail/CVE-2017-0146
+  https://nvd.nist.gov/vuln/detail/CVE-2017-0147
+  https://nvd.nist.gov/vuln/detail/CVE-2017-0148
+  https://github.com/RiskSense-Ops/MS17-010
+  https://risksense.com/wp-content/uploads/2018/05/White-Paper_Eternal-Blue.pdf
+  https://www.exploit-db.com/exploits/42030
+  https://attack.mitre.org/techniques/T1059/
+  https://attack.mitre.org/techniques/T1068/
+  https://attack.mitre.org/techniques/T1210/
+
+Also known as:
+  ETERNALBLUE
+
+
+View the full module info with the info -d command.
+
+msf exploit(windows/smb/ms17_010_eternalblue) > 
+```
+
+Alternatively, you can use the info command followed by the module’s path from the msfconsole prompt (e.g. `info exploit/windows/smb/ms17_010_eternalblue`). 
+
+Info is not a help menu; it will display detailed information on the module such as its author, relevant sources, etc.
+
+---
+
+### Search
+
+
+
+
+
+
 
 
 
