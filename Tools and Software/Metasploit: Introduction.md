@@ -175,6 +175,8 @@ Msfconsole is managed by context; this means that unless set as a global variabl
 
 In the example below, we have used the `ms17_010_eternalblue` exploit, and we have set parameters such as `RHOSTS`. If we were to switch to another module (e.g. a port scanner), we would need to set the `RHOSTS` value again as all changes we have made remained in the context of the `ms17_010_eternalblue` exploit. 
 
+Let us look at the example below to have a better understanding of this feature. We will use the MS17-010 “Eternalblue” exploit for illustration purposes.
+
 
 
 
