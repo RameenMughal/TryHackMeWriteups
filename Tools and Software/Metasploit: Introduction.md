@@ -1,4 +1,4 @@
-# Metasploit: Introduction
+<img width="854" height="309" alt="image" src="https://github.com/user-attachments/assets/00ff36c5-4698-409d-83ad-d0dbaa8eae0a" /># Metasploit: Introduction
 
 Room: [Metasploit: Introduction](https://tryhackme.com/room/metasploitintro)
 
@@ -367,6 +367,41 @@ Info is not a help menu; it will display detailed information on the module such
 ---
 
 ### Search
+
+One of the most useful commands in msfconsole is `search`. This command will search the Metasploit Framework database for modules relevant to the given search parameter. You can conduct searches using CVE numbers, exploit names (eternalblue, heartbleed, etc.), or target system.
+
+<img width="854" height="309" alt="image" src="https://github.com/user-attachments/assets/fdddf842-ab37-4b95-ae4b-630d91b811cd" />
+
+The output of the `search` command provides an overview of each returned module. You may notice the “name” column already gives more information than just the module name. You can see the type of module (auxiliary, exploit, etc.) and the category of the module (scanner, admin, windows, Unix, etc.). 
+
+You can use any module returned in a search result with the command use followed by the number at the beginning of the result line. (e.g. `use 0` instead of `use auxiliary/admin/smb/ms17_010_command`)
+
+Another essential piece of information returned is in the “rank” column. Exploits are rated based on their reliability. The table below provides their respective descriptions.
+
+| Ranking | Easy Meaning |
+|----------|-------------|
+| **Excellent** | Very reliable. Almost never crashes the target and works consistently. |
+| **Great** | Very reliable and usually detects the correct target/version automatically. |
+| **Good** | Reliable for common versions of the software. |
+| **Normal** | Works, but you must know the exact version/configuration of the target. |
+| **Average** | Unreliable; may fail often or be difficult to use. |
+| **Low** | Rarely works (less than 50% success rate). |
+| **Manual** | Requires manual setup and may be unstable. |
+
+**Easy order to remember:** `Excellent > Great > Good > Normal > Average > Low > Manual`
+
+You can direct the search function using keywords such as `type` and `platform`.
+
+For example, if we wanted our search results to only include auxiliary modules, we could set the `type` to auxiliary. The screenshot below shows the output of the `search type:auxiliary telnet` command.
+
+<img width="857" height="307" alt="image" src="https://github.com/user-attachments/assets/9ffe46c0-3336-4aa3-b8c5-6f52bfed1c31" />
+
+Please remember that exploits take advantage of a vulnerability on the target system and may always show unexpected behavior. A low-ranking exploit may work perfectly, and an excellent ranked exploit may not, or worse, crash the target system.
+
+---
+
+
+
 
 
 
