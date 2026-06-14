@@ -514,6 +514,26 @@ The `sessions` command can be used from the msfconsole prompt or any context to 
 
 To interact with any session, you can use the `sessions -i` command followed by the desired session number.
 
+---
+
+### Answer the questions below
+
+1. How would you set the LPORT value to 6666?
+
+`set LPORT 6666`
+
+2. How would you set the global value for RHOSTS to 10.10.19.23 ?
+
+`setg RHOSTS 10.10.19.23`
+
+3. What command would you use to clear a set payload?
+
+`unset PAYLOAD`
+
+4. What command do you use to proceed with the exploitation phase?
+
+`exploit`
+
 
 
 
