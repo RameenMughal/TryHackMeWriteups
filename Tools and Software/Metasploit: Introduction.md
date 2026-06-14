@@ -418,6 +418,8 @@ Write `info auxiliary/scanner/ssh/ssh_login` to get information about this
 
 ## Working with Modules
 
+Start the Lab Machine and if using your Kali Linux Machine, connect to the TryHackMe server by `sudo openvpen <FILENAME>`
+
 Once you have entered the context of a module using the `use` command followed by the module name, as seen earlier, you will need to set parameters. The most common parameters you will use are listed below. 
 
 Remember, based on the module you use, additional or different parameters may need to be set. It is good practice to use the `show options` command to list the required parameters.
@@ -453,7 +455,11 @@ In this example, we will set the `RHOSTS` parameter to the IP address of our tar
 
 Write `set RHOSTS <TARGET_IP>`: 
 
-<img width="532" height="288" alt="image" src="https://github.com/user-attachments/assets/621a58c3-7d8c-4107-89bd-6e6c58ae17f6" />
+<img width="368" height="23" alt="image" src="https://github.com/user-attachments/assets/80e30357-fa01-450e-ba30-b5bd7f11307c" />
+
+Now setting the `LHOST`, write `set LHOST <YOUR_TUN0_IP>`
+
+You can check your TryHackMe IP by `ifconfig` and check `tun0` IP Address.
 
 Parameters you will often use are:
 - **RHOSTS**: “Remote host”, the IP address of the target system. A single IP address or a network range can be set. This will support the CIDR (Classless Inter-Domain Routing) notation (/24, /16, etc.) or a network range (10.10.10.x – 10.10.10.y). You can also use a file where targets are listed, one target per line using `file:/path/of/the/target_file.txt`, as you can see below.
@@ -482,6 +488,10 @@ The `exploit` command can be used without any parameters or using the `-z` param
 
 The exploit `-z` command will run the exploit and background the session as soon as it opens.
 
+I ran the `exploit` command as it automatically connects to the first session:
+
+<img width="857" height="353" alt="image" src="https://github.com/user-attachments/assets/9483b91e-16a2-4fc9-9b19-aec96d831727" />
+
 This will return you the context prompt from which you have run the exploit.
 
 Some modules support the `check` option. This will check if the target system is vulnerable without exploiting it.
@@ -492,13 +502,19 @@ Some modules support the `check` option. This will check if the target system is
 
 Once a vulnerability has been successfully exploited, a session will be created. This is the communication channel established between the target system and Metasploit.
 
-You can use the `background` command to background the session prompt and go back to the msfconsole prompt.
+<img width="538" height="74" alt="image" src="https://github.com/user-attachments/assets/20609847-8552-4d05-af99-1da11ad47c91" />
+
+If you used `exploit -z`, you can use the `background` command to background the session prompt and go back to the msfconsole prompt.
+
+Meaning you can select any session you want as they are running in the background.
 
 Alternatively, `CTRL+Z` can be used to background sessions.
 
 The `sessions` command can be used from the msfconsole prompt or any context to see the existing sessions.
 
 To interact with any session, you can use the `sessions -i` command followed by the desired session number.
+
+
 
 
 
