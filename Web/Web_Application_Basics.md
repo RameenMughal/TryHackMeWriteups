@@ -30,4 +30,20 @@ There are many other Infrastructure components underpinning Web Applications, su
 
 **WAF (Web Application Firewall)** is an optional component for web applications. It helps filter out dangerous requests away from the Web Server and provides an element of protection. 
 
+---
+
+### Answer the questions below
+
+1. Which component on a computer is responsible for hosting and delivering content for web applications?
+
+Web Server
+
+2. Which tool is used to access and interact with web applications?
+
+Web Browser
+
+3. Which component acts as a protective layer, filtering incoming traffic to block malicious attacks, and ensuring the security of the the web application?
+
+Web Application Firewall
+
 
