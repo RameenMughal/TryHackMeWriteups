@@ -74,6 +74,62 @@ Then write command: `exploit` to run the exploit:
 
 <img width="1104" height="499" alt="image" src="https://github.com/user-attachments/assets/ad9b3792-0d9b-49b1-a02a-cb29ee2e663c" />
 
+5. Confirm that the exploit has run correctly. You may have to press enter for the DOS shell to appear. Background this shell (CTRL + Z). If this failed, you may have to reboot the target VM. Try running it again before a reboot of the target.
+
+To background the shell do `Ctrl + Z`:
+
+<img width="274" height="40" alt="image" src="https://github.com/user-attachments/assets/5e87b5d7-239a-440c-9279-e4cc8e7713e7" />
+
+## Escalate
+
+### Answer the questions below
+
+1. If you haven't already, background the previously gained shell (CTRL + Z). Research online how to convert a shell to meterpreter shell in metasploit. What is the name of the post module we will use? (Exact path, similar to the exploit we previously selected)
+
+`post/multi/manage/shell_to_meterpreter`
+
+You can check here: [Upgrading Shells to Meterpreter](https://docs.metasploit.com/docs/pentesting/metasploit-guide-upgrading-shells-to-meterpreter.html)
+
+2. Select this (use MODULE_PATH). Show options, what option are we required to change?
+
+`SESSION`
+
+Write `use post/multi/manage/shell_to_meterpreter`:
+
+<img width="463" height="53" alt="image" src="https://github.com/user-attachments/assets/d8293628-0e16-4222-9db1-d2b1987dd93a" />
+
+Then: `show options`:
+
+<img width="645" height="158" alt="image" src="https://github.com/user-attachments/assets/00e49502-7698-4c9f-8081-46440d4546ff" />
+
+3. Set the required option, you may need to list all of the sessions to find your target here.
+
+Write `set SESSION 1` (There is only 1 session as I used `exploit` and it automatically uses the first session):
+
+<img width="306" height="36" alt="image" src="https://github.com/user-attachments/assets/a921f875-f257-4415-bebb-12ddbff9bd90" />
+
+4. Run! If this doesn't work, try completing the exploit from the previous task once more.
+
+Write command: `run` and then do `Ctrl + C` to check the sessions by: `sessions -l`
+
+<img width="1555" height="439" alt="image" src="https://github.com/user-attachments/assets/db8fcde3-eb7d-4de3-b693-b7ed84a59a0a" />
+
+7. Once the meterpreter shell conversion completes, select that session for use.
+
+Write: `sessions -i 2`
+
+<img width="316" height="50" alt="image" src="https://github.com/user-attachments/assets/1c628953-3eb2-4cf4-a50e-101f0d1c362a" />
+
+8. Verify that we have escalated to NT AUTHORITY\SYSTEM. Run getsystem to confirm this. Feel free to open a dos shell via the command 'shell' and run 'whoami'. This should return that we are indeed system. Background this shell afterwards and select our meterpreter session for usage again.
+
+
+
+
+
+
+
+
+
 
 
 
