@@ -32,6 +32,8 @@ Specifically for the EternalBlue room, you can check the smb vulnerability by: `
 
 <img width="521" height="275" alt="image" src="https://github.com/user-attachments/assets/d121ed40-a478-461c-963c-089af62635e6" />
 
+This vulnerability corresponds to [CVE-2017-0143](https://nvd.nist.gov/vuln/detail/cve-2017-0143), commonly known as EternalBlue, a critical flaw in the SMBv1 (Server Message Block version 1) protocol that allows remote attackers to execute arbitrary code on affected Windows systems without authentication.
+
 ## Gain Access
 
 ### Answer the questions below
