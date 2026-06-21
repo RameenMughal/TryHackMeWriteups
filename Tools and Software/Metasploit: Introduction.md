@@ -490,7 +490,7 @@ The exploit `-z` command will run the exploit and background the session as soon
 
 I ran the `exploit` command as it automatically connects to the first session:
 
-<img width="857" height="353" alt="image" src="https://github.com/user-attachments/assets/9483b91e-16a2-4fc9-9b19-aec96d831727" />
+<img width="1104" height="499" alt="image" src="https://github.com/user-attachments/assets/064bd665-ac8a-4152-89da-9e7032a1dd77" />
 
 This will return you the context prompt from which you have run the exploit.
 
