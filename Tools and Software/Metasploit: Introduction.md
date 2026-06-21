@@ -502,8 +502,6 @@ Some modules support the `check` option. This will check if the target system is
 
 Once a vulnerability has been successfully exploited, a session will be created. This is the communication channel established between the target system and Metasploit.
 
-<img width="538" height="74" alt="image" src="https://github.com/user-attachments/assets/20609847-8552-4d05-af99-1da11ad47c91" />
-
 If you used `exploit -z`, you can use the `background` command to background the session prompt and go back to the msfconsole prompt.
 
 Meaning you can select any session you want as they are running in the background.
