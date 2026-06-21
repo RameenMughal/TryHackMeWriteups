@@ -445,7 +445,7 @@ We will `use 0` to select the SMB Eternal Blue one:
 
 Now we will see options on what parameters we need to set: `show options`
 
-<img width="845" height="308" alt="image" src="https://github.com/user-attachments/assets/02e7c8b6-cb58-46b5-9d89-e0e0b30a28a3" />
+<img width="1300" height="529" alt="image" src="https://github.com/user-attachments/assets/7d3c83f6-f4cc-4b9e-9d32-9a078f5018b7" />
 
 As you can see in the screenshot above, some of these parameters require a value for the exploit to work. Some required parameter values will be pre-populated, make sure you check if these should remain the same for your target. 
 
