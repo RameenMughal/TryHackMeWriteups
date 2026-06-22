@@ -245,6 +245,130 @@ Although HTTP/2 and HTTP/3 offer better speed and security, many systems still u
 
 ---
 
+### Answer the questions below
+
+1. Which HTTP protocol version became widely adopted and remains the most commonly used version for web communication, known for introducing features like persistent connections and chunked transfer encoding?
+
+HTTP/1.1
+
+2. Which HTTP request method describes the communication options for the target resource, allowing clients to determine which HTTP methods are supported by the web server?
+
+OPTIONS
+
+3. In an HTTP request, which component specifies the specific resource or endpoint on the web server that the client is requesting, typically appearing after the domain name in the URL?
+
+URL Path
+
+## HTTP Request: Headers and Body
+
+### Request Headers
+
+Request Headers allow extra information to be conveyed to the web server about the request. Some common headers are as follows:
+
+<img width="898" height="406" alt="image" src="https://github.com/user-attachments/assets/bbab3101-180b-4870-948f-114ecd8e5595" />
+
+---
+
+### Request Body
+
+In HTTP requests such as POST and PUT, where data is sent to the web server as opposed to requested from the web server, the data is located inside the HTTP Request Body. The formatting of the data can take many forms, but some common ones are `URL Encoded`, `Form Data`, `JSON`, or `XML`.
+
+#### URL Encoded (application/x-www-form-urlencoded)
+
+A format where data is structured in pairs of key and value where (`key=value`). Multiple pairs are separated by an (`&`) symbol, such as `key1=value1&key2=value2`. Special characters are percent-encoded.
+
+Example:
+
+```
+POST /profile HTTP/1.1
+Host: tryhackme.com
+User-Agent: Mozilla/5.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 33
+
+name=Aleksandra&age=27&country=US
+```
+
+#### Form Data (multipart/form-data)
+
+Allows multiple data blocks to be sent where each block is separated by a boundary string. The boundary string is the defined header of the request itself. This type of formatting can be used to send binary data, such as when uploading files or images to a web server.
+
+Example:
+
+```
+POST /upload HTTP/1.1
+Host: tryhackme.com
+User-Agent: Mozilla/5.0
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="username"
+
+aleksandra
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="profile_pic"; filename="aleksandra.jpg"
+Content-Type: image/jpeg
+
+[Binary Data Here representing the image]
+----WebKitFormBoundary7MA4YWxkTrZu0gW--
+```
+
+#### JSON (application/json)
+
+In this format, the data can be sent using the JSON (JavaScript Object Notation) structure. Data is formatted in pairs of `name : value`. Multiple pairs are separated by commas, all contained within curly braces `{ }`.
+
+Example:
+
+```
+POST /api/user HTTP/1.1
+Host: tryhackme.com
+User-Agent: Mozilla/5.0
+Content-Type: application/json
+Content-Length: 62
+
+{
+    "name": "Aleksandra",
+    "age": 27,
+    "country": "US"
+}
+```
+
+#### XML (application/xml)
+
+In XML formatting, data is structured inside labels called tags, which have an opening and closing. These labels can be nested within each other. You can see in the example below the opening and closing of the tags to send details about a user called Aleksandra
+
+Example:
+
+```
+POST /api/user HTTP/1.1
+Host: tryhackme.com
+User-Agent: Mozilla/5.0
+Content-Type: application/xml
+Content-Length: 124
+
+<user>
+    <name>Aleksandra</name>
+    <age>27</age>
+    <country>US</country>
+</user>
+```
+
+---
+
+### Answer the questions below
+
+1. Which HTTP request header specifies the domain name of the web server to which the request is being sent?
+
+Host
+
+2. What is the default content type for form submissions in an HTTP request where the data is encoded as key=value pairs in a query string format?
+
+application/x-www-form-urlencoded
+
+3. Which part of an HTTP request contains additional information like host, user agent, and content type, guiding how the web server should process the request?
+
+Request Headers
+
 
 
 
