@@ -144,6 +144,67 @@ HTTP Response
 
 Empty Line
 
+## HTTP Request: Request Line and Methods
+
+An HTTP request is what a user sends to a web server to interact with a web application and make something happen. Since these requests are often the first point of contact between the user and the web server, knowing how they work is super important—especially if you’re into cyber security.
+
+<img width="1140" height="600" alt="image" src="https://github.com/user-attachments/assets/4029592b-b94f-4149-8c67-d6acd2658087" />
+
+These elements make up the basics of how a client (user) communicates with a server.
+
+---
+
+### Request Line
+
+The request line (or start line) is the first part of an HTTP request and tells the server what kind of request it’s dealing with. It has three main parts: the HTTP method, the URL path, and the HTTP version.
+
+Example: `METHOD /path HTTP/version`
+
+---
+
+### HTTP Methods
+
+The HTTP method tells the server what action the user wants to perform on the resource identified by the URL path. Here are some of the most common methods and their possible security issue:
+
+#### GET
+
+Used to fetch data from the server without making any changes. Reminder! Make sure you’re only exposing data the user is allowed to see. Avoid putting sensitive info like tokens or passwords in GET requests since they can show up as plaintext.
+
+#### POST
+
+Sends data to the server, usually to create or update something. Reminder! Always validate and clean the input to avoid attacks like SQL injection or XSS.
+
+#### PUT
+
+Replaces or updates something on the server. Reminder! Make sure the user is authorised to make changes before accepting the request.
+
+#### DELETE
+
+Removes something from the server. Reminder! Just like with PUT, make sure only authorised users can delete resources.
+
+#### PATCH
+
+Updates part of a resource. It’s useful for making small changes without replacing the whole thing, but always validate the data to avoid inconsistencies.
+
+#### HEAD
+Works like GET but only retrieves headers, not the full content. It’s handy for checking metadata without downloading the full response.
+
+#### OPTIONS
+
+Tells you what methods are available for a specific resource, helping clients understand what they can do with the server.
+
+#### TRACE
+
+Similar to OPTIONS, it shows which methods are allowed, often for debugging. Many servers disable it for security reasons.
+
+#### CONNECT
+
+Used to create a secure connection, like for HTTPS. It’s not as common but is critical for encrypted communication.
+
+Each of these methods has its own set of security rules. For example, PATCH requests should be validated to avoid inconsistencies, and OPTIONS and TRACE should be turned off if not needed to avoid possible security risks.
+
+---
+
 
 
 
