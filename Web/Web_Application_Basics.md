@@ -205,7 +205,7 @@ Each of these methods has its own set of security rules. For example, PATCH requ
 
 ---
 
-## URL Path
+### URL Path
 
 The URL path tells the server where to find the resource the user is asking for. For instance, in the URL `https://tryhackme.com/api/users/123`, the path `/api/users/123` identifies a specific user.
 
@@ -214,6 +214,34 @@ Attackers often try to manipulate the URL path to exploit vulnerabilities, so it
 Validate the URL path to prevent unauthorised access
 Sanitise the path to avoid injection attacks
 Protect sensitive data by conducting privacy and risk assessments
+
+---
+
+### HTTP Version
+
+The HTTP version shows the protocol version used to communicate between the client and server. Here’s a quick rundown of the most common ones:
+
+#### HTTP/0.9 (1991)
+
+The first version, only supported GET requests.
+
+#### HTTP/1.0 (1996)
+
+Added headers and better support for different types of content, improving caching.
+
+#### HTTP/1.1 (1997)
+
+Brought persistent connections, chunked transfer encoding, and better caching. It’s still widely used today.
+
+#### HTTP/2 (2015)
+
+Introduced features like multiplexing, header compression, and prioritisation for faster performance.
+
+#### HTTP/3 (2022)
+
+Built on HTTP/2, but uses a new protocol (QUIC) for quicker and more secure connections.
+
+Although HTTP/2 and HTTP/3 offer better speed and security, many systems still use HTTP/1.1 because it’s well-supported and works with most existing setups. However, upgrading to HTTP/2 or HTTP/3 can provide significant performance and security improvements as more systems adopt them.
 
 ---
 
