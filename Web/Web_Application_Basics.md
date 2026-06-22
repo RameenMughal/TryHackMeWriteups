@@ -88,6 +88,22 @@ The fragment starts with a hash symbol (#) and helps point to a specific section
 
 ---
 
+### Answer the questions below
+
+1. Which protocol provides encrypted communication to ensure secure data transmission between a web browser and a web server?
+
+HTTPS
+
+2. What term describes the practice of registering domain names that are misspelt variations of popular websites to exploit user errors and potentially engage in fraudulent activities?
+
+Typosquatting
+
+3. What part of a URL is used to pass additional information, such as search terms or form inputs, to the web server?
+
+Query String
+
+
+
 
 
 
