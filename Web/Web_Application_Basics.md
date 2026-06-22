@@ -205,6 +205,18 @@ Each of these methods has its own set of security rules. For example, PATCH requ
 
 ---
 
+## URL Path
+
+The URL path tells the server where to find the resource the user is asking for. For instance, in the URL `https://tryhackme.com/api/users/123`, the path `/api/users/123` identifies a specific user.
+
+Attackers often try to manipulate the URL path to exploit vulnerabilities, so it’s crucial to:
+
+Validate the URL path to prevent unauthorised access
+Sanitise the path to avoid injection attacks
+Protect sensitive data by conducting privacy and risk assessments
+
+---
+
 
 
 
