@@ -134,6 +134,16 @@ The body is where the actual data is stored. In a request, the body might includ
 
 ---
 
+### Answer the questions below
+
+1. Which HTTP message is returned by the web server after processing a client's request?
+
+HTTP Response
+
+2. What follows the headers in an HTTP message?
+
+Empty Line
+
 
 
 
