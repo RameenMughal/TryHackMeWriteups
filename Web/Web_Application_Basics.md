@@ -489,6 +489,103 @@ Secure
 
 HttpOnly
 
+## Security Headers
+
+HTTP Security Headers help improve the overall security of the web application by providing mitigations against attacks like Cross-Site Scripting (XSS), clickjacking, and others.
+
+You can use a site like https://securityheaders.io/(opens in new tab) to analyse the security headers of any website. 
+
+---
+
+### Content-Security-Policy (CSP)
+
+A CSP header is an additional security layer that can help mitigate against common attacks like Cross-Site Scripting (XSS). Malicious code could be hosted on a separate website or domain and injected into the vulnerable website. A CSP provides a way for administrators to say what domains or sources are considered safe and provides a layer of mitigation to such attacks.
+
+Cross-Site Scripting (XSS) is a web security vulnerability where an attacker injects malicious JavaScript code into a website, and that code runs in other users' browsers.
+
+A website can use a Content Security Policy (CSP) header to tell the browser what content is allowed to load.
+
+Inside this header, there are rules like:
+- `default-src` → defines the default places where content can be loaded from.
+- `script-src` → defines where JavaScript files are allowed to come from.
+- Other rules can control images, fonts, videos, stylesheets, etc.
+
+These rules let the website administrator decide which websites or domains are trusted for different types of content.
+
+The keyword 'self' is special. It means: "Only allow content from the same website/domain that the user is currently visiting."
+
+Looking at an example CSP header: `Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.tryhackme.com; style-src 'self'`
+
+We see the use of:
+- `default-src`: Which specifies the default policy of self, which means only the current website.
+- `script-src`: Which specifics the policy for where scripts can be loaded from, which is self along with scripts hosted on `https://cdn.tryhackme.com`
+- `style-src`: Which specifies the policy for where style CSS style sheets can be loaded from the current website (self)
+
+---
+
+### Strict-Transport-Security (HSTS)
+
+The HSTS header ensures that web browsers will always connect over HTTPS. 
+
+Let's look at an example of HSTS: `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`
+
+Here’s a breakdown of the example HSTS header by directive:
+- `max-age`: This is the expiry time in seconds for this setting
+- `includeSubDomains`: An optional setting that instructs the browser to also apply this setting to all subdomains.
+- `preload`: This optional setting allows the website to be included in preload lists. It tells browsers to always use HTTPS for a website, even before a user visits it for the first time.
+
+---
+
+### X-Content-Type-Options
+
+The X-Content-Type-Options header tells the browser not to guess what type of file a resource is. Instead, it should only use the Content-Type provided by the website.
+
+Here’s an example: `X-Content-Type-Options: nosniff`
+
+Here’s a breakdown of the X-Content-Type-Options header by directives:
+
+- `nosniff`: This directive tells the browser not to guess the file type and to trust only the Content-Type specified by the server. This helps prevent malicious files from being treated as a different type and executed.
+
+---
+
+### Referrer-Policy
+
+The Referrer-Policy header controls how much information about the previous webpage is shared when a user clicks a link and visits another website.
+
+This header allows website administrators to decide what information should be sent to the destination website.
+
+Here are some examples of Referrer-Policy:
+- `Referrer-Policy: no-referrer`
+- `Referrer-Policy: same-origin`
+- `Referrer-Policy: strict-origin`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+
+Here’s a breakdown of the Referrer-Policy header by directives:
+
+- `no-referrer`: This directive prevents the browser from sending any information about the page the user came from.
+- `same-origin`: This directive only sends referrer information when the user moves between pages on the same website. No referrer information is sent to external websites.
+- `strict-origin`: This directive sends only the website's origin (domain name) as the referrer, and only when moving between secure HTTPS websites.
+- `strict-origin-when-cross-origin`: This directive sends the full URL when navigating within the same website. When navigating to a different website, it only sends the origin (domain name), and only if the connection remains HTTPS.
+
+---
+
+### Answer the questions below
+
+1. In a Content Security Policy (CSP) configuration, which property can be set to define where scripts can be loaded from?
+
+`script-src`
+
+2. When configuring the Strict-Transport-Security (HSTS) header to ensure that all subdomains of a site also use HTTPS, which directive should be included to apply the security policy to both the main domain and its subdomains?
+
+`includeSubDomains`
+
+3. Which HTTP header directive is used to prevent browsers from interpreting files as a different MIME type than what is specified by the server, thereby mitigating content type sniffing attacks?
+
+`nosniff`
+
+
+ 
+
 
 
 
