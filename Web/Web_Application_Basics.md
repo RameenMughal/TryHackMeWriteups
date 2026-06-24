@@ -583,6 +583,30 @@ Here’s a breakdown of the Referrer-Policy header by directives:
 
 `nosniff`
 
+## Practical Task: Making HTTP Requests
+
+### Answer the questions below
+
+1. Make a `GET` request to `/api/users`. What is the flag?
+
+Select `GET` with URL `https://tryhackme.com/api/users`
+
+<img width="1048" height="361" alt="image" src="https://github.com/user-attachments/assets/8698f78a-9e34-41ab-8462-27d8e554aeb9" />
+
+2. Make a `POST` request to `/api/user/2` and update the country of Bob from UK to US. What is the flag?
+
+Select `POST` with URL `https://tryhackme.com/api/user/2` to with two parameters `country:US` and `name: Bob` as we want to change the country only of Bob
+
+<img width="1063" height="870" alt="image" src="https://github.com/user-attachments/assets/c62abea5-bbc0-42e8-9322-99051c5e8b89" />
+
+3. Make a `DELETE` request to `/api/user/1` to delete the user. What is the flag?
+
+Select `DELETE` With URL `https://tryhackme.com/api/user/1`
+
+<img width="1050" height="631" alt="image" src="https://github.com/user-attachments/assets/0a860661-3261-46c2-bcc7-5ca10f9eaa0f" />
+
+
+
 
  
 
