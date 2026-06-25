@@ -15,3 +15,5 @@ Hence here is a list of Other Introductory Rooms with links.
 5. [Learning Cybersecurity](https://tryhackme.com/room/beginnerpathintro)
 
 6. [Starting out in Cyber Sec](https://tryhackme.com/room/startingoutincybersec)
+
+7. [Defensive Security Intro](https://tryhackme.com/room/defensivesecurityintro)
