@@ -16,4 +16,9 @@ For more information about options and protocols used in Hydra: [Kali Hydra Tool
 
 This shows the importance of using a strong password; if your password is common, doesn’t contain special characters and is not above eight characters, it will be prone to be guessed. A one-hundred-million-password list contains common passwords, so when an out-of-the-box application uses an easy password to log in, change it from the default! CCTV cameras and web frameworks often use `admin:password` as the default login credentials, which is obviously not strong enough.
 
+## Using Hydra
+
+Start the Lab Machine and your AttackBox or your own Kali Linux Machine. I will use my Kali Linux Machine to attack the Lab Machine.
+
+If using your own Machine then connect to the TryHackMe server by `sudo openvpn <filename>`, You can refer to the OpenVPN room to know how to connect through OpenVPN.
 
