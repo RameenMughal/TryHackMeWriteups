@@ -36,13 +36,15 @@ These are the following areas:
 3. Input
 4. Output
 
+<img width="2984" height="1660" alt="image" src="https://github.com/user-attachments/assets/d3b83621-97a0-4dba-9646-b0eae08c5711" />
+
 ---
 
 ### The Operations Area
 
 A categorized collection of CyberChef operations, with a search feature for quickly finding and using specific functions.
 
-## Common CyberChef Operations
+#### Common CyberChef Operations
 
 | Operation | Description | Example |
 |-----------|-------------|---------|
@@ -64,14 +66,36 @@ Features include the following:
 - `Load recipe`: Allows the user to load previously saved recipes.
 - `Clear Recipe`: This feature will enable users to clear the chosen recipe during usage.
 
-These can be found in the highlighted icons below:
-
-<img width="890" height="1560" alt="image" src="https://github.com/user-attachments/assets/34a7636d-9707-470a-b507-7635966c3c71" />
-
 The bottom part of the image above is the `BAKE!` button. This processes the data with the given recipe.
 
 Additionally, you can tick the `Auto Bake` checkbox. This feature allows users to automatically cook using the selected recipe without manually clicking `BAKE!` every time.
 
+---
+
+### Input Area
+
+The input area provides a user-friendly space where you can easily input text or files by pasting, typing, or dragging them to perform operations.
+
+Additionally, it has the following features:
+1. `Add a new input tab`: This is where an additional tab is created for the user to use different values from the previous tab.
+2. `Open folder as input`: This feature allows users to upload a whole folder as input value.
+3. `Open file as input`: This feature allows the user to upload a file as its input value.
+4. `Clear input and output`: This feature allows the user to clear any input values inserted and the corresponding output value.
+5. `Reset pane layout`: This feature brings the tool's interface to its default window sizes.
+
+---
+
+### Output Area
+
+The output area is a visual space that showcases the data processing results. It neatly presents the outcomes of any manipulations or transformations you have applied to the input data, allowing for a clear and intuitive display of the processed information.
+
+Features include:
+1. `Save output to file`: This feature allows the users to save the result into a .dat file.
+2. `Copy raw output to the clipboard`: This feature allows users to copy raw output directly to their clipboard, allowing them to quickly copy the results for use in other applications or documents.
+3. `Replace input with output`: This feature allows users to quickly overwrite the input data based on the operations' results.
+4. `Maximise output pane`: This feature brings the tool's interface to its default window sizes.
+
+---
 
 
 
