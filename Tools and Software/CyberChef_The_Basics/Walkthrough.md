@@ -109,3 +109,22 @@ Recipe
 
 ## Before Anything Else
 
+Let's have a quick overview of the thought process when using CyberChef! This process consists of four different steps:
+
+<img width="1140" height="180" alt="image" src="https://github.com/user-attachments/assets/571a33cf-c9ff-409b-b959-a4c5363bdfe9" />
+
+Let's discuss each step further.
+1. Set an Objective – Define what you want to achieve (e.g., decode a suspicious string).
+2. Provide Input – Paste or upload the data into the input area.
+3. Choose Operations – Select the appropriate operations (e.g., ROT13, Base64, Base85) based on your analysis.
+4. Check the Output – Verify if the result meets your objective. If not, try different operations and repeat the process.
+
+---
+
+### Answer the questions below
+
+1. At which step would you determine, "What do I want to accomplish?
+
+1
+
+
