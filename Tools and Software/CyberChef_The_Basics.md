@@ -97,5 +97,14 @@ Features include:
 
 ---
 
+### Answer the questions below
+
+1. In which area can you find "From Base64"?
+
+Operations 
+
+2. Which area is considered the heart of the tool?
+
+Recipe
 
 
