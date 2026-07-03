@@ -2,7 +2,10 @@
 
 Room: [CyberChef: The Basics](https://tryhackme.com/room/cyberchefbasics)
 
-Room Prerequisite: [Cryptography Basics](https://tryhackme.com/room/cryptographybasics)
+Room Prerequisites: 
+1. [Cryptography Basics](https://tryhackme.com/room/cryptographybasics)
+2. [Networking Concepts](https://tryhackme.com/room/networkingconcepts)
+3. [Web Application Basics](https://tryhackme.com/room/webapplicationbasics)
 
 <img width="940" height="190" alt="image" src="https://github.com/user-attachments/assets/da970afd-e953-445d-8621-f36452df1780" />
 
@@ -128,3 +131,124 @@ Let's discuss each step further.
 1
 
 ## Practice, Practice, Practice
+
+We will explore some of this task's most commonly used operation categories. Recognizing which category to utilize can enhance your ability to use the tool more efficiently and effectively.
+
+### Extractors
+
+<img width="896" height="229" alt="image" src="https://github.com/user-attachments/assets/227c59ce-010d-444d-9f87-2701ade0a7a4" />
+
+The `Extract IP addresses` will extract any valid IPv4/6 address from any given input.
+
+The `Extract email addresses` extracts any strings and characters with this format, anything@domain[.]com. Examples of domains include hotmail.com, google.com, tryhackme.com, and yahoo.com
+
+---
+
+### Date and Time
+
+<img width="896" height="151" alt="image" src="https://github.com/user-attachments/assets/9a9c87d6-df44-45df-b407-12c5572607f1" />
+
+A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch). 
+
+To convert "Fri Sep 6 20:30:22 +04 2024" into a UNIX Timestamp, use the operations `To UNIX Timestamp`, where the result would be `1725654622`. If you wish to convert it back to a more readable format, you can use `From UNIX Timestamp`.
+
+---
+
+### Data Format
+
+| Operation | Description | Example |
+|-----------|-------------|---------|
+| **From Base64** | Decodes a Base64-encoded string back into its original readable text. | `V2VsY29tZSB0byB0cnloYWNrbWUh` → `Welcome to tryhackme!` |
+| **URL Decode** | Converts URL-encoded characters (percent-encoded values) back into their normal form. | `https%3A%2F%2Fgchq%2Egithub%2Eio%2FCyberChef%2F` → `https://gchq.github.io/CyberChef/` |
+| **From Base85** | Decodes text that has been encoded using Base85. It is similar to Base64 but stores data more efficiently as it can represent the same amount of binary data using few characters. | `BOu!rD]j7BEbo7` → `hello world` |
+| **From Base58** | Decodes Base58-encoded data. Base58 removes confusing characters like `0`, `O`, `I`, and `l` to make the text easier for humans to read. | `AXLU7qR` → `Thm58` |
+| **To Base62** | Encodes text using Base62, which uses letters and numbers to create shorter encoded strings. | `Thm62` → `6NiRkOY` |
+
+Operations such as `Base(64, 85, 58, 62)` are known as **base encodings**. Base encoding takes binary data (strings of 0s and 1s) and transforms it into a text-based representation using a specific set of ASCII (American Standard Code for Information Interchange) characters.
+
+If you want to view the complete ASCII Table, please refer to this page [ASCII Table](https://www.ascii-code.com/).
+
+---
+
+### Convert THM String to Base64 String
+
+Our example would be to encode the letters "THM". 
+
+#### Step 1: Convert To Binary and Merge(Manually)
+
+Based on our table from the ASCII Table, `T = 01010100`, `H=01001000`, `M = 01001101`. 
+
+Next, concatenate these binaries and make sure they have 24 characters. You should have `010101000100100001001101`
+
+#### Step 2: Divide and Convert to Decimal(Manually)
+
+Separate `010101000100100001001101` into 6 characters each. You should have `010101` `000100` `100001` `001101`. These are 6-bit characters; we should have four instances of this now. We need to convert each instance to Decimal. Let's convert, then!
+
+Result is `010101 = 21`, `000100 = 4`, `100001 = 33` and `001101 = 13`
+
+#### Step 3: Convert to Base64 (Manually)
+
+Now that we have the Numbers from the previous step, which are 21, 4, 33, and 13, let's look for the equivalent characters from our table below. This table represents a base64 index table.
+
+You can check Table from here: [The Base64 Alphabets](https://www.garykessler.net/library/base64.html)
+
+Result is `21 = V`, `4 = E`, `33 = h` and `13 = N`
+
+Combine these characters, and you should have the equivalent of "THM" in base64 format. The answer would be `VEhN`.
+
+---
+
+### URL Decode
+
+This works by converting the percent-encoded characters back to their raw values. 
+
+For a reference of these values, you can check the page [Percent Encoding](https://en.wikipedia.org/wiki/Percent-encoding). 
+
+Note that the default character set in HTML5 is UTF-8. Check the table below for a quick overview of what we can typically see in a URL.
+
+<img width="895" height="296" alt="image" src="https://github.com/user-attachments/assets/b1702f4b-85f5-4c0f-a2c3-ecd579061530" />
+
+---
+
+### Answer the questions below
+
+1. What is the hidden email address?
+
+`hidden@hotmail.com`
+
+<img width="959" height="345" alt="image" src="https://github.com/user-attachments/assets/82dee07c-7f54-49e8-9ac6-26832494a0bd" />
+
+2. What is the hidden IP address that ends in .232?
+
+`102.20.11.232`
+
+<img width="959" height="350" alt="image" src="https://github.com/user-attachments/assets/2ddb37d7-8e08-4412-9d2d-d07ed30d056a" />
+
+3. Which domain address starts with the letter "T"?
+
+`TryHackMe.com`, Use the `Extract Domains` Operation
+
+<img width="959" height="353" alt="image" src="https://github.com/user-attachments/assets/bbece33b-d1c1-46f0-863e-d1f258f86012" />
+
+4. What is the binary value of the decimal number 78?
+
+`01001110`, First use `From Decimal` to convert `78` to `N` and then use `To Binary` to convert `N` to its binary value
+
+<img width="772" height="347" alt="image" src="https://github.com/user-attachments/assets/3e7b9c47-5cc5-4125-a628-c141f2b5f543" />
+
+5. What is the URL encoded value of `https://tryhackme.com/r/careers`?
+
+`https%3A%2F%2Ftryhackme%2Ecom%2Fr%2Fcareers`
+
+<img width="959" height="350" alt="image" src="https://github.com/user-attachments/assets/483b4521-5458-4269-b068-d46a628fd1c4" />
+
+
+
+
+
+
+
+
+
+
+
