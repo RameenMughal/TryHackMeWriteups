@@ -242,6 +242,48 @@ Note that the default character set in HTML5 is UTF-8. Check the table below for
 
 <img width="959" height="350" alt="image" src="https://github.com/user-attachments/assets/483b4521-5458-4269-b068-d46a628fd1c4" />
 
+## Your First Official Cook
+
+### Answer the questions below
+
+1. Using the file you downloaded in Task 5, which IP starts and ends with "10"?
+
+`10.10.2.10`, Use the `Extract IP Addresses`
+
+<img width="958" height="353" alt="image" src="https://github.com/user-attachments/assets/857ac47a-cbe0-4f03-bc90-1ce686c318d8" />
+
+2. What is the base64 encoded value of the string "Nice Room!"?
+
+`TmljZSBSb29tIQ==`, Use the `To Base64`
+
+<img width="958" height="335" alt="image" src="https://github.com/user-attachments/assets/812bbd37-9dca-40a8-9a8e-3c069ec10d58" />
+
+3. What is the URL decoded value for `https%3A%2F%2Ftryhackme%2Ecom%2Fr%2Froom%2Fcyberchefbasics`?
+
+`https://tryhackme.com/r/room/cyberchefbasics`, use the `URL Decode`
+
+<img width="959" height="340" alt="image" src="https://github.com/user-attachments/assets/809c410e-38a1-468d-97e0-7fe226dea008" />
+
+4. What is the datetime string for the Unix timestamp `1725151258`?
+
+`Sun 1 September 2024 00:40:58 UTC`, Use `From Unix Timestamp`
+
+<img width="957" height="343" alt="image" src="https://github.com/user-attachments/assets/b83339e6-ac41-4633-b0a6-da539eaa3534" />
+
+5. What is the Base85 decoded string of the value `<+oue+DGm>Ap%u7`?
+
+`This is fun!`, use the `From Base85`
+
+<img width="959" height="347" alt="image" src="https://github.com/user-attachments/assets/f502b2fd-8274-4175-8318-b30bd3b6c75a" />
+
+
+
+
+
+
+
+
+
 
 
 
