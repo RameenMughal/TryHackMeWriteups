@@ -48,6 +48,31 @@ We have already covered four of the above six elements. Let's discuss the remain
 
 <img width="966" height="238" alt="image" src="https://github.com/user-attachments/assets/02c610a4-df8d-4fed-90f6-b5e49629ab6a" />
 
+## DAD
+
+The security of a system is attacked through one of several means. It can be via the disclosure of secret data, alteration of data, or destruction of data.
+- **Disclosure** is the opposite of confidentiality. In other words, disclosure of confidential data would be an attack on confidentiality.
+- **Alteration** is the opposite of Integrity. For example, the integrity of a cheque is indispensable.
+- **Destruction/Denial** is the opposite of Availability.
+
+The opposite of the CIA Triad would be the DAD Triad: Disclosure, Alteration, and Destruction.
+
+Protecting against disclosure, alteration, and destruction/denial is of utter significance. This protection is equivalent to working to maintain confidentiality, integrity and availability.
+
+Protecting confidentiality and integrity to an extreme can restrict availability, and increasing availability to an extreme can result in losing confidentiality and integrity. Good security principles implementation requires a balance between the three.
+
+---
+
+### Answer the questions below
+
+1. The attacker managed to gain access to customer records and dumped them online. What is this attack?
+
+Disclosure
+
+2. A group of attackers were able to locate both the main and the backup power supply systems and switch them off. As a result, the whole network was shut down. What is this attack?
+
+Destruction/Denial
+
 
 
 
