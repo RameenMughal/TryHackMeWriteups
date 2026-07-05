@@ -135,4 +135,27 @@ Defence-in-Depth refers to creating a security system of multiple levels; hence 
 
 Consider the following analogy: you have a locked drawer where you keep your important documents and pricey stuff. The drawer is locked; however, do you want this drawer lock to be the only thing standing between a thief and your expensive items? If we think of multi-level security, we would prefer that the drawer be locked, the relevant room be locked, the main door of the apartment be locked, the building gate be locked, and you might even want to throw in a few security cameras along the way. Although these multiple levels of security cannot stop every thief, they would block most of them and slow down the others.
 
+## ISO/IEC 19249
+
+The International Organization for Standardization (ISO) and the International Electrotechnical Commission (IEC) have created the ISO/IEC 19249. In this task, we will brush briefly upon *ISO/IEC 19249:2017 Information technology - Security techniques - Catalogue of architectural and design principles for secure products, systems and applications*. The purpose is to have a better idea of what international organizations would teach regarding security principles.
+
+---
+
+### Architectural Principles:
+
+ISO/IEC 19249 lists five architectural principles:
+
+#### 1. Domain Separation
+
+Domain Separation means putting related things into separate groups (called domains) so they are isolated from each other.
+- Each group contains related programs, data, or resources.
+- Every group has its own security rules and permissions.
+- A group can only access what it is allowed to access.
+
+In an x86 processor:
+- Ring 0 → Used by the operating system (kernel). It has the highest privileges and can control everything.
+- Ring 3 → Used by normal applications (like Chrome or Word). It has limited privileges and cannot directly access important system resources.
+
+This separation helps keep the system secure. If a normal application is hacked, it cannot easily take full control of the operating system.
+
 
