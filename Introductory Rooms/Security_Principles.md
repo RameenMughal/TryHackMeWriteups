@@ -129,5 +129,10 @@ We covered only three security models. The reader can explore many additional se
 
 <img width="922" height="216" alt="image" src="https://github.com/user-attachments/assets/ba5a9400-4809-46d7-90fc-994dceb7538e" />
 
+## Defence-in-Depth
+
+Defence-in-Depth refers to creating a security system of multiple levels; hence it is also called Multi-Level Security.
+
+Consider the following analogy: you have a locked drawer where you keep your important documents and pricey stuff. The drawer is locked; however, do you want this drawer lock to be the only thing standing between a thief and your expensive items? If we think of multi-level security, we would prefer that the drawer be locked, the relevant room be locked, the main door of the apartment be locked, the building gate be locked, and you might even want to throw in a few security cameras along the way. Although these multiple levels of security cannot stop every thief, they would block most of them and slow down the others.
 
 
