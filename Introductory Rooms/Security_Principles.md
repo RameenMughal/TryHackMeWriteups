@@ -158,4 +158,54 @@ In an x86 processor:
 
 This separation helps keep the system secure. If a normal application is hacked, it cannot easily take full control of the operating system.
 
+#### 2. Layering
+
+Layering means dividing a system into different levels (layers), where each layer has a specific job.
+- Every layer performs its own task.
+- A layer only communicates with the layer directly above or below it.
+- Security rules can be added at each layer.
+- If one layer has a problem, the other layers still provide protection.
+- Layering relates to Defence in Depth.
+
+**Example 1: OSI Model**
+
+A computer network has 7 layers in the OSI model.
+- Each layer has a different responsibility (such as sending data or checking errors).
+- Each layer provides services to the layer above it.
+- Security can be applied at every layer, making the network safer and easier to test.
+
+**Example 2: Programming**
+
+When a programmer reads or writes a file:
+- They use simple functions like `read()` and `write()`.
+- The programming language handles the complex, low-level system calls in the background.
+- This makes programming easier and more secure.
+
+#### 3. Encapsulation
+
+Encapsulation means hiding the internal details of a system or object and only allowing access through safe and approved methods.
+- Users cannot directly change important data.
+- They must use specific functions (methods) provided by the system.
+- This helps prevent mistakes and keeps the data secure
+
+**Example 1: Clock Object**
+
+Suppose you have a clock object.
+- Bad: Letting the user directly change the seconds value (they could set it to 80, which is invalid).
+- Good: Providing an `increment()` method that safely increases the time by one second.
+
+This ensures the clock always shows a valid time.
+
+**Example 2: Database**
+
+Instead of letting an application directly access the database:
+- The application uses an API (Application Programming Interface).
+- The API checks requests and only allows valid operations.
+- This protects the database from incorrect or unauthorized changes.
+
+#### 4. Redundancy
+
+
+
+
 
