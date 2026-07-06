@@ -205,6 +205,15 @@ Instead of letting an application directly access the database:
 
 #### 4. Redundancy
 
+Redundancy means having a backup or extra copy of important components so the system keeps working even if one part fails.
+- If one part stops working, another backup part takes over.
+- This helps keep the system available and protects the data.
+
+**Example 1: Power Supply**
+
+A server has two power supplies.
+- If one power supply fails, the other one continues providing power.
+- The server keeps running without interruption.
 
 
 
