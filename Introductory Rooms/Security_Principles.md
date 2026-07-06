@@ -215,6 +215,17 @@ A server has two power supplies.
 - If one power supply fails, the other one continues providing power.
 - The server keeps running without interruption.
 
+**Example 2: RAID 5**
+
+A RAID 5 system uses three hard drives.
+- If one hard drive fails, the data can still be recovered from the other two drives.
+- If data on one drive is changed incorrectly, the system can detect it using parity, helping maintain data integrity.
+
+#### 5. Virtualization
+
+With the advent of cloud services, virtualization has become more common and popular. The concept of virtualization is sharing a single set of hardware among multiple operating systems. Virtualization provides sandboxing capabilities that improve security boundaries, secure detonation, and observance of malicious programs.
+
+---
 
 
 
