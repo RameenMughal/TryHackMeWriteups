@@ -272,3 +272,13 @@ There are three terms that we need to take note of to avoid any confusion.
 - **Vulnerability**: Vulnerable means susceptible to attack or damage. In information security, a vulnerability is a weakness.
 - **Threat**: A threat is a potential danger associated with this weakness or vulnerability.
 - **Risk**: The risk is concerned with the likelihood of a threat actor exploiting a vulnerability and the consequent impact on the business.
+
+## Conclusion
+
+Finally, the Shared Responsibility Model is worth mentioning, especially with the increased reliance on cloud services. Various aspects are required to ensure proper security. They include hardware, network infrastructure, operating systems, applications, etc. However, customers using cloud services have different access levels depending on the cloud services they use. For example, an Infrastructure as a Service (IaaS) user has complete control (and responsibility) over the operating system.
+
+On the other hand, a Software as a Service (SaaS) user has no direct access to the underlying operating system. Consequently, achieving security in a cloud environment necessitates both the cloud service provider and the user to do their parts. The Shared Responsibility Model is a cloud security framework to ensure that each party is aware of its responsibility.
+
+The Shared Responsibility Model means that both the cloud provider and the customer are responsible for security, but they are responsible for different things.
+- Cloud Provider → Protects the cloud infrastructure (hardware, networking, data centers).
+- Customer → Protects their own data, accounts, applications, and settings.
