@@ -253,4 +253,22 @@ ISO/IEC 19249 teaches five design principles:
 
 5
 
+## Zero Trust versus Trust but Verify
 
+Trust is a very complex topic; in reality, we cannot function without trust. If we think of trust on a business level, things only become more sophisticated; however, we need some guiding security principles. Two security principles that are of interest to us regarding trust:
+
+**Trust but Verify**: Even if you trust a user or system, always check and verify their actions. This is done using logs and security tools like intrusion detection and prevention systems.
+
+**Zero Trust**: Never trust by default. Every user and device must prove their identity before accessing resources, even if they are inside the organization.
+
+Microsegmentation means dividing a network into very small sections, even down to a single computer (host).
+- Each section is protected separately.
+- Devices must authenticate and get permission before communicating with another section.
+- This is a key part of the Zero Trust security model.
+
+## Threat versus Risk
+
+There are three terms that we need to take note of to avoid any confusion.
+- **Vulnerability**: Vulnerable means susceptible to attack or damage. In information security, a vulnerability is a weakness.
+- **Threat**: A threat is a potential danger associated with this weakness or vulnerability.
+- **Risk**: The risk is concerned with the likelihood of a threat actor exploiting a vulnerability and the consequent impact on the business.
