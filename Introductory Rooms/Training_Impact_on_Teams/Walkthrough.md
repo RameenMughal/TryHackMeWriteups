@@ -54,9 +54,7 @@ If an employee becomes 4% more productive, it's like the company gets 4% more va
 
 One employee's salary = $80,000
 
-$$
-4\% \times \$80{,}000 = \$3{,}200
-$$
+4% × $80,000 = $3,200
 
 So, each employee gives the company an extra $3,200 worth of productivity every year.
 
@@ -80,3 +78,59 @@ $$
 Total training cost = $5,000
 $$
 
+#### Step 3: Calculate ROI (Return on Investment)
+
+ROI tells us how much benefit we get compared to what we spent.
+
+The ROI formula is $ROI = \frac{\text{Gain}}{\text{Cost}} \times 100$.
+
+Substitute the values:
+
+$$
+ROI = \frac{32,000}{5,000} \times 100 = 6.4 \times 100 = 640\%
+$$
+
+
+ROI = 640%
+
+It means:
+- The company spent $5,000 on training.
+- Because of the training, the company gained $32,000 in extra productivity.
+- For every $1 spent on training, the company got $6.40 worth of benefit.
+
+---
+
+### Answer the questions below
+
+1. Consider the following scenario and answer the following questions.
+- Situation: A cyber security team has 20 employees
+- Cost: Each employee costs $50,000 annually
+- Assumption: Training increases productivity by 4%
+
+What would be the savings due to the increased productivity?
+
+$$
+Savings=Number of Employees×Productivity Increase×Annual Cost per Employee
+$$
+
+Substitute the values: 20 × 4% × $50,000
+
+First, calculate 4% of $50,000: 4% × $50,000 = $2,000
+
+Now multiply by 20 employees:
+
+$$
+20×$2,000=$40,000
+$$
+
+2. Assuming that training costs $500 per employee, what is the Return on Investment?
+
+We already calculated salary: $40,000
+
+Training Cost: 20 × $500 = $10,000
+
+```text
+ROI = ($40,000 / $10,000) × 100
+    = 4 × 100
+    = 400%
+```
