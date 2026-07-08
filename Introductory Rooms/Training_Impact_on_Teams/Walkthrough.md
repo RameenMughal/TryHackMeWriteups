@@ -55,7 +55,7 @@ If an employee becomes 4% more productive, it's like the company gets 4% more va
 One employee's salary = $80,000
 
 $$
-4\% \times \$80,000 = \$3,200
+4\% \times \$80{,}000 = \$3{,}200
 $$
 
 So, each employee gives the company an extra $3,200 worth of productivity every year.
