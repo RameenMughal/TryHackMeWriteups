@@ -30,3 +30,25 @@ The three categories of OWASP Top 10:2025 discussed in this room relates to fail
 What does IAAA stand for?
 
 Identity, Authentication, Authorisation, Accountability
+
+## A01: Broken Access Control
+
+Broken Access Control happens when the server doesn’t properly enforce who can access what on every request. A common occurence of this is IDOR (Insecure Direct Object Reference): if changing an ID (like `?id=7` → `?id=6`) lets you see or edit someone else’s data, access control is broken.
+
+In practice this shows up as horizontal privilege escalation (same role, other user’s stuff) or vertical privilege escalation (jumping to admin-only actions) because the application trusts the client too much.
+
+Room to learn more about this: [Broken Access Control](https://tryhackme.com/room/owaspbrokenaccesscontrol)
+
+---
+
+### Answer the questions below
+
+1. If you don't get access to more roles but can view the data of another users, what type of privilege escalation is this?
+
+Horizontal
+
+2. What is the note you found when viewing the user's account who had more than $ 1 million?
+
+<img width="1023" height="843" alt="image" src="https://github.com/user-attachments/assets/83164b17-0943-4a35-915f-eb2af4051953" />
+
+
