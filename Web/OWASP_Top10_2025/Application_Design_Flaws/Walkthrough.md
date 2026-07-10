@@ -199,6 +199,101 @@ As we know the secret key and algorithm, we can create a `decrypt.py` which decr
 
 <img width="895" height="82" alt="image" src="https://github.com/user-attachments/assets/b1acaeb0-9257-4040-bba1-0a3cec162684" />
 
+## AS06: Insecure Design
+
+### Insecure Design 
+
+**What It Is**
+
+Insecure design happens when flawed logic or architecture is built into a system from the start. These flaws stem from skipped threat modelling, no design requirements or reviews, or accidental errors.
+
+Moreover, with the introduction of AI assistants, AI systems exacerbate insecure design. Developers often assume that models are safe, correct, or predictable, or that the code they produce is flaw-free. When an AI system can generate queries, write code, or classify users without limits, the risk is built into the design, leading to poor architectural patterns.
+
+**Why It Matters**
+
+You can't patch an insecure design. It's built into the workflow, logic, and trust boundaries. Fixing it means rethinking how systems, and now AI, make decisions.
+
+**Common Insecure Designs In 2025**
+- Weak business logic controls, like recovery or approval flows
+- Flawed assumptions about user or model behaviour
+- AI components with unchecked authority or access
+- Missing guardrails for LLMs and automation agents
+- Test or debug bypasses left in production
+- No consistent abuse-case review or AI threat modelling
+
+Guardrails are rules, controls, or security measures that prevent a system from doing something unsafe or unauthorized.
+
+**Insecure Design In The AI Era**
+
+AI introduces new kinds of design failures. For example, prompt injection occurs when user input is blended with system prompts, allowing attackers to hijack the context or extract hidden data. Blind trust in model output creates fragile systems that act on AI decisions without validation or oversight, which is why human review remains necessary. When it comes to poisoned models, pulled from unverified sources or fine-tuned on unsafe data, they can embed hidden behaviours or backdoors that compromise the system from within.
+
+**How To Design Securely**
+
+- Treat every model as untrusted until proven otherwise.
+- Validate and filter all model inputs and outputs to ensure accuracy and integrity.
+- Separate system prompts from user content.
+- Keep sensitive data out of prompts unless absolutely needed and protect it with strict controls.
+- Require human review for high-risk AI actions.
+- Log model provenance, monitor behaviour, and apply differential privacy for sensitive data.
+- Include AI-specific threat modelling for prompt attacks, inference risks, agent misuse, and supply chain compromise throughout the design process.
+- Build threat modelling into every stage of development, not just at the start.
+- Define clear security requirements for each feature before implementation.
+- Apply the principle of least privilege across users, APIs, and services.
+- Ensure proper authentication, authorisation, and session management across the system.
+- Keep dependencies, third-party components, and supply chain sources verified and up to date.
+- Continuously monitor and test the system for logic flaws, abuse paths, and emergent risks as new features or AI components are added.
+
+--
+
+### Challenge
+
+Navigate to `MACHINE_IP:5005`. Have they assumed that only mobile devices can access it?
+
+---
+
+### Answer the questions below
+
+What's the flag?
+
+Navigating to the web page, we get SecureChat which has mobile app:
+
+<img width="832" height="331" alt="image" src="https://github.com/user-attachments/assets/44e74e47-ad38-42c1-8237-c008616014de" />
+
+Checking the source page, there is nothing new there and the download button is also just dead CSS.
+
+I also tried to curl acting to request data from Android but got the same web page:
+
+`curl -H "User-Agent: Android" http://MACHINE_IP:5005/` and `curl -A "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)" http://MACHINE_IP:5005/`
+
+So we can think as it assumes that users will only access it from mobile, there will be some pages pubicly available that we can see from our browser
+
+Trying `gobsuter` to find hidden directories or pages: 
+
+`gobuster dir -u http://10.49.155.85:5005 -w /usr/share/wordlists/dirb/common.txt`
+
+I only get `/console` but got Bad Request after accessing it.
+
+We can think again that there will be an `api` directory that manages users and their messages as the app is about messages.
+
+Trying another `gobuster` scan with api, so we get `users` directory: 
+
+`gobuster dir -u http://MACHINE_IP:5005/api -w /usr/share/wordlists/dirb/common.txt`
+
+<img width="452" height="206" alt="image" src="https://github.com/user-attachments/assets/0a7dc8d3-253d-40eb-8eba-6194ed1b5b8e" />
+
+Accessing the `/users` we get user's information in which `admin` is important:
+
+<img width="350" height="161" alt="image" src="https://github.com/user-attachments/assets/628ba683-cfe3-4483-9b2d-643182dbea18" />
+
+But still there is no flag, so as this is about messages so there will be an api named as `messages` so accessing the admin messages would be helpful.
+
+Tried accessing multiple like `/api/users/admin/messages`, `/api/users/messages` and `/api/messages`
+
+Then finally at `/api/messages/admin` we get the flag:
+
+<img width="664" height="267" alt="image" src="https://github.com/user-attachments/assets/272bbcd6-7759-44a4-9fdb-b82f718b2afa" />
+
+
 
 
 
