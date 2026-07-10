@@ -293,7 +293,11 @@ Then finally at `/api/messages/admin` we get the flag:
 
 <img width="664" height="267" alt="image" src="https://github.com/user-attachments/assets/272bbcd6-7759-44a4-9fdb-b82f718b2afa" />
 
+## Conclusion
 
+Security design failures across AS02 Security Misconfigurations, AS03 Software Supply Chain Failures, AS04 Cryptographic Failures, and AS06 Insecure Design all come from the same root cause: weak foundations. You cannot add security at the end and expect it to work. Strong systems start with clear security requirements, realistic threat assumptions, controlled configurations, vetted dependencies, and sound cryptographic choices.
+
+Treat defaults with suspicion, treat every dependency as a potential risk, and keep design simple enough to reason about. Get the design right early, and you avoid a long future of preventable incidents.
 
 
 
