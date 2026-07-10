@@ -122,3 +122,25 @@ Navigate to `MACHINE_IP:5003`. The code is outdated and imports an old `lib/vuln
 
 What's the flag?
 
+Looking at the code of `app.py` given to us, one thing immediately stands out:
+
+```
+if data == 'debug':
+    return jsonify(debug_info())
+```
+
+If you send "debug" as the input, the application calls `debug_info()` from the vulnerable library.
+
+A debug function is meant for developers, not for users. It often reveals sensitive information that attackers can use. So it is accessible to everyone which is a bad thing
+
+Using curl command: 
+
+```
+curl -X POST http://MACHINE_IP:5003/api/process \
+-H "Content-Type: application/json" \
+-d '{"data":"debug"}'
+```
+
+<img width="571" height="193" alt="image" src="https://github.com/user-attachments/assets/a81a5eb5-656e-43c8-a79b-b0ca9324c675" />
+
+
