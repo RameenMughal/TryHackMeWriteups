@@ -143,4 +143,22 @@ curl -X POST http://MACHINE_IP:5003/api/process \
 
 <img width="571" height="193" alt="image" src="https://github.com/user-attachments/assets/a81a5eb5-656e-43c8-a79b-b0ca9324c675" />
 
+## AS04: Cryptographic Failures
+
+### Cryptographic Failures
+
+**What It Is**
+
+Cryptographic failures happen when encryption is used incorrectly or not at all. This includes weak algorithms, hard-coded keys, poor key handling, or unencrypted sensitive data. These flaws let attackers access information that should be private.
+
+**Why It Matters**
+
+Web applications rely on cryptography everywhere: protecting network traffic, securing stored data, verifying identities, and safeguarding secrets. When these controls fail, sensitive data such as passwords, tokens, or personal information can be exposed, leading to account takeovers or full-scale breaches.
+
+Attackers can exploit these flaws through man-in-the-middle attacks, brute-force attacks on weak keys, or by simply discovering secrets that were never properly protected.
+
+
+
+
+
 
