@@ -157,6 +157,47 @@ Web applications rely on cryptography everywhere: protecting network traffic, se
 
 Attackers can exploit these flaws through man-in-the-middle attacks, brute-force attacks on weak keys, or by simply discovering secrets that were never properly protected.
 
+**Common Patterns**
+- Using deprecated or weak algorithms like MD5, SHA-1, or ECB mode
+- Hard-coded secrets in code or configuration
+- Poor key rotation or management practices
+- Lack of encryption for sensitive data at rest or in transit
+- Self-signed or invalid TLS certificates
+- Using AI/ML systems without proper secret handling for model parameters or sensitive inputs
+
+**How To Prevent It**
+- Use strong, modern algorithms such as AES-GCM, ChaCha20-Poly1305, or enforce TLS 1.3 with valid certificates
+- Use secure key management services like Azure Key Vault, AWS KMS, or HashiCorp Vault
+- Rotate secrets and keys regularly, following defined crypto periods
+- Document and enforce policies and standard operating procedures for key lifecycle management
+- Maintain a complete inventory of certificates, keys, and their owners
+- Ensure AI models and automation agents never expose unencrypted secrets or sensitive data
+
+---
+
+### Challenge
+
+Navigate to `MACHINE_IP:5004`. Can you find the key to decrypt the file?
+
+---
+
+### Answer the questions below
+
+What's the flag?
+
+Navigating to the page gives us Encrypted document where only administrator can access.
+
+<img width="837" height="215" alt="image" src="https://github.com/user-attachments/assets/dddd99a6-a730-416f-9c88-ae9ee0752eb8" />
+
+Checking the source page of this web page gives us `decrypt.js` which contains hardcoded secret key `my-secret-key-16` and algorithm ECB.
+
+The developer has hardcoded the encryption key in client-side JavaScript.
+
+Anyone can open `/static/js/decrypt.js` and see the key.
+
+As we know the secret key and algorithm, we can create a `decrypt.py` which decrypts the encrypted document:
+
+<img width="895" height="82" alt="image" src="https://github.com/user-attachments/assets/b1acaeb0-9257-4040-bba1-0a3cec162684" />
 
 
 
