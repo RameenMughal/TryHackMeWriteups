@@ -493,7 +493,7 @@ HttpOnly
 
 HTTP Security Headers help improve the overall security of the web application by providing mitigations against attacks like Cross-Site Scripting (XSS), clickjacking, and others.
 
-You can use a site like https://securityheaders.io/(opens in new tab) to analyse the security headers of any website. 
+You can use a site like [Security Headers](https://securityheaders.io/) to analyse the security headers of any website. 
 
 ---
 
