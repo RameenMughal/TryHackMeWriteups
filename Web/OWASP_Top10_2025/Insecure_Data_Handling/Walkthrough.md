@@ -139,7 +139,7 @@ Additionally, for applications, integrity and trust boundaries should also be wi
 
 ### Practical
 
-This practical will demonstrate a deserialization attack in Python. You can access this practical on `http://10.49.159.152:8002`.
+This practical will demonstrate a deserialization attack in Python. You can access this practical on `http://MACHINE_IP:8002`.
 
 Insecure deserialization happens when an application accepts serialized data from a user and rebuilds it into an object without checking it. An attacker can modify this data to execute malicious code or change the application's behavior.
 
