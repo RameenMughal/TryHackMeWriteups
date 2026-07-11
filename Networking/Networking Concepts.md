@@ -331,7 +331,7 @@ Note: You may have to press Enter after sending the information in case you donâ
 
 I checked more ports available with `nmap` scan and tried other ports also
 
-<img width="300" height="700" alt="image" src="https://github.com/user-attachments/assets/6c61e746-ea65-47bb-83d5-9795b20b1cd1" />
+<img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/6c61e746-ea65-47bb-83d5-9795b20b1cd1" />
 
 I tried, ftp, ssh and telnet 
 
