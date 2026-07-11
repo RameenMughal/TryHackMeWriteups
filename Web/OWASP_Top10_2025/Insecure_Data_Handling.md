@@ -11,6 +11,14 @@ This room will introduce you to 3 elements of the OWASP Top 10 list (2025). In t
 - A05: Injection
 - A08: Software or Data Integrity Failures
 
+---
 
+### Deploy Practical
+
+Start the Lab Machine and I am using my Kali Linux Machine as an Attack Box, so I will connect my machine to the TryHackMe Server by OpenVPN.
+
+You can check how to connect your machine by OpenVPN through this room: [OpenVPN](https://tryhackme.com/room/openvpn)
+
+Connecting by command: `sudo openvpn <filename>`
 
 
