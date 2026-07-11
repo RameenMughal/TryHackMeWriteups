@@ -123,6 +123,60 @@ Check the contents of `flag.txt`: `{{ self.__init__.__globals__.__builtins__.__i
 
 <img width="1660" height="649" alt="image" src="https://github.com/user-attachments/assets/fac72550-f2ff-4cb3-9664-ff945b416870" />
 
+## A08: Software or Data Integrity Failures
+
+**What Are Software or Data Integrity Failures?**
+
+Software or Data Integrity Failures occur when an application relies on code, updates, or data it assumes are safe, without verifying their authenticity, integrity, or origin. This includes trusting software updates without verification, loading scripts or configuration files from untrusted sources, failing to validate data that impacts application logic, or accepting data such as binaries, templates, or JSON files without confirming whether it has been altered.
+
+**How to Avoid Software & Data Integrity Failures**
+
+Preventing these failures begins with establishing trust boundaries. Applications should never assume that code, updates, or key pieces of data are legitimate and automatically trusted; their integrity must be verified. This involves using methods such as cryptographic checks (like checksums) for update packages and ensuring that only trusted sources can modify critical artefacts.
+
+Additionally, for applications, integrity and trust boundaries should also be within build processes such as CI/CD.
+
+---
+
+### Practical
+
+This practical will demonstrate a deserialization attack in Python. You can access this practical on `http://10.49.159.152:8002`.
+
+Insecure deserialization happens when an application accepts serialized data from a user and rebuilds it into an object without checking it. An attacker can modify this data to execute malicious code or change the application's behavior.
+
+Serialization is the process of converting an object into a format that can be stored or sent over a network. Deserialization is the reverse process.
+
+Python's `pickle` module is especially dangerous because it can execute code during deserialization.
+
+Follow the steps in the practical to generate and provide some malicious input to the web application.
+
+---
+
+### Recommended TryHackMe Content
+
+If you'd like to explore this type of attack in much further depth, we highly recommend the following TryHackMe content: [Insecure Deserialisation](https://tryhackme.com/room/insecuredeserialisation)
+
+---
+
+### Answer the questions below
+
+Use Python to pickle a malicious, serialised payload that reads the contents of flag.txt and submits it to the application.
+
+What are the contents of flag.txt?
+
+Navigating to the page gives us hint that we need to use python `pickle` library to create malicious pickle object that executes a command when the server deserializes it.
+
+At the bottom `Toggle Solution` you can see a small python script that we will use to create a pickle object.
+
+I created `exploit.py` by pasting the same code to this and ran it:
+
+<img width="431" height="27" alt="image" src="https://github.com/user-attachments/assets/52262cf2-9595-4984-9437-37a92db0b7f7" />
+
+And pasted the output in the form which gave us the flag:
+
+<img width="1645" height="574" alt="image" src="https://github.com/user-attachments/assets/93f5c4a3-ec57-4d7a-bdf0-b502ff5b9d8e" />
+
+
+
 
 
 
