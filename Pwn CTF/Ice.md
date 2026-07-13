@@ -48,5 +48,19 @@ DARK-PC, by command: `nmap -sC -sV -p- TARGET_IP`
 
 <img width="563" height="326" alt="image" src="https://github.com/user-attachments/assets/b896370b-5807-4bc3-b826-de101e29c172" />
 
+## Gain Access
+
+### Answer the questions below
+
+1. Now that we've identified some interesting services running on our lab machine, let's do a little bit of research into one of the weirder services identified: Icecast. Icecast, or well at least this version running on our target, is heavily flawed and has a high level vulnerability with a score of 7.5 (7.4 depending on where you view it). What is the Impact Score for this vulnerability? Use [CVE Details: CVE-2004-1561](https://www.cvedetails.com) for this question and the next.
+
+6.4
+
+<img width="781" height="97" alt="image" src="https://github.com/user-attachments/assets/18ce7b7b-42eb-4f9f-9c2a-cc42c7274ad6" />
+
+2. What is the CVE number for this vulnerability? This will be in the format: CVE-0000-0000
+
+CVE-2004-1561
+
 
 
