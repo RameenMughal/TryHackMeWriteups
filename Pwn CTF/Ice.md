@@ -50,6 +50,8 @@ DARK-PC, by command: `nmap -sC -sV -p- TARGET_IP`
 
 ## Gain Access
 
+You can refer to the [Icecast Exploit -Rapid7](https://www.rapid7.com/db/modules/exploit/windows/http/icecast_header/) to know about the vulnerability.
+
 ### Answer the questions below
 
 1. Now that we've identified some interesting services running on our lab machine, let's do a little bit of research into one of the weirder services identified: Icecast. Icecast, or well at least this version running on our target, is heavily flawed and has a high level vulnerability with a score of 7.5 (7.4 depending on where you view it). What is the Impact Score for this vulnerability? Use [CVE Details: CVE-2004-1561](https://www.cvedetails.com) for this question and the next.
