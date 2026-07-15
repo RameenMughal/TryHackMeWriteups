@@ -92,6 +92,47 @@ First set up your LHOSTS with your tun0 IP which you can also see by command: `i
 
 <img width="1423" height="279" alt="image" src="https://github.com/user-attachments/assets/0f997bba-8d5f-4910-9a35-b2d0edaddfb1" />
 
+Now do the command: `exploit`, you get one session:
+
+<img width="1078" height="136" alt="image" src="https://github.com/user-attachments/assets/b70768c3-e397-4ee2-bc6b-bd60a876dd1f" />
+
+## Escalate
+
+### Answer the questions below
+
+1. Woohoo! We've gained a foothold into our victim machine! What's the name of the shell we have now?
+
+Meterpreter
+
+2. What user was running that Icecast process?
+
+Dark, by command `getuid` where `Dark-PC` is the hostname and Dark is the user:
+
+<img width="158" height="38" alt="image" src="https://github.com/user-attachments/assets/88bbd4da-7604-4d00-999c-e19f9bf9fe08" />
+
+3. What build of Windows is the system?
+
+7601 by command `sysinfo` under the OS:
+
+<img width="317" height="108" alt="image" src="https://github.com/user-attachments/assets/d07fdd43-68d9-46d2-aeb1-5fa45bd597cf" />
+
+4. Now that we know some of the finer details of the system we are working with, let's start escalating our privileges. First, what is the architecture of the process we're running?
+
+x64 under the Architecture.
+
+5. Now that we know the architecture of the process, let's perform some further recon. While this doesn't work the best on x64 machines, let's now run the following command `run post/multi/recon/local_exploit_suggester`. *This can appear to hang as it tests exploits and might take several minutes to complete*
+
+<img width="850" height="315" alt="image" src="https://github.com/user-attachments/assets/adb267d7-8c04-4957-b2b9-739e72d13893" />
+
+6. Running the local exploit suggester will return quite a few results for potential escalation exploits. What is the full path (starting with exploit/) for the first returned exploit?
+
+`exploit/windows/local/bypassuac_eventvwr`
+
+<img width="845" height="215" alt="image" src="https://github.com/user-attachments/assets/ffedd5c2-cb2c-4ddd-8e64-8b5d4c30321b" />
+
+
+
+
 
 
 
