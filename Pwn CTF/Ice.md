@@ -274,48 +274,13 @@ I tried to connect to the Dark machine remotely but could not I dont know why.
 
 <img width="1699" height="408" alt="image" src="https://github.com/user-attachments/assets/dea7eb18-16a9-47e6-870e-d85bc7a6f556" />
 
+## Extra Credit
 
+Explore manual exploitation via exploit code found on exploit-db. 
 
+Exploit link: [Exploit Database](https://www.exploit-db.com/exploits/568)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+To learn more about alternative exploitation methods, check out the sequel to this room: [Blaster](https://tryhackme.com/room/blaster)
 
 
 
