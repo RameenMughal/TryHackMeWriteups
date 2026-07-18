@@ -176,6 +176,124 @@ SeTakeOwnershipPrivilege
 
 <img width="176" height="330" alt="image" src="https://github.com/user-attachments/assets/549069c8-4820-461a-9906-18962e30ad8f" />
 
+## Looting 
+
+### Answer the questions below
+
+1. Prior to further action, we need to move to a process that actually has the permissions that we need to interact with the lsass service, the service responsible for authentication within Windows. First, let's list the processes using the command `ps`. Note, we can see processes being run by NT AUTHORITY\SYSTEM as we have escalated permissions (even though our process doesn't).
+
+<img width="671" height="326" alt="image" src="https://github.com/user-attachments/assets/9b541ca9-fa63-4c59-8908-946197ebc179" />
+
+2. In order to interact with lsass we need to be 'living in' a process that is the same architecture as the lsass service (x64 in the case of this machine) and a process that has the same permissions as lsass. The printer spool service happens to meet our needs perfectly for this and it'll restart if we crash it! What's the name of the printer service?
+
+The Print Spooler is a background service in Windows that manages print jobs sent to your printer.
+
+Mentioned within this question is the term 'living in' a process. Often when we take over a running program we ultimately load another shared library into the program (a dll) which includes our malicious code. From this, we can spawn a new thread that hosts our shell. 
+
+`spoolsv.exe`
+
+<img width="658" height="110" alt="image" src="https://github.com/user-attachments/assets/5b325053-0563-4f7d-b875-7cd3b9a0d7e3" />
+
+3. Migrate to this process now with the command `migrate -N PROCESS_NAME`
+
+Command: `migrate -N spoolsv.exe`
+
+<img width="199" height="49" alt="image" src="https://github.com/user-attachments/assets/5b1efdda-437c-47d7-9350-fe29693ed26c" />
+
+4. Let's check what user we are now with the command `getuid`. What user is listed?
+
+`NT AUTHORITY\SYSTEM`
+
+<img width="191" height="34" alt="image" src="https://github.com/user-attachments/assets/a6b2a6be-36a2-448d-b2ac-445d6a0fa5e4" />
+
+5. Now that we've made our way to full administrator permissions we'll set our sights on looting. Mimikatz is a rather infamous password dumping tool that is incredibly useful. Load it now using the command `load kiwi` (Kiwi is the updated version of Mimikatz)
+
+<img width="388" height="119" alt="image" src="https://github.com/user-attachments/assets/6dab17e2-d17e-4056-ba16-6e5ddbde3248" />
+
+6. Loading kiwi into our meterpreter session will expand our help menu, take a look at the newly added section of the help menu now via the command `help`.
+
+<img width="439" height="299" alt="image" src="https://github.com/user-attachments/assets/18a1e6e7-1335-488e-81dd-be0209369b96" />
+
+7. Which command allows up to retrieve all credentials?
+
+`creds_all`
+
+<img width="442" height="275" alt="image" src="https://github.com/user-attachments/assets/175a85eb-f20d-4d0e-acf8-f4fafb3b6426" />
+
+8. Run this command now. What is Dark's password? Mimikatz allows us to steal this password out of memory even without the user 'Dark' logged in as there is a scheduled task that runs the Icecast as the user 'Dark'. It also helps that Windows Defender isn't running on the box ;) (Take a look again at the ps list, this box isn't in the best shape with both the firewall and defender disabled)
+
+`Password01`, but I think correct actual password is `Password01!`
+
+<img width="648" height="261" alt="image" src="https://github.com/user-attachments/assets/c1420253-2d4e-4487-a0be-2400d19f2ecc" />
+
+## Post-Exploitation
+
+1. Before we start our post-exploitation, let's revisit the help menu one last time in the meterpreter shell. We'll answer the following questions using that menu.
+
+<img width="437" height="316" alt="image" src="https://github.com/user-attachments/assets/737ac7f5-3227-4113-a5da-76aaa27322c8" />
+
+2. What command allows us to dump all of the password hashes stored on the system?
+
+`hashdump`
+
+<img width="359" height="80" alt="image" src="https://github.com/user-attachments/assets/ac716591-029a-4c75-b7ed-a12de1f36795" />
+
+3. While more useful when interacting with a machine being used, what command allows us to watch the remote user's desktop in real time?
+
+`screenshare`
+
+<img width="455" height="206" alt="image" src="https://github.com/user-attachments/assets/28f9aa3d-92d3-4562-a9a9-5cbcaa0391fd" />
+
+4. How about if we wanted to record from a microphone attached to the system?
+
+`record_mic`
+
+<img width="439" height="121" alt="image" src="https://github.com/user-attachments/assets/ccd05195-b57c-45a4-9228-33bebf134c69" />
+
+5. To complicate forensics efforts we can modify timestamps of files on the system. What command allows us to do this?
+
+`timestomp`
+
+<img width="321" height="86" alt="image" src="https://github.com/user-attachments/assets/25345a72-2bf3-452c-8d01-b3e6428f4814" />
+
+6. Mimikatz allows us to create what's called a `golden ticket`, allowing us to authenticate anywhere with ease. What command allows us to do this?
+
+Golden ticket attacks are a function within Mimikatz which abuses a component to Kerberos (the authentication system in Windows domains), the ticket-granting ticket. In short, golden ticket attacks allow us to maintain persistence and authenticate as any user on the domain.
+
+`golden_ticket_create`
+
+<img width="438" height="274" alt="image" src="https://github.com/user-attachments/assets/71f8794c-8f5d-4146-8847-02ae8d5c4df5" />
+
+7. One last thing to note. As we have the password for the user 'Dark' we can now authenticate to the machine and access it via remote desktop (MSRDP). As this is a workstation, we'd likely kick whatever user is signed onto it off if we connect to it, however, it's always interesting to remote into machines and view them as their users do. If this hasn't already been enabled, we can enable it via the following Metasploit module: `run post/windows/manage/enable_rdp`
+
+The RDP is already enabled:
+
+<img width="698" height="89" alt="image" src="https://github.com/user-attachments/assets/224e9c93-4ac7-4abf-a172-1fd13cd3fce7" />
+
+I tried to connect to the Dark machine remotely but could not I dont know why.
+
+<img width="1699" height="408" alt="image" src="https://github.com/user-attachments/assets/dea7eb18-16a9-47e6-870e-d85bc7a6f556" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
