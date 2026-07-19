@@ -40,6 +40,22 @@ Implementing access control can help prevent security breaches and unauthorized 
 
 ---
 
+### Broken Access Control:
+
+Broken access control vulnerabilities refer to situations where access control mechanisms fail to enforce proper restrictions on user access to resources or data. 
+
+Here are some common exploits for broken access control and examples:
+
+1. **Horizontal privilege escalation** occurs when an attacker can access resources or data belonging to other users with the same level of access.
+   - For example, a user might be able to access another user’s account by changing the user ID in the URL.
+2. **Vertical privilege escalation** occurs when an attacker can access resources or data belonging to users with higher access levels.
+   - For example, a regular user can access administrative functions by manipulating a hidden form field or URL parameter.
+3. **Insufficient access control** checks occur when access control checks are not performed correctly or consistently, allowing an attacker to bypass them.
+   - For example, an application might allow users to view sensitive data without verifying their proper permissions.
+4. **Insecure direct object references** occur when an attacker can access a resource or data by exploiting a weakness in the application’s access control mechanisms.
+   - For example, an application might use predictable or easily guessable identifiers for sensitive data, making it easier for an attacker to access.
+
+These exploits can be prevented by implementing strong access control mechanisms and regularly reviewing and testing them to ensure they are functioning as intended.
 
 
 
