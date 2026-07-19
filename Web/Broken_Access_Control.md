@@ -57,5 +57,29 @@ Here are some common exploits for broken access control and examples:
 
 These exploits can be prevented by implementing strong access control mechanisms and regularly reviewing and testing them to ensure they are functioning as intended.
 
+---
+
+### Answer the questions below
+
+1. What is IDOR?
+
+Insecure Direct Object Reference
+
+2. What occurs when an attacker can access resources or data belonging to other users with the same level of access?
+
+Horizontal privilege escalation
+
+3. What occurs when an attacker can access resources or data from users with higher access levels?
+
+Vertical privilege escalation
+
+4. What is ABAC?
+
+Attribute-Based Access Control 
+
+5. What is RBAC?
+
+Role-Based Access Control
+
 
 
