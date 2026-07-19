@@ -81,7 +81,7 @@ Attribute-Based Access Control
 
 Role-Based Access Control
 
-### Deploy the Machine
+## Deploy the Machine
 
 Start the Lab Machine and as I am using my Kali Linux Machine, we will connect to the TryHackMe Server by OpenVPN.
 
