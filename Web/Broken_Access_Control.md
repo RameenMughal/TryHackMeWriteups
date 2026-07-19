@@ -81,5 +81,18 @@ Attribute-Based Access Control
 
 Role-Based Access Control
 
+### Deploy the Machine
+
+Start the Lab Machine and as I am using my Kali Linux Machine, we will connect to the TryHackMe Server by OpenVPN.
+
+Connect to the TryHackMe Server by: `sudo openvpn FILENAME`
+
+You can check how to connect through OpenVPN by this room: [OpenVPN](https://tryhackme.com/room/openvpn)
+
+You can now start accessing the target website application by entering `http://TARGET_IP/` into the browser.
+
+<img width="609" height="215" alt="image" src="https://github.com/user-attachments/assets/5af2dbb1-399e-46c5-b78b-63e0ab02f5ac" />
+
+
 
 
