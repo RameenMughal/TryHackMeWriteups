@@ -12,7 +12,7 @@ To wrap up the room, we'll be pivoting back to these tools for persistence and a
 
 *This room is a remix of my previous room [Retro](https://tryhackme.com/room/retro) with some complications I added to that room having been removed. For increased difficulty and an exercise in patience, check that room out after this. In addition, this room is the sequel to [Ice](https://tryhackme.com/room/ice). - DarkStar747*
 
-Start the Lab Machine and connect to the TryHackMe Server by OpenVPN: `sudo open FILENAME`.
+Start the Lab Machine and connect to the TryHackMe Server by OpenVPN: `sudo openvpn FILENAME`.
 
 You can check how to connect through OpenVPN by this room: [OpenVPN](https://tryhackme.com/room/openvpn)
 
