@@ -15,3 +15,11 @@ To wrap up the room, we'll be pivoting back to these tools for persistence and a
 Start the Lab Machine and connect to the TryHackMe Server by OpenVPN: `sudo open FILENAME`.
 
 You can check how to connect through OpenVPN by this room: [OpenVPN](https://tryhackme.com/room/openvpn)
+
+## Activate Forward Scanners and Launch Proton Torpedoes
+
+Run nmap scan: 
+
+### Answer the questions below
+
+1. 
