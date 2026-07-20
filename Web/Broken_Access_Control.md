@@ -170,6 +170,47 @@ Proxy
 
 <img width="419" height="352" alt="image" src="https://github.com/user-attachments/assets/9273660f-4764-4505-a116-6e953105f0e7" />
 
+## Exploiting the Web Application
+
+In the previous task, we learned that the file functions.php returns a JSON response upon login. The response contains a `redirect_link` with a parameter that we can test for access control vulnerabilities.
+
+To start testing for this vulnerability, we can intercept the HTTP response and copy the value of the redirect_link parameter to our address bar. `http://TARGET_IP/dashboard.php?isadmin=false`
+
+Since the application redirects the user to dashboard.php while the JSON response can only be seen by intercepting using a proxy tool, we can try changing the parameter’s value from “false” to “true” or vice versa. `http://TARGET_IP/dashboard.php?isadmin=true`
+
+Upon changing the value from false to true, application redirects us to `admin.php`, which is hidden to a normal user by default. Below is the HTTP request that is captured using Burp Suite Proxy.
+
+<img width="630" height="287" alt="image" src="https://github.com/user-attachments/assets/46d845cb-154b-431a-b24a-db18ee6e320f" />
+
+<img width="1684" height="406" alt="image" src="https://github.com/user-attachments/assets/c81a7037-b78e-458c-9756-8b52aacd87f7" />
+
+Since we have access to admin.php using a low-privilege account, we might as well check for a vertical privilege escalation attack.
+
+Checking the box in the “Admin access” column of the account you registered and clicking the “Save Changes” button will give us admin privileges. Which in return enables us to revoke the access of other admin users.
+
+<img width="850" height="136" alt="image" src="https://github.com/user-attachments/assets/20814d47-7b20-4b48-be15-a9bf042a03d0" />
+
+---
+
+### Answer the questions below
+
+1. What kind of privilege escalation happened after accessing admin.php?
+
+Vertical
+
+2. What parameter allows the attacker to access the admin page?
+
+`isadmin`
+
+3. What is the flag in the admin page?
+
+Screenshot provided above after accessing the `admin.php`
+
+
+
+
+
+
 
 
 
