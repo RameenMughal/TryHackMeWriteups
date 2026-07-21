@@ -9,3 +9,5 @@ Rooms Included:
 2. [Computer Types](https://tryhackme.com/room/computertypes) (Not free, but when I did it was free)
 3. [Virtualisation Basics](https://tryhackme.com/room/virtualisationbasics) (Not free, when I did it was free)
 4. [Cloud Computing Fundamentals](https://tryhackme.com/room/cloudcomputingfundamentals) (Not free, when I did it was free)
+
+**Note**: The writeup for the "Cloud Computing Fundamentals" is under the "Cloud Computing" directory.
