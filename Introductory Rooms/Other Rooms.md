@@ -19,3 +19,5 @@ Hence here is a list of Other Introductory Rooms with links.
 7. [Defensive Security Intro](https://tryhackme.com/room/defensivesecurityintro)
 
 8. [Careers in Cyber](https://tryhackme.com/room/careersincyber)
+
+9. [Offensive Security Intro](https://tryhackme.com/room/offensivesecurityintro)
