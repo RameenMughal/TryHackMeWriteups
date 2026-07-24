@@ -41,6 +41,8 @@ Write command `sudo nano /etc/hosts` to open the file and then copy paste `TARGE
 
 After 3 minutes, visit `http://enum.thm` to access the machine.
 
+<img width="836" height="227" alt="image" src="https://github.com/user-attachments/assets/3ae20550-20b1-4a17-b1ba-0fb43fbfd945" />
+
 ## Authentication Enumeration
 
 Think of yourself as a digital detective. It's not just about picking up clues—it's about understanding what these clues reveal about the security of a system. This is essentially what authentication enumeration involves. It's like piecing together a puzzle rather than just ticking off items on a checklist.
@@ -99,4 +101,73 @@ Data from previous security breaches is a goldmine for attackers as it allows th
 What type of error messages can unintentionally provide attackers with confirmation of valid usernames?
 
 Verbose Errors
+
+## Enumerating Users via Verbose Errors
+
+### Understanding Verbose Errors
+
+In the world of web development, verbose errors are like unintentional whispers of a system, revealing secrets meant to be kept hidden. These detailed error messages are invaluable during the debugging process, helping developers understand exactly what went wrong. However, just like an overheard conversation might reveal too much, these verbose errors can unintentionally expose sensitive data to those who know how to listen.
+
+Verbose errors can turn into a goldmine of information, providing insights such as:
+
+- **Internal Paths**: Like a map leading to hidden treasure, these reveal the file paths and directory structures of the application server which might contain configuration files or secret keys that aren't visible to a normal user.
+- **Database Details**: Offering a sneak peek into the database, these errors might spill secrets like table names and column details.
+- **User Information**: Sometimes, these errors can even hint at usernames or other personal data, providing clues that are crucial for further investigation.
+
+---
+
+### Inducing Verbose Errors
+
+Attackers induce verbose errors as a way to force the application to reveal its secrets. Below are some common techniques used to provoke these errors:
+
+1. **Invalid Login Attempts**: By intentionally entering incorrect usernames or passwords, attackers can trigger error messages that help distinguish between valid and invalid usernames. For example, entering a username that doesn’t exist might trigger a different error message than entering one that does, revealing which usernames are active.
+2. **SQL Injection**: This technique involves slipping malicious SQL commands into entry fields, hoping the system will stumble and reveal information about its database structure. For example, placing a single quote (`'`) in a login field might cause the database to throw an error, inadvertently exposing details about its schema.
+3. **File Inclusion/Path Traversal**: By manipulating file paths, attackers can attempt to access restricted files, causing the system to display errors that expose its internal file paths. For example, using directory traversal sequences like `../../` could lead to errors that disclose restricted file paths.
+4. **Form Manipulation**: Changing the values in a web form can make the application show error messages that reveal how the backend works or expose sensitive information. For example, changing hidden form fields to cause validation errors may reveal what type or format of data the application expects.
+5. **Application Fuzzing**: Sending unexpected inputs to various parts of the application to see how it reacts can help identify weak points. For example, tools like Burp Suite Intruder are used to automate the process, bombarding the application with varied payloads to see which ones provoke informative errors.
+
+---
+
+### The Role of Enumeration and Brute Forcing
+
+When it comes to breaching authentication, enumeration and brute forcing often go hand in hand:
+- **User Enumeration**: Discovering valid usernames sets the stage, reducing the guesswork in subsequent brute-force attacks.
+- **Exploiting Verbose Errors**: The insights gained from these errors can illuminate aspects like password policies and account lockout mechanisms, paving the way for more effective brute-force strategies.
+In summary, verbose errors are like breadcrumbs leading attackers deeper into the system, providing them with the insights needed to tailor their strategies and potentially compromise security in ways that could go undetected until it’s too late.
+
+---
+
+### Enumeration in Authentication Forms
+
+In this HackerOne report [User enumeration through forget password](https://hackerone.com/reports/1166054), the attacker was able to enumerate users using the website's Forget Password function. 
+
+Similarly, we can also enumerate emails in login forms. For example, navigate to `http://enum.thm/labs/verbose_login/` and put any email address in the Email input field.
+
+When you input an invalid email, the website will respond with "Email does not exist." indicating that the email has not been registered yet.
+
+<img width="851" height="168" alt="image" src="https://github.com/user-attachments/assets/b434e0a9-708f-486b-9ee2-c42be2768f02" />
+
+However, if the email is already registered, the website will respond with an "Invalid password" error message, indicating that the email exists in the database but the password is incorrect.
+
+<img width="850" height="178" alt="image" src="https://github.com/user-attachments/assets/c8b863bf-0522-4787-b2e9-210da3d4b2ed" />
+
+---
+
+### Automation
+
+Python script is given that will check for valid emails in the target web app. Save the code below as `script.py`.
+
+**Breakdown of the script**:
+
+**url**: The script targets the endpoint handling the login functionality of the application.
+
+```
+url = 'http://enum.thm/labs/verbose_login/functions.php'
+```
+
+
+
+
+
+
 
