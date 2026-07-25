@@ -218,7 +218,44 @@ What is the valid email address from the list?
 
 <img width="185" height="140" alt="image" src="https://github.com/user-attachments/assets/11f287ee-cebf-49ed-9db6-e41632814b1a" />
 
+## Exploiting Vulnerable Password Reset Logic
 
+### Password Reset Flow Vulnerabilities
+
+Password reset mechanism is an important part of user convenience in modern web applications. However, their implementation requires careful security considerations because poorly secured password reset processes can be easily exploited.
+
+**Email-Based Reset**
+
+When a user resets their password, the application sends an email containing a reset link or a token to the user’s registered email address. The user then clicks on this link, which directs them to a page where they can enter a new password and confirm it, or a system will automatically generate a new password for the user. This method relies heavily on the security of the user's email account and the secrecy of the link or token sent.
+
+**Security Question-Based Reset**
+
+This involves the user answering a series of pre-configured security questions they had set up when creating their account. If the answers are correct, the system allows the user to proceed with resetting their password. While this method adds a layer of security by requiring information only the user should know, it can be compromised if an attacker gains access to personally identifiable information (PII), which can sometimes be easily found or guessed.
+
+Each of these methods has its vulnerabilities:
+
+- **Predictable Tokens**: If the reset tokens used in links or SMS messages are predictable or follow a sequential pattern, attackers might guess or brute-force their way to generate valid reset URLs.
+- **Token Expiration Issues**: Tokens that remain valid for too long or do not expire immediately after use provide a window of opportunity for attackers. It’s crucial that tokens expire swiftly to limit this window.
+- **Insufficient Validation**: The mechanisms for verifying a user’s identity, like security questions or email-based authentication, might be weak and susceptible to exploitation if the questions are too common or the email account is compromised.
+- **Information Disclosure**: Any error message that specifies whether an email address or username is registered can inadvertently help attackers in their enumeration efforts, confirming the existence of accounts.
+- **Insecure Transport**: The transmission of reset links or tokens over non-HTTPS connections can expose these critical elements to interception by network eavesdroppers.
+
+---
+
+### Exploiting Predictable Tokens
+
+Tokens that are simple, predictable, or have long expiration times can be particularly vulnerable to interception or brute force. For example, the below code is used by the vulnerable application hosted in the Predictable Tokens lab:
+
+```
+$token = mt_rand(100, 200);
+$query = $conn->prepare("UPDATE users SET reset_token = ? WHERE email = ?");
+$query->bind_param("ss", $token, $email);
+$query->execute();
+```
+
+The code above sets a random three-digit PIN as the reset token of the submitted email. Since this token doesn't employ mixed characters, it can be easily brute-forced.
+
+Navigate to the application's password reset page, input "admin@admin.com" in the Email input field, and click Submit.
 
 
 
