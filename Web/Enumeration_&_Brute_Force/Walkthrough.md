@@ -165,6 +165,8 @@ Python script is given that will check for valid emails in the target web app. S
 url = 'http://enum.thm/labs/verbose_login/functions.php'
 ```
 
+**How do you know that it is `functions.php`?**: By clicking "View Page Source", you can see html code of the web page, wher in the end you can see `script.js`, by opening this you can see the code 
+
 **headers**: A collection of HTTP headers is defined to mimic a typical browser request, ensuring the requests appear legitimate
 
 ```
