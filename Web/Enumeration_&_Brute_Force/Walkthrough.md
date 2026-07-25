@@ -165,7 +165,9 @@ Python script is given that will check for valid emails in the target web app. S
 url = 'http://enum.thm/labs/verbose_login/functions.php'
 ```
 
-**How do you know that it is `functions.php`?**: By clicking "View Page Source", you can see html code of the web page, wher in the end you can see `script.js`, by opening this you can see the code 
+**How do you know that it is `functions.php`?**: By clicking "View Page Source", you can see html code of the web page, wher in the end you can see `script.js`, by opening this you can see the code that it manages the login feature.
+
+It takes the data and sends to the `functions.php` to check if the login is successful or failed.
 
 **headers**: A collection of HTTP headers is defined to mimic a typical browser request, ensuring the requests appear legitimate
 
@@ -201,6 +203,24 @@ response = requests.post(url, headers=headers, data=data)
 We can use a common list of emails from this repository [Gmail Usernames](https://github.com/nyxgeek/username-lists/blob/master/usernames-top100/usernames_gmail.com.txt).
 
 Once you've downloaded the payload list, use the script on your own machine to check for valid email addresses.
+
+Command: `python3 script.py usernames_gmail.com.txt`
+
+<img width="334" height="205" alt="image" src="https://github.com/user-attachments/assets/28e8cb5b-54e9-4039-9c74-10298f3bcce6" />
+
+---
+
+### Answer the questions below
+
+What is the valid email address from the list?
+
+`canderson@gmail.com`
+
+<img width="185" height="140" alt="image" src="https://github.com/user-attachments/assets/11f287ee-cebf-49ed-9db6-e41632814b1a" />
+
+
+
+
 
 
 
