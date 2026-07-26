@@ -255,7 +255,71 @@ $query->execute();
 
 The code above sets a random three-digit PIN as the reset token of the submitted email. Since this token doesn't employ mixed characters, it can be easily brute-forced.
 
+To demonstrate this, go to `http://enum.thm/labs/predictable_tokens/`.
+
+<img width="833" height="169" alt="image" src="https://github.com/user-attachments/assets/7314f5ff-7c87-43b1-ac09-950536a8d6b7" />
+
 Navigate to the application's password reset page, input "admin@admin.com" in the Email input field, and click Submit.
+
+The application will respond with a success message.
+
+<img width="545" height="178" alt="image" src="https://github.com/user-attachments/assets/6ffebb27-09a7-46f5-8103-b4c7e1c2d0d4" />
+
+For demonstration purposes, the web application uses the reset link: `http://enum.thm/labs/predictable_tokens/reset_password.php?token=123`
+
+<img width="512" height="162" alt="image" src="https://github.com/user-attachments/assets/7dea516d-7e57-407b-b712-637164ccd935" />
+
+Notice the token is a simple numeric value. Using Burp Suite, navigate to the above URL and capture the request.
+
+First from the "Proxy" section, capture the request and then check the request from the subsection of Proxy "HTTP History":
+
+<img width="629" height="352" alt="image" src="https://github.com/user-attachments/assets/4fd05e64-b945-4bee-8c1e-414621cfcfbf" />
+
+Subsequently, send the request to the Intruder, highlight the value of the token parameter, and click the Add payload button, as shown below.
+
+First highlight the "123" and then click the button "Add" so the payload section will open.
+
+<img width="781" height="190" alt="image" src="https://github.com/user-attachments/assets/b3c0534d-3dd2-4601-ba18-ca5a4ccab267" />
+
+Using the AttackBox or your own attacking VM, use Crunch to generate a list of numbers from 100 to 200. This list will be used as the dictionary in the brute-force attack.
+
+Command: `crunch 3 3 -o otp.txt -t %%% -s 100 -e 200 `
+
+<img width="334" height="98" alt="image" src="https://github.com/user-attachments/assets/eb8b1c97-9771-4030-932c-60db27868e8b" />
+
+Go back to Intruder and configure the payload to use the generated file.
+
+<img width="2986" height="1380" alt="image" src="https://github.com/user-attachments/assets/76673e3f-e942-4353-b31a-c49810e74392" />
+
+<img width="2720" height="824" alt="image" src="https://github.com/user-attachments/assets/f910ef31-eec1-4c15-889c-1cbcfca7ee93" />
+
+Click the "Start Attack" Button.
+
+The attack will take some time to finish if you're using Burp Suite Community Edition. However, once successful, you will get a response with a much bigger content length compared to the responses with an "Invalid token" error message.
+
+<img width="577" height="335" alt="image" src="https://github.com/user-attachments/assets/1a0a7f08-5a56-4a2e-922a-d1266dd528cd" />
+
+Log in to the application using the new password.
+
+---
+
+### Answer the questions below
+
+What is the flag?
+
+<img width="1705" height="196" alt="image" src="https://github.com/user-attachments/assets/ac23e4e6-73e3-4765-8ec0-1dcea058dc6e" />
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
