@@ -309,6 +309,40 @@ What is the flag?
 
 <img width="1705" height="196" alt="image" src="https://github.com/user-attachments/assets/ac23e4e6-73e3-4765-8ec0-1dcea058dc6e" />
 
+## Exploiting HTTP Basic Authentication
+
+### Basic Authentication?
+
+Basic authentication offers a more straightforward method when securing access to devices. It requires only a username and password, making it easy to implement and manage on devices with limited processing capabilities. 
+
+Network devices such as routers typically utilise basic authentication to control access to their administrative interfaces. In this scenario, the primary goal is to prevent unauthorized access with minimal setup.
+
+While basic authentication does not offer the robust security features provided by more complex schemes like OAuth or token-based authentication, its simplicity makes it suitable for environments where session management and user tracking are not required or are managed differently. 
+
+For example, in devices like routers that are primarily accessed for configuration changes rather than regular use, the overhead of maintaining session states is unnecessary and could complicate device performance.
+
+HTTP Basic Authentication is defined in [RFC 7617](https://datatracker.ietf.org/doc/html/rfc7617), which specifies that the credentials (username and password) should be transported as a base64-encoded string within the HTTP Authorization header. This method is straightforward but not secure over non-HTTPS connections, as base64 is not an encryption method and can be easily decoded. The real threat often comes from weak credentials that can be brute-forced.
+
+HTTP Basic Authentication provides a simple challenge-response mechanism for requesting user credentials.
+
+<img width="1334" height="1412" alt="image" src="https://github.com/user-attachments/assets/daed2965-7a75-46f7-82c9-ff9f7546418e" />
+
+Diagram from [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication)
+
+The Authorization header format is as follows:
+
+```
+Authorization: Basic <credentials>
+```
+
+where `<credentials>` is the base64 encoding of `username:password`.
+
+---
+
+
+
+
+
 
 
 
