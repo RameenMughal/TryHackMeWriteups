@@ -339,6 +339,89 @@ where `<credentials>` is the base64 encoding of `username:password`.
 
 ---
 
+### Exploitation
+
+To demonstrate this, go to `http://enum.thm/labs/basic_auth/`.
+
+<img width="757" height="250" alt="image" src="https://github.com/user-attachments/assets/992be3d8-fc98-448e-8ffb-9c6775766c26" />
+
+Input any username and password in the pop-up and capture the Basic Auth Request using Burp.
+
+<img width="538" height="217" alt="image" src="https://github.com/user-attachments/assets/80711d16-f834-4b19-92c7-d577eb3a7583" />
+
+<img width="625" height="350" alt="image" src="https://github.com/user-attachments/assets/6b500cb9-3e9e-408c-9736-bf501b4980c8" />
+
+Right-click the request and send it to Intruder.
+
+<img width="2926" height="998" alt="image" src="https://github.com/user-attachments/assets/9ac83eaf-ad95-449f-b80f-986a342e2efb" />
+
+In Burp Intruder, go to the "Positions" tab and decode the base64 encoded string in the Authorization header.
+
+<img width="2992" height="1496" alt="image" src="https://github.com/user-attachments/assets/ca1c7513-ecb7-4761-bfd7-d398c02c7bf1" />
+
+<img width="554" height="200" alt="image" src="https://github.com/user-attachments/assets/0b1342b0-7823-41dc-acc4-15a25429ba66" />
+
+Once decoded, highlight the decoded string and click the Add button in the top right corner.
+
+Next is configuring the payloads. Go to the Payloads tab and set the payload type to Simple list and choose your preferred wordlist. 
+
+In this demo, we will use the [500 Worst Passwords](https://github.com/danielmiessler/SecLists/blob/master/Passwords/Common-Credentials/500-worst-passwords.txt) from SecLists.
+
+<img width="2978" height="1392" alt="image" src="https://github.com/user-attachments/assets/a75a1ec9-2869-47d6-bd87-426f1e4ccb7a" />
+
+Since the header is base64 encoded, we need to add two rules in the Payload processing section. The first automatically adds a username to the password, so instead of 123456, the payload will be "admin:123456".
+
+<img width="2990" height="1432" alt="image" src="https://github.com/user-attachments/assets/9ce115eb-7890-482d-8134-e197f97ed4e4" />
+
+The second rule will base64 encode the combined username and password from the supplied list.
+
+<img width="2992" height="1414" alt="image" src="https://github.com/user-attachments/assets/7b60817f-b5d3-4bc0-a21f-582ee2e1ed3f" />
+
+We should also remove the character "=" (equal sign) from the encoding because base64 uses "=" for padding. To do this, scroll down and remove the "=" sign from the list of characters in the Payload encoding section.
+
+<img width="223" height="186" alt="image" src="https://github.com/user-attachments/assets/6bc77717-3429-4e04-b377-a1af7bda5ae4" />
+
+Once done, go back to the Positions tab and click the "Start Attack" button. The attack will take a little less than 2 minutes.
+
+<img width="656" height="353" alt="image" src="https://github.com/user-attachments/assets/5dffb93e-5a8c-4f08-b00d-0dac6d03ece4" />
+
+Once you get a Status code 200, it means the brute force is successful, and one of the passwords in the supplied list is working. Decode the encoded base64 string in the successful request.
+
+<img width="2682" height="982" alt="image" src="https://github.com/user-attachments/assets/e1feec68-4892-461d-9a2d-00fc7a54da4c" />
+
+<img width="527" height="278" alt="image" src="https://github.com/user-attachments/assets/01bbdb3e-9e8c-4206-8dd6-ddd4f9d60243" />
+
+Use the decoded base64 string to log into the application.
+
+<img width="595" height="295" alt="image" src="https://github.com/user-attachments/assets/f2ad4add-d3b7-473e-acef-940ed1bf21da" />
+
+---
+
+### Answer the questions below
+
+1. What is the flag?
+
+<img width="907" height="232" alt="image" src="https://github.com/user-attachments/assets/197df1a6-4d5a-4735-80f6-58c584d1c2ea" />
+
+2. Try using Hydra instead of Burp to brute force the password.
+
+Command: `hydra -l admin -P 500-worst-passwords.txt enum.thm http-get /labs/basic_auth`
+
+<img width="518" height="109" alt="image" src="https://github.com/user-attachments/assets/f21ce03e-3ca1-42d9-9c33-60a8a769c2d3" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
