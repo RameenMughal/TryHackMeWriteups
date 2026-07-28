@@ -74,6 +74,14 @@ Command: `xfreerdp /v:TARGET_IP /u:Wade /p:'parzival'` and open the user.txt fil
 
 <img width="1239" height="358" alt="image" src="https://github.com/user-attachments/assets/0b7cab07-00ad-4a3a-b61d-fd4d71c22088" />
 
+## Breaching the Control Room
+
+### Answer the questions below
+
+1. When enumerating a machine, it's often useful to look at what the user was last doing. Look around the machine and see if you can find the CVE which was researched on this server. What CVE was it?
+
+
+
 
 
 
