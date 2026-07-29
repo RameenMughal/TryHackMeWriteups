@@ -80,6 +80,54 @@ Command: `xfreerdp /v:TARGET_IP /u:Wade /p:'parzival'` and open the user.txt fil
 
 1. When enumerating a machine, it's often useful to look at what the user was last doing. Look around the machine and see if you can find the CVE which was researched on this server. What CVE was it?
 
+CVE-2019-1388
+
+I could not find the CVE in the Windows even watching the official walkthrough so I found out that other people are also having this issue that they cannot see the CVE in Internet Explorere History. So I got to know from the Hint and checking the walkthrough.
+
+Original way is to open the Internet Explorer, click the Start icon and you see the CVE under History of 2 weeks ago but in mine I dont see that.
+
+<img width="505" height="225" alt="image" src="https://github.com/user-attachments/assets/0d256d37-7d38-45bd-a9c7-5ebfa1561a39" />
+
+You can also check there is an application named `hhupd` so you can search about it in Google and you will get to know about this CVE.
+
+2. Looks like an executable file is necessary for exploitation of this vulnerability and the user didn't really clean up very well after testing it. What is the name of this executable?
+
+`hhupd`
+
+<img width="390" height="152" alt="image" src="https://github.com/user-attachments/assets/875cf387-b175-4192-bf3d-b6a7f61bb735" />
+
+3. Research vulnerability and how to exploit it. Exploit it now to gain an elevated terminal!
+
+CVE-2019-1388 is a Windows User Account Control (UAC) bypass vulnerability. It lets a normal user gain Administrator (SYSTEM-level) privileges without knowing the administrator password.
+
+When Windows wants to verify a program, it shows a certificate.
+
+That certificate has a "View Certificate" button.
+
+Microsoft forgot to properly restrict what users could do from that certificate window.
+
+An attacker can abuse it to open Internet Explorer with administrator privileges.
+
+From Internet Explorer, they can:
+1. Open File → Open
+2. Browse to C:\Windows\System32
+3. Run cmd.exe
+
+Since Internet Explorer is already running as Administrator, Command Prompt also opens as Administrator.
+
+Now the attacker has full control of the computer.
+
+You can check about this vulnerability on this website [NIST CVE-2019-1388 Detail](https://nvd.nist.gov/vuln/detail/cve-2019-1388)
+
+
+
+
+
+
+
+
+
+
 
 
 
