@@ -119,6 +119,64 @@ Now the attacker has full control of the computer.
 
 You can check about this vulnerability on this website [NIST CVE-2019-1388 Detail](https://nvd.nist.gov/vuln/detail/cve-2019-1388)
 
+Now for exploiting this machine, Open hhupd exe and click "Show More Details".
+
+<img width="249" height="257" alt="image" src="https://github.com/user-attachments/assets/225056ee-abb3-4ec5-9227-49a40e696075" />
+
+Click on show about the publishers certificate.
+
+<img width="238" height="275" alt="image" src="https://github.com/user-attachments/assets/42f2e160-0171-46d6-ae87-f2d33cfd959d" />
+
+Click on the CA Issued by "VeriSign Commercial Software Publishers CA"
+
+<img width="244" height="281" alt="image" src="https://github.com/user-attachments/assets/8e265049-1dae-4bdc-965a-f0a11ffbc506" />
+
+A browser page will open up.
+
+<img width="510" height="203" alt="image" src="https://github.com/user-attachments/assets/a6f0ea96-5c4d-40d2-bbe3-cc6392eb939d" />
+
+Click the Settings Gear icon and select "File" and then "Save as", then a dialog box will appear indicating that a file is not available.
+
+<img width="511" height="233" alt="image" src="https://github.com/user-attachments/assets/1fe974f3-e7ff-4a77-93a9-5194b0169bda" />
+
+Then save the Filename as `c:\Windows\system32\*.*` and press Save so we can open this directly indirectly.
+
+<img width="514" height="250" alt="image" src="https://github.com/user-attachments/assets/c7b86e57-4616-4d83-b56d-10259ac9f500" />
+
+Now search "cmd" at the upper right space indicating Search icon, scroll down to get the cmd.
+
+<img width="512" height="237" alt="image" src="https://github.com/user-attachments/assets/1fe86ad0-83af-486f-a0c2-ad5487e335ae" />
+
+Open the cmd and you have gained Administrator rights.
+
+<img width="511" height="257" alt="image" src="https://github.com/user-attachments/assets/20d2080b-7387-4002-a305-42da4e7885e2" />
+
+4. Now that we've spawned a terminal, let's go ahead and run the command 'whoami'. What is the output of running this?
+
+<img width="229" height="74" alt="image" src="https://github.com/user-attachments/assets/5291cebe-63b8-4af1-b816-5fe252a29140" />
+
+5. Now that we've confirmed that we have an elevated prompt, read the contents of root.txt on the Administrator's desktop. What are the contents? Keep your terminal up after exploitation so we can use it in task four!
+
+Go to the directory by command `cd c:\Users\Administrator\Desktop` and then see the contents by command `type root.txt`
+
+<img width="489" height="234" alt="image" src="https://github.com/user-attachments/assets/e0bf4d7a-1971-4a90-80a3-1d1c818bacd4" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
