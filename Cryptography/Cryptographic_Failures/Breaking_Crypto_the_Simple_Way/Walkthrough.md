@@ -44,6 +44,29 @@ Save the file and then access the website `http://bcts.thm/`
 
 <img width="611" height="182" alt="image" src="https://github.com/user-attachments/assets/b8a7514a-3822-4ee2-83b7-bfe405e1de5e" />
 
+## Brute-forcing Keys
 
+Cryptography relies on the premise that keys used in encryption are computationally infeasible to guess. A "strong" key is one that provides a high level of entropy (unpredictability) and sufficient length to make brute-force attacks impractical. For example, a 128-bit key has 2^128 possible combinations, which would take centuries to brute-force using modern hardware.
 
+---
+
+### Characteristics of Strong Keys:
+
+- **Length**: Longer keys significantly increase the computational effort required to brute-force them.
+- **Entropy**: Keys must be truly random, not derived from predictable inputs like timestamps or user data.
+- **Uniqueness**: Keys must be unique across different encryptions or systems to prevent correlation attacks.
+
+A correlation attack is an attack where someone compares encrypted data from different messages or systems to find patterns and learn information. The same encryption key should not be reused in different places, because an attacker might compare the ciphertexts and discover relationships between the plaintexts.
+
+When these principles are violated, keys become vulnerable to brute-force or mathematical attacks.
+
+---
+
+### Math of RSA
+
+RSA encryption, named after its inventors Rivest, Shamir, and Adleman, is based on the difficulty of factoring large numbers.
+
+A public key consists of:
+- `n = p×q`: The product of two large prime numbers, (`p`) and (`q`).
+- `e`: A small public exponent (commonly (`e = 65537`)).
 
