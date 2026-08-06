@@ -70,3 +70,45 @@ A public key consists of:
 - `n = p×q`: The product of two large prime numbers, (`p`) and (`q`).
 - `e`: A small public exponent (commonly (`e = 65537`)).
 
+The private key is derived from:
+- `ϕ(n) = (p−1) × (q−1)`, where `ϕ` is Euler's totient function.
+- `d`: The modular inverse of `e`, `e modulo 𝜙 ( 𝑛 ) ϕ(n)`, satisfying `𝑒 × 𝑑 ≡ 1 ( mod 𝜙 ( 𝑛 ) ) e × d ≡ 1 (mod ϕ(n))`.
+
+The statement is: `e × d ≡ 1 (modϕ(n))`
+
+This means: When you multiply `e` and `d`, and divide the result by `φ(n)`, the remainder must be 1.
+
+So, `d` is the modular inverse of `e`.
+
+**What does modulo mean?**: Suppose `ϕ(n) = 20` and `e = 3`
+
+We need to find a number d such that `3 × d ≡ 1 (mod20)`
+
+This means: Find a number `d` so that multiplying it by 3 leaves a remainder of 1 when divided by 20.
+
+Let's try values.
+
+3 × 1 = 3     → remainder 3
+3 × 2 = 6     → remainder 6
+3 × 3 = 9     → remainder 9
+3 × 4 = 12    → remainder 12
+3 × 5 = 15    → remainder 15
+3 × 6 = 18    → remainder 18
+3 × 7 = 21    → remainder 1 ✅
+
+Because `21 ÷ 20 = 1` remainder 1
+
+So, `d = 7`
+
+Confirming: `3 × 7 = 21` and `21 mod 20 = 1`
+
+So, `3 × 7 ≡ 1 (mod20)`
+
+Therefore, `e = 3`, `d = 7`
+
+Here, 7 is the modular inverse of 3 modulo 20.
+
+The value `d` is chosen so that it undoes what `e` does.
+
+Encryption: Message -> Use e -> Ciphertext -> Use d -> Original Message
+
