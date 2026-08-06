@@ -270,3 +270,96 @@ This calculation takes only a few steps, even for very large numbers (2048-bit R
 
 These vulnerabilities highlight the critical importance of randomness and diversity in prime generation for RSA security.
 
+---
+
+### Exercise
+
+Using the `c`, `n`, and `e`, which are crucial components of the RSA encryption process. The RSA algorithm also utilises two large prime numbers, `p` and `q`. Can you uncover the hidden text behind it? Follow along to build a script that will uncover the hidden text.
+
+```
+Public Key: n = 43941819371451617899582143885098799360907134939870946637129466519309346255747  
+Exponent: e = 65537  
+Ciphertext: c = 9002431156311360251224219512084136121048022631163334079215596223698721862766
+```
+
+Your task is to recover the plaintext by factoring `n` and deriving the private key. The challenge assumes `n` is a product of two weakly generated primes `p` and `q`.
+
+#### Factoring
+
+Since `n` is the product of two large primes (`p` and `q`), factorisation is the first step. Modern factoring tools, like [MSIEVE](https://github.com/radii/msieve) or [YAFU](https://github.com/bbuhrow/yafu), can be used for this purpose. However, for educational purposes, you can use Python and a library like `sympy`.
+
+A Python library `sympy` for symbolic mathematics. It can perform algebra, number theory, prime testing, factorization, GCD, modular inverses, and much more.
+
+Use the following Python code I saved as `factor.py` to find the final flag.
+
+The script will compute:
+
+```
+p = 205237461320000835821812139013267110933
+q = 214102333408513040694153189550512987959
+```
+
+Alternatively, you can use [FactorDB](https://factordb.com/) and search for the prime numbers of the `n`. For example:
+
+<img width="959" height="261" alt="image" src="https://github.com/user-attachments/assets/ea6e86ba-c4ff-4b59-b462-895d44d00890" />
+
+#### Compute phi
+
+Using the two primes, calculate phi(n), where:
+
+```
+phi_n = (p - 1) * (q - 1)
+print("Phi(n) =", phi_n)
+```
+
+#### Finding the Private Key
+
+The private key exponent (d) is the modular inverse of (e) modulo (ϕ(n)):
+
+Use Python to calculate (d):
+
+```
+from sympy import factorint
+from Crypto.Util.number import inverse, long_to_bytes
+
+e = 65537
+d = inverse(e, phi_n)
+print("Private key (d):", d)
+```
+
+#### Decrypting the Ciphertext
+
+Now that you have (d), decrypt the given ciphertext (c):
+
+Use Python to compute the plaintext:
+
+```
+c = 9002431156311360251224219512084136121048022631163334079215596223698721862766
+
+plaintext = pow(c, d, n)
+flag = long_to_bytes(plaintext)
+print(flag.decode())
+print("Decrypted Plaintext:", flag)
+```
+
+---
+
+### Key Takeaways from Broadcast RSA
+- Avoid small public exponents like `e = 3`; instead, use larger values like `e = 65537`.
+- Ensure encrypted messages are padded with random data (e.g., PKCS#1 or OAEP) to prevent mathematical attacks.
+- Use different plaintexts for different recipients to avoid the conditions that make CRT attacks possible.
+
+---
+
+### Answer the questions below
+
+What is the flag?
+
+<img width="870" height="208" alt="image" src="https://github.com/user-attachments/assets/68259bc4-2ffc-434a-b92c-b4eb0ac68d05" />
+
+
+
+
+
+
+
