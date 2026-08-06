@@ -181,5 +181,60 @@ q₂ = 17
 
 Since RSA security depends on keeping p and q secret, both keys are now broken.
 
+**Small Differences Between Primes**: If `p` and `q` are too close in value, efficient algorithms such as [Fermat's factorisation](https://en.wikipedia.org/wiki/Fermat%27s_factorization_method) method can quickly factor `n`.
 
+Suppose `p = 97` and `q = 101`
+
+Notice: `101 - 97 = 4`
+
+They are very close.
+
+Now, `n = 97 × 101 = 9797`
+
+An attacker sees only `n = 9797`
+
+Because 97 and 101 are close together, Fermat's Factorization can quickly discover: `9797 = 97 × 101`
+
+Once the attacker knows `p` and `q`, they can calculate the private key and decrypt messages.
+
+Fermat's idea is: Instead of guessing factors directly, it tries to write n as the difference of two squares: `n = a² − b²`
+
+which can be rewritten as: `n = (a+b)(a−b)`
+
+If `p` and `q` are close together, then:
+- `a` is found very quickly.
+- `b` is very small.
+- So factoring `n` becomes easy.
+
+For the example above find the smallest integer a such that `a² ≥ n`
+
+The square root of `9797` is about: `√9797 ≈ 98.98`
+
+So we start with: `a = 99` because `99² = 9801`
+
+Compute `b² = a² − n`
+
+```
+b² = 99² - 9797
+    = 9801 - 9797
+    = 4
+```
+
+Now check if 4 is a perfect square. `√4 = 2` Yes!
+
+So, `b = 2`
+
+Fermat's formula says `n = (a+b)(a−b)`
+
+Substitute the values:
+
+```
+a = 99
+b = 2
+p = a - b = 99 - 2 = 97
+q = a + b = 99 + 2 = 101
+9797 = 97 × 101
+```
+
+The attacker has successfully factored `n`.
 
