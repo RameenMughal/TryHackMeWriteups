@@ -238,3 +238,35 @@ q = a + b = 99 + 2 = 101
 
 The attacker has successfully factored `n`.
 
+**Mathematical Exploits Using GCD**:
+The GCD of two public keys that share a prime can be computed in polynomial time: `GCD(n1​,n2​) = p`
+
+Polynomial time means that the time an algorithm takes to finish grows reasonably as the input size grows. In computer science, these algorithms are considered efficient.
+
+Suppose: 
+
+```
+n₁ = 143 = 11 × 13
+n₂ = 187 = 11 × 17
+```
+
+The attacker computes: `GCD(143, 187)`
+
+The Euclidean Algorithm (used to compute GCD) is a polynomial-time algorithm.
+
+Let's see it:
+
+```
+187 ÷ 143 = 1 remainder 44
+143 ÷ 44 = 3 remainder 11
+44 ÷ 11 = 4 remainder 0
+```
+
+When the remainder becomes 0, the last non-zero remainder is the GCD.
+
+`GCD(143,187) = 11`
+
+This calculation takes only a few steps, even for very large numbers (2048-bit RSA keys).
+
+These vulnerabilities highlight the critical importance of randomness and diversity in prime generation for RSA security.
+
