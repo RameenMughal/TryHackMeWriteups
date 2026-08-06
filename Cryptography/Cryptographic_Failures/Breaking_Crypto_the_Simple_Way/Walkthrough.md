@@ -112,3 +112,74 @@ The value `d` is chosen so that it undoes what `e` does.
 
 Encryption: Message -> Use e -> Ciphertext -> Use d -> Original Message
 
+The security of RSA depends on the difficulty of factoring (n) into its prime components (p) and (q). However, if (p) or (q) is poorly generated or shared across keys, this foundational assumption breaks down.
+
+---
+
+### How Factorisation Time Increases Exponentially
+
+As prime numbers grow larger, factorisation time increases exponentially, making brute-force factorisation infeasible for properly generated RSA keys.
+
+---
+
+### What is "P's and Q's"?
+
+The paper [Minding your p’s and q’s](https://www.cl.cam.ac.uk/archive/rja14/Papers/psandqs.pdf)  "P's and Q's" by Ross Anderson and Serge Vaudenay explores how poor randomness in RSA key generation can lead to severe vulnerabilities. It outlines key weaknesses that attackers can exploit:
+
+**Predictable Primes**: If `p` or `q` are generated using a weak random number generator (e.g., seeded with system time), an attacker can recreate the key generation process and derive the primes.
+
+**Shared Primes Across Keys**: When multiple RSA keys share a common prime `p`, the attacker can use the greatest common divisor (GCD) method to factor `n1 ​= p × q1​` and `n2 ​= p × q2​`, breaking both keys.
+
+Suppose, by accident, both users use the same prime `p = 11`.
+
+```
+Key 1:
+p = 11
+q₁ = 13
+
+n₁ = 11 × 13 = 143
+```
+
+```
+Key 2:
+p = 11
+q₂ = 17
+
+n₂ = 11 × 17 = 187
+```
+
+The attacker only sees the public keys: `n₁ = 143` and `n₂ = 187`
+
+They don't know `p`, `q₁`, or `q₂`.
+
+The attacker calculates: `GCD(143, 187)`
+
+Let's factor them `143 = 11 × 13` and `187 = 11 × 17`
+
+The greatest common divisor is `GCD(143, 187) = 11`
+
+The attacker has now discovered the shared prime!
+
+Once the attacker knows `p = 11`, they can easily find the other primes.
+
+For Key 1: `q₁ = 143 ÷ 11 = 13`
+
+For Key 2: `q₂ = 187 ÷ 11 = 17`
+
+Now the attacker knows:
+
+```
+Key 1:
+p = 11
+q₁ = 13
+```
+```
+Key 2:
+p = 11
+q₂ = 17
+```
+
+Since RSA security depends on keeping p and q secret, both keys are now broken.
+
+
+
