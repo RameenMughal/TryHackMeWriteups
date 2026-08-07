@@ -357,6 +357,80 @@ What is the flag?
 
 <img width="870" height="208" alt="image" src="https://github.com/user-attachments/assets/68259bc4-2ffc-434a-b92c-b4eb0ac68d05" />
 
+## Breaking Hashes
+
+Hashing is a cryptographic process that transforms an input (e.g., a password or a message) into a fixed-size string, often called a hash. The transformation is one-way, meaning it’s not feasible to reverse the hash to recover the original input. Hashing is used for:
+- **Password Storage**: Instead of storing plaintext passwords, systems store their hashes. During login, the input password is hashed and compared to the stored hash.
+- **Data Integrity**: Hashes verify that data has not been altered during transmission.
+- **Message Authentication (HMAC)**: Hashes combined with a secret key verify that a message hasn’t been tampered with.
+
+HMAC (Hash-based Message Authentication Code) combines a secret key with a hash function to verify that a message has not been altered and comes from someone who knows the secret key. If the message is modified, the HMAC value changes, allowing the receiver to detect tampering. It provides integrity and authentication, but does not encrypt the message.
+
+---
+
+### Common Vulnerabilities in Hashing
+
+**Weak Hash Algorithms**: Older algorithms like MD5 and SHA-1 are considered insecure due to their susceptibility to collisions (two inputs producing the same hash). Attackers can exploit these collisions to make malicious data appear legitimate.
+
+**Lack of Salting**: When the same input consistently produces the same hash, attackers can use precomputed databases (rainbow tables) to reverse the hash to its original value. Salting—adding a unique, random value to each input before hashing—prevents this.
+
+**Insecure HMACs**: Hash-based Message Authentication Codes (HMACs) rely on a hash function combined with a secret key to ensure message authenticity. Weaknesses arise when:
+- The hash function is insecure.
+- The key is short, predictable, or reused.
+
+---
+
+### SHA-256 Isn’t Ideal for Password Hashing
+
+SHA-256 is a fast and efficient hash function used for data integrity and digital signatures, but it is not suitable for password hashing because attackers can test billions of hashes per second using modern GPUs. Instead, password hashing schemes like Argon2, bcrypt, and PBKDF2 are designed to be slow and computationally expensive, making brute-force attacks much harder. They also allow developers to increase the cost factor over time as hardware becomes more powerful.
+
+The cost factor (also called the work factor) controls how much time and computing power is needed to hash a password.
+- A low cost factor → hashing is faster, but attackers can try more password guesses per second.
+- A high cost factor → hashing is slower, making brute-force attacks much harder.
+
+To put this into perspective, here’s a rough comparison of how many hashes per second different algorithms can process using GPU acceleration:
+
+<img width="897" height="251" alt="image" src="https://github.com/user-attachments/assets/1b99b585-87f6-4594-9307-c032b7ca7c09" />
+
+If an attacker is trying to brute-force a password, SHA-256 allows them to test billions of possibilities per second, while bcrypt and Argon2 intentionally slow them down to just a few thousand or even hundreds per second. This makes an enormous difference in security.
+
+While SHA-256 can be used for password hashing if you add a salt and manually iterate the hashing process many times, this is still a weaker approach than using a proper password hashing function. Argon2, bcrypt, and PBKDF2 include built-in protections against brute-force attacks, making them far better suited for storing passwords securely.
+
+---
+
+### Choosing the Right Hashing Function
+
+To clarify when to use different hash functions, here’s a comparison:
+
+<img width="902" height="205" alt="image" src="https://github.com/user-attachments/assets/50f2c83e-7c86-44c1-942f-3dd249808dbb" />
+
+Data Integrity checks whether data has changed and uses only a hash function. Anyone can calculate the hash.
+
+While, Message Authentication checks whether data has changed and verifies who sent it and Uses a hash function plus a secret key. Only someone with the secret key can generate the correct HMAC.
+
+Many developers assume that hashing alone is enough to secure passwords, but the reality is that the right tool needs to be used for the right job. Using SHA-256 to hash passwords is like using a padlock on a bank vault—it provides some protection, but it’s not nearly strong enough to stop a determined attacker.
+
+---
+
+### Challenge
+
+HMAC (Hash-based Message Authentication Code) is a cryptographic method used to verify the integrity and authenticity of a message. It combines a cryptographic hash function (in this case, SHA-1) with a secret key. If an attacker can determine the secret key, they can forge valid HMACs and manipulate messages.
+
+In this challenge, you are given a message along with its HMAC-SHA1 digest. However, the secret key used for signing is weak. Your objective is to recover the key.
+
+A digest is simply the output (result) of a hash function. It is also called a hash value or hash.
+
+Below is the message and the SHA1 digest of that message.
+
+```
+Message: CanYouGuessMySecret
+SHA1-Digest: 1484c3a5d65a55d70984b4d10b1884bda8876c1d
+```
+
+---
+
+### Solution
+
 
 
 
