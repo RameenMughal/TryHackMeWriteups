@@ -431,6 +431,86 @@ SHA1-Digest: 1484c3a5d65a55d70984b4d10b1884bda8876c1d
 
 ### Solution
 
+Hashcat is a powerful tool for cracking hashes and HMAC keys. Since we know the format is HMAC-SHA1 , we will use mode 150 . Mode 150 targets HMAC-SHA1 based on this [documentation](https://hashcat.net/wiki/doku.php?id=example_hashes).
+
+Save the hash and message into a file: `echo -n "1484c3a5d65a55d70984b4d10b1884bda8876c1d:CanYouGuessMySecret" > digest.txt`
+
+Run Hashcat with the RockYou wordlist: `hashcat -a 0 -m 150 digest.txt /usr/share/wordlists/rockyou.txt`
+
+Below is the expected output:
+
+```
+hashcat (v7.1.2) starting
+
+OpenCL API (OpenCL 3.0 PoCL 6.0+debian  Linux, None+Asserts, RELOC, SPIR-V, LLVM 18.1.8, SLEEF, DISTRO, POCL_DEBUG) - Platform #1 [The pocl project]
+====================================================================================================================================================
+* Device #01: cpu-haswell-AMD Ryzen 5 7430U with Radeon Graphics, 1456/2912 MB (512 MB allocatable), 4MCU
+
+Minimum password length supported by kernel: 0
+Maximum password length supported by kernel: 256
+Minimum salt length supported by kernel: 0
+Maximum salt length supported by kernel: 256
+
+Hashes: 1 digests; 1 unique digests, 1 unique salts
+Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
+Rules: 1
+
+Optimizers applied:
+* Zero-Byte
+* Not-Iterated
+* Single-Hash
+* Single-Salt
+
+ATTENTION! Pure (unoptimized) backend kernels selected.
+Pure kernels can crack longer passwords, but drastically reduce performance.
+If you want to switch to optimized kernels, append -O to your commandline.
+See the above message to find out about the exact limits.
+
+Watchdog: Temperature abort trigger set to 90c
+
+Host memory allocated for this attack: 513 MB (2204 MB free)
+
+Dictionary cache built:
+* Filename..: /usr/share/wordlists/rockyou.txt
+* Passwords.: 14344392
+* Bytes.....: 139921507
+* Keyspace..: 14344385
+* Runtime...: 1 sec
+
+1484c3a5d65a55d70984b4d10b1884bda8876c1d:CanYouGuessMySecret:XXXXXXXX
+                                                          
+Session..........: hashcat
+Status...........: Cracked
+Hash.Mode........: 150 (HMAC-SHA1 (key = $pass))
+Hash.Target......: 1484c3a5d65a55d70984b4d10b1884bda8876c1d:CanYouGues...Secret
+Time.Started.....: Fri Aug  7 12:48:55 2026 (1 sec)
+Time.Estimated...: Fri Aug  7 12:48:56 2026 (0 secs)
+Kernel.Feature...: Pure Kernel (password length 0-256 bytes)
+Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#01........:    81466 H/s (0.47ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
+Progress.........: 4096/14344385 (0.03%)
+Rejected.........: 0/4096 (0.00%)
+Restore.Point....: 0/14344385 (0.00%)
+Restore.Sub.#01..: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidate.Engine.: Device Generator
+Candidates.#01...: 123456 -> oooooo
+Hardware.Mon.#01.: Util: 22%
+
+Started: Fri Aug  7 12:48:25 2026
+Stopped: Fri Aug  7 12:48:57 2026
+```
+
+---
+
+### Answer the questions below
+
+What is the secret used to encrypt the message?
+
+<img width="828" height="382" alt="image" src="https://github.com/user-attachments/assets/28f80f0b-6109-42fc-bd8a-ac88b2d10123" />
+
+
 
 
 
