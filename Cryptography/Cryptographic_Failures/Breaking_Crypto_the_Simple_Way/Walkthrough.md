@@ -608,6 +608,146 @@ What is the flag?
 
 <img width="664" height="175" alt="image" src="https://github.com/user-attachments/assets/8c392337-f571-4dd0-9304-fcc9a67088b9" />
 
+## Bit Flipping Attacks
+
+### What is Unauthenticated Encryption?
+
+Unauthenticated encryption refers to encryption that does not include a mechanism to verify the integrity or authenticity of the ciphertext. This means that an attacker can modify encrypted data that is in transit, and the system will still accept and process it without detecting any tampering.
+
+When the application decrypts tampered ciphertext without verifying its integrity, an attacker can manipulate the plaintext in predictable ways. This is the root cause of bit-flipping attacks.
+
+A classic example is AES in CBC (Cipher Block Chaining) mode without an authentication tag. AES-CBC encrypts data securely but does not ensure integrity. If an attacker can modify the ciphertext, they can manipulate certain bits of the decrypted plaintext without breaking the encryption.
+
+This leads to bit-flipping attacks, where an attacker changes ciphertext in a way that results in controlled modifications in the plaintext.
+
+---
+
+### Bit Flipping Attacks
+
+Bit flipping attacks target systems that use unauthenticated encryption, allowing an attacker to modify ciphertext so that the decrypted plaintext is manipulated in predictable ways. This type of attack is particularly dangerous when systems assume that encrypted data is inherently safe to trust without verifying its integrity.
+
+AES-CBC can be vulnerable to bit-flipping attacks if there is no MAC (Message Authentication Code) to check whether the ciphertext was changed.
+
+Think of it like this:
+- AES-CBC encrypts data in blocks.
+- Each plaintext block is connected to the previous ciphertext block.
+- If an attacker changes some bits in a ciphertext block, those changes can cause controlled changes in the decrypted plaintext.
+- Without a MAC, the system may not notice that the ciphertext was modified.
+
+For example, consider an encrypted payload: `{"role":"0"}`
+
+If this ciphertext is tampered with, the role could be escalated to "1". Without integrity protection, the system would accept the manipulated plaintext as legitimate.
+
+Suppose the original decrypted message is: `role=user`
+
+An attacker modifies the ciphertext so that it decrypts to: `role=admin`
+
+The attacker doesn't need to know the encryption key. They are manipulating the ciphertext so that the decrypted result changes.
+
+A MAC helps prevent this because the attacker cannot modify the ciphertext and produce a valid MAC without knowing the secret key.
+
+---
+
+### Exercise
+
+Navigate to `http://bcts.thm/labs/lab4/`.
+
+<img width="446" height="149" alt="image" src="https://github.com/user-attachments/assets/7703be75-3259-4ac4-94eb-9b50685829ef" />
+
+The application accepts any credential as shown below:
+
+```
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['password'])) {
+    $username = htmlspecialchars($_POST['username']);
+    $password = htmlspecialchars($_POST['password']);
+
+    $message = "username={$username}";
+    $role = "0";
+    $token = encrypt_data($message, $key, $iv);
+    $token2 = encrypt_data($role, $key, $iv);
+
+    setcookie("auth_token", $token, time() + 3600, "/");
+    setcookie("role", $token2, time() + 3600, "/");
+    header("Location: dashboard.php");
+    exit();
+}
+```
+
+This PHP code handles a POST login request. It takes the submitted username and password, cleans them using `htmlspecialchars()`, and creates a message containing the username, such as `username=user`. It then sets the user's role to `0` and encrypts both the username message and role using `encrypt_data()` with the same key and IV. These encrypted values are stored as cookies called `auth_token` and role, each valid for one hour. Finally, the user is redirected to `dashboard.php`.
+
+IV (Initialization Vector) is a random or unpredictable value used along with an encryption key when encrypting data. It prevents the same plaintext from producing the same ciphertext every time.
+
+As we can see in the code above, the cookie named `role` uses an encrypted version of the text `0`.
+
+<img width="536" height="223" alt="image" src="https://github.com/user-attachments/assets/fcdb7284-1c61-402f-8ae4-c6739a36c558" />
+
+Below is a sample script `flipbit.py` that will flip the `role=0` to `role=1`.
+
+**Explanation of Script**
+
+**Hex Decoding**:
+
+```
+try:
+    cipher_bytes = bytearray(unhexlify(original_token))
+except ValueError:
+    print("Invalid token format! Make sure it's a valid hex string.")
+    exit(1)
+```
+
+- Converts the hex-encoded token into a bytearray for modification.
+- If the token is not in a valid hex format, an error is printed, and the script exits.
+
+**AES Block Size and Initialization Vector (IV)**
+
+```
+block_size = 16
+```
+
+- AES uses a 16-byte block size.
+- The first 16 bytes of the encrypted token represent the IV in AES-CBC mode.
+
+**Bit-Flipping Attack**
+
+```
+guest_offset = 0
+
+xor_diff = [
+    0x01,  # '0' -> '1'
+]
+```
+
+- Bit-flipping works by modifying the IV to change the decrypted plaintext.
+- `guest_offset = 0` means the modification starts at byte 0 of the IV.
+- The script applies an XOR operation (`^=`) to change a specific byte in the IV.
+- In this case, it changes '0' to '1' in the decrypted text.
+
+**Applying the Bit Flip**
+
+```
+for i, diff in enumerate(xor_diff):
+    print(f"[DEBUG] Modifying byte at offset {guest_offset + i}: {hex(cipher_bytes[guest_offset + i])} XOR {hex(diff)}")
+    cipher_bytes[guest_offset + i] ^= diff
+```
+
+- Iterates over `xor_diff` and modifies the corresponding bytes in the IV.
+- Uses XOR (`^=`) to modify the first byte of the IV.
+
+First copy the role token from the Developer Tools and then run the script `flipbit.py`.
+
+<img width="617" height="116" alt="image" src="https://github.com/user-attachments/assets/c03f3e28-2ec3-47d3-b6d1-c965ea8e15af" />
+
+Using the modified cookie, change the existing value by double clicking of the cookie role and refresh the page.
+
+---
+
+### Answer the questions below
+
+What is the flag?
+
+<img width="1068" height="468" alt="image" src="https://github.com/user-attachments/assets/bdc9305d-4119-4111-bb56-724d9fee038a" />
+
+
 
 
 
