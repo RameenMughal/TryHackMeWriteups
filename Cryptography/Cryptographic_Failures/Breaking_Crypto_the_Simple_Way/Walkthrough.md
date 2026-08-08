@@ -510,6 +510,105 @@ What is the secret used to encrypt the message?
 
 <img width="828" height="382" alt="image" src="https://github.com/user-attachments/assets/28f80f0b-6109-42fc-bd8a-ac88b2d10123" />
 
+## Exposing Keys
+
+### Risks of Exposing Cryptographic Keys in Client-Side Code
+
+Exposing cryptographic keys in client-side code is a common yet critical mistake. When keys are included in code that runs in the user's browser (e.g., JavaScript), anyone with access to the application can retrieve and misuse those keys. This defeats the purpose of encryption and authentication, as the attacker gains direct access to the mechanism meant to protect the data.
+
+Key risks include:
+- **Unauthorised Access**: Exposed keys can be used to decrypt sensitive data or interact with backend APIs as an authenticated user.
+- **Data Tampering**: An attacker can use the keys to generate signed payloads or modify encrypted messages, bypassing integrity checks.
+- **API Abuse**: Hardcoded API keys may allow attackers to access privileged API endpoints without authorisation.
+
+---
+
+### Common Scenarios of Key Exposure
+
+- **Hardcoded API Keys in JavaScript**: Developers often embed API keys in front-end code for convenience, forgetting that anyone can view this code using browser developer tools.
+- **Encryption Keys in Client-Side Frameworks**: Encryption keys are sometimes included in front-end libraries or scripts to encrypt/decrypt data locally. These keys can be easily extracted and used maliciously.
+- **Unsecured Configuration Files**: Configuration files embedded in web applications may contain sensitive credentials or keys in plain text.
+
+---
+
+### Exercise
+
+Navigate to `http://bcts.thm/labs/lab3`.
+
+<img width="447" height="131" alt="image" src="https://github.com/user-attachments/assets/ceba2b09-ecf1-45ba-85d8-3c84d06e9239" />
+
+Open your developer tools (F12) or right click to choose Inspect (Q), navigate to the network tab, and try submitting a message.
+
+<img width="858" height="229" alt="image" src="https://github.com/user-attachments/assets/4f0e6065-15ea-4854-a967-5d8ad108e8e1" />
+
+As you can see in the image above, the submitted data is encrypted using the data parameter as shown in the request.
+
+Checking the source code of the web page will show that the application uses JavaScript to encrypt the submitted message before submitting it to `process.php`.
+
+<img width="1778" height="1584" alt="image" src="https://github.com/user-attachments/assets/888068bd-0a8c-48f6-8144-f587a88b04cd" />
+
+Takes the message you type, locks/encrypts it using AES with a fixed secret key, adds a random value (IV) to make the encryption safer, converts the encrypted message into Base64, and sends both the encrypted message and IV to process.php for processing.
+
+Since the encryption key used to encrypt the message is hardcoded in the JavaScript code, it is possible for an attacker to create a script that will brute force for the correct message using the hardcoded encryptionKey value.
+
+To simplify this, a wordlist containing the possible message is available on the server at `http://bcts.thm/labs/lab3/wordlist.txt`.
+
+However, directly brute-forcing the application will not work since the request is encrypted, so we must automate this using Python.
+
+Below is the sample Python script named as `brute_keys.py` that uses the available wordlist.txt in the server.
+
+**Note**: If you're using your own machine, you must install `pycryptodome` using pip for the script to work.
+
+**Explanation of script** 
+
+`encrypt_message(message, iv)`:
+- Encrypts a given message using AES-CBC mode.
+- Pads the message to ensure its length is a multiple of the AES block size (16 bytes).
+- Encrypts the padded message using AES with the provided IV.
+- Converts the ciphertext and IV to Base64 format before returning.
+
+`send_payload(ciphertext, iv)`:
+- Sends the encrypted message and IV as a JSON payload to the target server.
+- Returns the server's response.
+
+`bruteforce()`:
+- Reads the wordlist from wordlist.txt.
+- Iterates over each word in the list:
+- Generates a random IV (16 bytes).
+- Encrypts the word using AES-CBC.
+- Sends the encrypted message to the server.
+- Check if the response contains "Access granted!" (indicating success).
+
+Once the script successfully brute forces the correct message, the application will return the flag.
+
+First download the `wordlist.txt` from this command: `wget http://bcts.thm/labs/lab3/wordlist.txt`
+
+<img width="823" height="121" alt="image" src="https://github.com/user-attachments/assets/d5c2ce1a-12fe-40aa-bd47-12a0e8fa8635" />
+
+Then run the script: `python3 brute_key.py`
+
+<img width="293" height="230" alt="image" src="https://github.com/user-attachments/assets/272aa9b1-a9cf-4179-b0f8-0baf15c55e00" />
+
+---
+
+### Key Takeaways
+
+- **Never Hardcode Keys**: Avoid embedding sensitive keys in client-side code or configuration files that are accessible to users.
+- **Use Secure Key Management**: Store keys in secure environments, such as server-side applications or dedicated key management services (e.g., AWS KMS, Azure Key Vault).
+- **Implement Backend Encryption**: Perform sensitive operations, like encryption and decryption, on the server side to prevent exposure of critical secrets.
+- **Educate Developers**: Many developers make this mistake unknowingly. Awareness and secure coding practices can prevent these vulnerabilities.
+
+---
+
+### Answer the questions below
+
+What is the flag?
+
+<img width="798" height="201" alt="image" src="https://github.com/user-attachments/assets/9b9ddb94-119f-46e1-bc4c-6b37e91045eb" />
+
+<img width="664" height="175" alt="image" src="https://github.com/user-attachments/assets/8c392337-f571-4dd0-9304-fcc9a67088b9" />
+
+
 
 
 
