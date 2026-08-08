@@ -747,7 +747,29 @@ What is the flag?
 
 <img width="1068" height="468" alt="image" src="https://github.com/user-attachments/assets/bdc9305d-4119-4111-bb56-724d9fee038a" />
 
+## Conclusion
 
+### Best Practices for Avoiding Cryptographic Mistakes
+
+To secure cryptographic implementations and prevent the vulnerabilities explored in this room, follow these best practices:
+
+1. **Use Strong Keys and Secure Algorithms**
+   - Generate keys with sufficient entropy and length (e.g., AES-256 for symmetric encryption).
+   - Use modern, secure algorithms such as AES-GCM, RSA-2048, and SHA-256.
+   - Regularly update cryptographic libraries to protect against newly discovered vulnerabilities.
+2. **Avoid Exposing Keys in Client-Side Code**
+   - Never hardcode encryption keys, API secrets, or sensitive credentials in JavaScript or other client-side files.
+   - Store secrets securely on the server side and use environment variables or key management systems like AWS KMS or Azure
+Key Vault.
+3. **Implement Authenticated Encryption**
+   - Always pair encryption with integrity checks using authenticated encryption modes like AES-GCM or AES-CCM.
+   - Ensure that any data transmitted over untrusted channels is encrypted and includes integrity protection.
+4. **Secure RSA Implementations**
+   - Use larger public exponents (e = 65537) and ensure that encrypted messages include padding (e.g., OAEP or PKCS#1).
+   - Avoid encrypting the same plaintext for multiple recipients with the same public exponent.
+5. **Educate Developers**
+   - Ensure that development teams understand secure cryptographic practices and the risks of misconfigurations.
+   - Conduct regular training and code reviews to identify and fix potential issues before deployment.
 
 
 
