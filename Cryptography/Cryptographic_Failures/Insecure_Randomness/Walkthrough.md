@@ -72,7 +72,58 @@ Entropy
 
 nay
 
+## Types of Random Number Generators
 
+### True Random Number Generator (TRNG)
+
+TRNGs generate randomness by relying on unpredictable physical phenomena like thermal noise or radioactive decay. Since these generators stem from natural events, they produce inherently random values. TRNGs are commonly used in highly sensitive cryptographic operations, such as generating the keys for algorithms like RSA or ECC. These keys are then used in tasks like encryption, digital signatures, and certificate creation, where unpredictability is crucial for security. However, TRNGs require specialised hardware and can be slower than other RNGs, making them less suitable for tasks requiring rapid number generation.
+
+RSA is a method for encrypting data using two keys: one to lock (encrypt) and another to unlock (decrypt) it, relying on the difficulty of factoring large number.
+
+Elliptic Curve Cryptography (ECC) is a way to encrypt data using smaller keys while still providing strong security. It is based on the math of elliptic curves.
+
+<img width="1140" height="340" alt="image" src="https://github.com/user-attachments/assets/c44933d5-b3f5-49a3-9397-3c1a2f399623" />
+
+As shown in the above figure, the basic workflow includes capturing a seeding value from a natural, unpredictable physical source. This value is then fed into hardware that performs a non-deterministic transformation to generate a sequence of truly random, unpredictable numbers. The output of TRNGs cannot be predicted or reproduced, making them ideal for high-security cryptographic operations.
+
+---
+
+### Pseudorandom Number Generator (PRNG)
+
+PRNGs, unlike TRNGs, generate random numbers algorithmically based on an initial seed value. While they may appear random, they are deterministic, meaning the same seed will always produce the same sequence of numbers. PRNGs are faster and more efficient than TRNGs and are suitable for applications that quickly need large quantities of random numbers, like simulations or gaming. However, since they are algorithmic, predictability becomes a risk if an attacker can deduce the seed or its generation method.
+
+#### Types of PRNGs
+
+We will examine the two primary types of PRNGs, statistical and cryptographic PRNGs, focusing on their differences and specific applications.
+
+**1. Statistical PRNG**
+
+Statistical PRNGs are designed to produce numbers that pass statistical randomness tests, meaning the numbers appear random and lack obvious patterns. These generators are widely used in non-security applications such as simulations, statistical sampling, and gaming, where randomness is required but not in a security-critical context. However, statistical PRNGs are deterministic by nature, meaning the same seed value will always produce the same sequence of numbers. This predictability makes them unsuitable for cryptographic tasks where unpredictability is paramount. 
+
+**2. Cryptographically Secure PRNG (CSPRNG)**
+
+A CSPRNG is a type of PRNG made for security purposes. It generates random numbers that are very difficult to predict or guess.
+
+Unlike normal PRNGs, CSPRNGs are designed so that even if someone knows some of the generated numbers or part of the system’s internal information, they still cannot easily figure out the next numbers.
+
+CSPRNGs are important in security applications such as:
+- Creating encryption keys
+- Generating secure session tokens
+- Producing random numbers for security protocols
+
+They must follow strict security requirements to make sure their output cannot be predicted. Although CSPRNGs can be slower than normal PRNGs because they use extra security measures, they are very important for keeping cryptographic systems secure.
+
+---
+
+### Answer the questions below
+
+You prepare a game involving immediate interaction and random event simulation but with no critical security requirements. Which type of RNG would be most appropriate for this purpose? Write the correct option only.
+a) TRNG
+b) Statistical PRNG
+c) We should not use randomness in games
+d) None of the above
+
+b
 
 
 
