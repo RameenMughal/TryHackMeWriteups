@@ -118,9 +118,13 @@ They must follow strict security requirements to make sure their output cannot b
 ### Answer the questions below
 
 You prepare a game involving immediate interaction and random event simulation but with no critical security requirements. Which type of RNG would be most appropriate for this purpose? Write the correct option only.
+
 a) TRNG
+
 b) Statistical PRNG
+
 c) We should not use randomness in games
+
 d) None of the above
 
 b
