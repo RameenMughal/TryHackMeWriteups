@@ -226,11 +226,129 @@ Doing the same steps as `victim`, first create a reset link for `master` at `htt
 
 Run the Python script as `python3 exploit_token master TIMESTAMP`
 
-Reset the password and then loggin in as `master`
+Reset the password `http://random.thm:8090/case/reset_password.php?token=master{timestamp_of_token_generation}` and then loggin in as `master`
 
 3. What is the PHP function used to create the token variable in the code above?
 
 `time()`
+
+## Predictable Seed in PRNGs
+
+In this task, the focus shifts to cases where a predictable seed is used to initialise PRNGs. If the seed is weak or predictable, an attacker can reproduce the entire sequence of random numbers, leading to severe vulnerabilities in systems that rely on these random values.
+
+An example of the impact of predictable seeding is in `CAPTCHA` systems, where the random value determining the CAPTCHA challenge will be generated to detect a bot activity. If the seed used to initialise the PRNG is predictable, an attacker could predict the CAPTCHA values ahead of time, allowing them to bypass the CAPTCHA and access restricted areas of the application without solving it.
+
+This issue also manifests in systems like lottery or game applications, where PRNGs determine the outcome of random draws. When these generators are seeded with predictable values, such as timestamps, attackers can manipulate the system by predicting the outcome, ensuring they win consistently. By exploiting the predictable PRNG seed, the attacker can reverse-engineer or replicate the same random sequence, breaking the system's fairness.
+
+---
+
+### Practical Scenario
+
+In this scenario, we will explore how using predictable seeds to generate tokens in a magic link login system can lead to account takeover. 
+
+The token inside this link is created using PHP's `mt_rand()` function. The problem is that `mt_rand()` is not designed for security when used to create login tokens. In this case, the system uses predictable information, such as the CRC32 value of the user's email, together with a constant value to create the seed. If an attacker can figure out how the seed is created, they may be able to predict the token that the website will generate. If they can predict a valid token for another user, they could potentially log in as that user and take over the account.
+
+CRC32 stands for Cyclic Redundancy Check 32-bit. It is a function that takes some data, such as an email address, and produces a 32-bit number called a checksum.
+
+The important thing is that CRC32 is not encryption. It is mainly used to detect whether data has been changed or corrupted.
+
+**Analysis of Magic Link Feature**
+
+- Start by navigating the web application at `http://random.thm:8090/case/` and click `Login with Magic Link`.
+
+<img width="612" height="268" alt="image" src="https://github.com/user-attachments/assets/b6d30d5d-8d92-4132-ae87-1bd565047202" />
+
+- The website allows users to log in through a magic link sent to their email. For this demonstration, use the email: `magic@mail.random.thm`. Enter this email address into the provided input field and click `Send Magic Link`.
+
+<img width="700" height="183" alt="image" src="https://github.com/user-attachments/assets/dd4b701f-fbce-413c-970d-66c6e8f1f793" />
+
+The magic link contains a token allowing users to log in without entering a password.
+
+- Open the mailbox by logging in with the email `magic@mail.random.thm` and password `Testing@123`. You will see the Login with Magic Link email like this:
+
+<img width="862" height="158" alt="image" src="https://github.com/user-attachments/assets/cd9c69fe-0ae6-40c1-a51f-12bfe514252d" />
+
+- In the victim's inbox, you will see the magic link email. The magic link will look like this: `http://random.thm:8090/case/magic_link_login.php?token=MTEzNTUwODU0MQ==`
+- The token (`MTEzNTUwODU0MQ==`) is a base64-encoded version of a random number generated using PHP’s `mt_rand()` function.
+
+**Analysis of Server Side Code**
+
+Now that we have captured the magic link token from the victim’s email, it's essential to understand how this token was generated on the server. The server uses the PHP’s mt_rand() function to generate a random number that forms the basis of the token. Below is the server-side code that generates the token:
+
+```
+mt_srand(CONSTANT_VALUE + crc32($email));
+
+$random_number = mt_rand();
+$token = base64_encode($random_number);
+```
+
+This code generates a token in a few steps:
+- `mt_srand(CONSTANT_VALUE + crc32($email));`: This sets the starting seed for the random number generator. The seed is made from a constant value plus the CRC32 value of the user's email.
+- `$random_number = mt_rand();`: `mt_rand()` generates a random-looking number based on that seed.
+- `$token = base64_encode($random_number);`The generated number is converted into Base64 format so it can be used as a token.
+
+So, simply: Email → CRC32 → Seed → `mt_rand()` → Random Number → Base64 → Token
+
+The security problem is that the seed depends partly on the email, which is usually predictable. Therefore, if someone can determine the seed, they may be able to reproduce the same `mt_rand()` output and predict the token.
+
+**Decoding the Token**
+
+To proceed with the attack, we need to decode the Base64 token and retrieve the original random number generated by the server. This number is the direct output of PHP’s `mt_rand()` function, which was seeded with a predictable value. You can use an online tool like [Base64 Decode](https://www.base64decode.org/) to quickly decode the token. Simply paste the Base64-encoded token (`MTEzNTUwODU0MQ==`) into the input field, and the decoded output will be displayed.
+
+Once we have decoded the Base64 string, we are left with the original random number generated by `mt_rand()`, which, in our case, is `1135508541`. This number is crucial for the next step in the attack, as it is the output of a PRNG that was seeded using a dynamic value.
+
+---
+
+### Exploitation
+
+The primary tool we’ll use to exploit this vulnerability is [`php_mt_seed`](https://www.openwall.com/php_mt_seed/). This tool is specifically designed to crack the seed of PHP’s `mt_rand()` function based on the outputs of the random number generator. Once you provide `php_mt_seed` with a `mt_rand()` output, it calculates possible seed values that could have produced that output. 
+
+You can learn detailed technical explanations and maths about the tool here [Breaking PHP's `mt_rand()` Function](https://blog.lexfo.fr/php-mt-rand-prediction.html).
+
+You can download the tool of latest version here in the main page [Download php_mt_seed](https://www.openwall.com/php_mt_seed/)
+
+The next step with the tool setup is to crack the seed based on the decoded random number from the token. We know that the decoded random number from the base64 token was `1135508541`. This number is the direct output of `mt_rand()`. To find the seed, run the following command in the AttackBox, which takes a little over 5 minutes to show the result (You can skip it as well):
+
+
+
+`php_mt_seed` will output a list of possible seeds that could have generated the random number `1135508541`. This may take up to a few minutes, depending on the range of possible seeds. When using `php_mt_seed`, the tool generates multiple possible seeds because different seeds can produce the same initial random number. This happens due to the way `mt_rand()` is initialised. To accurately identify the correct seed, each one must be tested in the environment individually. In our case, the random number `1135508541` was generated through the seed `970732804`.
+
+Once you have identified the correct seed, you can identify the constant value that the server used to prepare the seed. All you need to do is subtract the CRC32 value of `magic@mail.random.thm` from the identified seed. You can use this [CyberChef](https://gchq.github.io/CyberChef/) to get the exact value.
+
+<img width="551" height="296" alt="image" src="https://github.com/user-attachments/assets/10e5753c-ca01-451a-bf8f-da6303f59a12" />
+
+First put "CRC Checksum" and choose the Algorithm "CRC-32", Then choose "From Base" and select Radix 16 value.
+
+After getting the CRC32 value `970731467`, if we subtract it from the identified seed value `970732804`, we will get the constant value, which is `1337` in this case. 
+
+An attacker only needs the target’s email address to log in as someone else. Once they have the email, the attacker can calculate the CRC32 of the email, add `1337` to it, and use the resulting seed with `mt_srand()`. This allows the attacker to predict the exact token generated for the target, enabling them to bypass authentication and log in as that user without knowing the password. 
+
+In the AttackBox copy and paste the following PHP code to a file called `magic_link_login.php` and then use the command `php -S 0.0.0.0:8181` to utilise PHP's built-in web server for us to access the script. The script will generate 10 tokens based on a seed comprising a constant value and an email address. The script will accept the constant value and email as input and generate the corresponding tokens. 
+
+<img width="457" height="24" alt="image" src="https://github.com/user-attachments/assets/0fe018a9-24d4-42a1-9d82-c0024a36ae25" />
+
+Then navigate to your own localhost to get the Tokens `http://127.0.0.1:8181/magic_link_login.php?email=magic@mail.random.thm&constant=1337`
+
+<img width="530" height="175" alt="image" src="https://github.com/user-attachments/assets/e07b86b0-6ee8-4641-b5b9-36e9bc4868e6" />
+
+<img width="597" height="95" alt="image" src="https://github.com/user-attachments/assets/eb613c8d-b6aa-442a-8989-59ad5a3399ff" />
+
+Now that you have the predicted token, you can log in as the target user. Simply visit the magic link URL `http://random.thm:8090/case/magic_link_login.php?token={predicted_token}` with the predicted token to log in without knowing the password.
+
+---
+
+### Answer the questions below
+
+1. What is the flag value after logging in as magic@mail.random.thm?
+
+<img width="1710" height="256" alt="image" src="https://github.com/user-attachments/assets/3ddacbbd-abd2-444f-aae4-b9362c733bec" />
+
+
+
+
+
+
+
 
 
 
