@@ -309,7 +309,7 @@ You can download the tool of latest version here in the main page [Download php_
 
 The next step with the tool setup is to crack the seed based on the decoded random number from the token. We know that the decoded random number from the base64 token was `1135508541`. This number is the direct output of `mt_rand()`. To find the seed, run the following command in the AttackBox, which takes a little over 5 minutes to show the result (You can skip it as well):
 
-
+<img width="320" height="164" alt="image" src="https://github.com/user-attachments/assets/0a7926e0-2b7b-4cb6-b412-5454da06c239" />
 
 `php_mt_seed` will output a list of possible seeds that could have generated the random number `1135508541`. This may take up to a few minutes, depending on the range of possible seeds. When using `php_mt_seed`, the tool generates multiple possible seeds because different seeds can produce the same initial random number. This happens due to the way `mt_rand()` is initialised. To accurately identify the correct seed, each one must be tested in the environment individually. In our case, the random number `1135508541` was generated through the seed `970732804`.
 
