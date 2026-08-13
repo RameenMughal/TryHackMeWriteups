@@ -226,7 +226,11 @@ Doing the same steps as `victim`, first create a reset link for `master` at `htt
 
 Run the Python script as `python3 exploit_token master TIMESTAMP`
 
+<img width="269" height="166" alt="image" src="https://github.com/user-attachments/assets/0735c8f4-653c-4496-9adf-3e8446cd2422" />
+
 Reset the password `http://random.thm:8090/case/reset_password.php?token=master{timestamp_of_token_generation}` and then loggin in as `master`
+
+<img width="1717" height="249" alt="image" src="https://github.com/user-attachments/assets/a20110b3-774b-41b3-9346-263a27f3184f" />
 
 3. What is the PHP function used to create the token variable in the code above?
 
