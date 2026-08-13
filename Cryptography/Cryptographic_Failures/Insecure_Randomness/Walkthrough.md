@@ -349,8 +349,52 @@ Now that you have the predicted token, you can log in as the target user. Simply
 
 2. What is the flag value after logging in as hr@mail.random.thm?
 
+Going to the `Login with Magic Link` page then enter `hr@mail.random.thm` to send the magic link to this email.
 
-3. What is the PHP function used to seed the RNG in the code above?
+Login the mail page `http://random.thm:8090/mail/` by entering `hr@mail.random.thm` and `Testing@123` as email and password, you will see the email of Magic Link:
+
+<img width="862" height="154" alt="image" src="https://github.com/user-attachments/assets/cf61f765-c78a-40e7-8f0c-b6509c3a1db8" />
+
+Decoding this base64 `MjU1MjEwNzUx` with [Base64 Decode](https://www.base64decode.org/) which gives us `255210751` which is the output of the PRNG seeded with the dynamic value, we need to find the dynamic value.
+
+Using the `php_mt_seed` command to get the possible seed values that got the value `255210751`
+
+Command: `./php_mt_seed 255210751`
+
+<img width="322" height="206" alt="image" src="https://github.com/user-attachments/assets/3e7de729-fa83-4e2d-9238-33c7ade01be7" />
+
+To identify the correct seed, we will first calculate the CRC32 value of email `hr@mail.random.thm` from [CyberChef](https://gchq.github.io/CyberChef/) which is `3226467716`:
+
+<img width="770" height="279" alt="image" src="https://github.com/user-attachments/assets/d2a4d2ab-0d32-41c7-adc6-6828d6666a4e" />
+
+Now we will compare these both values to identify the correct seed.
+
+As we know that the application uses `mt_srand(CONSTANT_VALUE + crc32($email));` meaning `seed = constant + CRC32(email)` but we don't know the constant yet so we can move the equation like `constant = seed - CRC32(email)` to calculate the constant.
+
+Following is the table where Candidate seed is minused with the CRC32 value of email:
+
+| Candidate seed | Calculated constant |
+| -------------: | ------------------: |
+|      570783581 |         -2655686135 |
+|     1664709063 |         -1561758653 |
+|     3104005235 |          -122622481 |
+| **3226469053** |            **1337** |
+
+The `1337` matches like the constant of above question so this is most likely the correct constant.
+
+So correct seed is `3226469053`
+
+Run the `magic_link_login.php` by command `php -S 0.0.0.0:8181` then check in the browser `http://127.0.0.1:8181/magic_link_login.php?email=hr@mail.random.thm&constant=1337`
+
+<img width="488" height="167" alt="image" src="https://github.com/user-attachments/assets/5a79dede-cb63-42fc-83ef-04cc6bba1dc4" />
+
+Then access the dashbaord by `http://random.thm:8090/case/magic_link_login.php?token={predicted_token}`
+
+<img width="1717" height="247" alt="image" src="https://github.com/user-attachments/assets/780ca4b4-0663-4908-9047-428940e645f8" />
+
+**Note**: If it says Invalid Magic Link then send the Magic Link again.
+
+4. What is the PHP function used to seed the RNG in the code above?
 
 `mt_srand`
 
@@ -390,23 +434,3 @@ c) 6-digit constant value
 d) All of the above
 
 d
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
