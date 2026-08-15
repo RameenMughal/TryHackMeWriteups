@@ -278,6 +278,10 @@ Click `Download Tasks File`
 
 RSA, because the file name consist of `rsa` indicating the algorithm.
 
+4. Crack the password with John The Ripper and rockyou, what's the passphrase for the key?
+
+
+
 
 
 
