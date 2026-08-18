@@ -322,6 +322,56 @@ An excellent video if you want a visual explanation is available here. [Secret K
 
 DH Key Exchange is often used alongside RSA public key cryptography, to prove the identity of the person you’re talking to with digital signing. This prevents someone from attacking the connection with a man-in-the-middle attack by pretending to be Bob.
 
+## PGP, GPG and AES
+
+### What is PGP?
+
+PGP stands for Pretty Good Privacy. It’s a software that implements encryption for encrypting files, performing digital signing and more.
+
+---
+
+### What is GPG?
+
+[GnuPG or GPG](https://gnupg.org/) is an Open Source implementation of PGP from the GNU project. You may need to use GPG to decrypt files in CTFs. With PGP/GPG, private keys can be protected with passphrases in a similar way to SSH private keys. If the key is passphrase protected, you can attempt to crack this passphrase using John The Ripper and gpg2john. The key provided in this task is not protected with a passphrase.
+
+The man page for GPG can be found online here [gpg manpage](https://www.gnupg.org/gph/de/manual/r1023.html).
+
+GNU is the name of a large free and open-source software project. GNU originally stood for: GNU's Not Unix
+
+It is a project that creates free software and tools, many of which are commonly used on Linux systems.
+
+So this sentence means the project that develops and maintains GnuPG along with many other free software tools.
+
+---
+
+### What about AES?
+
+AES, sometimes called Rijndael after its creators, stands for Advanced Encryption Standard. It was a replacement for DES which had short keys and other cryptographic flaws.
+
+AES and DES both operate on blocks of data (a block is a fixed size series of bits).
+
+AES is complicated to explain, If you’d like to learn how it works, here’s an excellent video from Computerphile [AES Explained](https://www.youtube.com/watch?v=O4xNJsjtN6E)
+
+---
+
+### Answer the questions below
+
+You have the private key, and a file encrypted with the public key. Decrypt the file. What's the secret word?
+
+`Pineapple`
+
+Import the private key: `gpg --import tryhackme.key`
+
+<img width="376" height="100" alt="image" src="https://github.com/user-attachments/assets/729ca9b1-5741-4dfe-b028-5ba9b347da51" />
+
+Because your private key needs to be available to GPG before GPG can use it for decryption. You are basically telling GPG: "Add this private key to your GPG key collection so you can use it."
+
+Then decrypt the GPG File: `gpg --decrypt message.gpg`
+
+<img width="406" height="57" alt="image" src="https://github.com/user-attachments/assets/fb744af1-0366-48fd-8c12-9046f85d056d" />
+
+
+
 
 
 
