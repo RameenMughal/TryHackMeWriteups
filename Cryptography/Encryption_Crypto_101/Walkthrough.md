@@ -280,6 +280,52 @@ RSA, because the file name consist of `rsa` indicating the algorithm.
 
 4. Crack the password with John The Ripper and rockyou, what's the passphrase for the key?
 
+`delicious`
+
+First convert the RSA file into hash format that the John the Ripper understands to bruteforce the passphrase: `ssh2john ID_RSA_FILE > hash.txt`
+
+<img width="285" height="20" alt="image" src="https://github.com/user-attachments/assets/9e068550-0fe0-488d-b686-3903f43a7d87" />
+
+`ssh2john` takes your SSH private key (`id_rsa`) and converts it into a hash format that John the Ripper understands. It does not crack the password yet.
+
+Then brute force the passphrase: `john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt`
+
+<img width="375" height="50" alt="image" src="https://github.com/user-attachments/assets/f4c6a2e2-279a-46f7-896e-723c44a38a1e" />
+
+Display the cracked passphrase: `john --show hash.txt`
+
+<img width="196" height="50" alt="image" src="https://github.com/user-attachments/assets/dcfdcc91-9a78-43a5-b3cb-d747e5969058" />
+
+## Explaining Diffie Hellman Key Exchange
+
+### What is Key Exchange?
+
+Key exchange allows 2 people/parties to establish a set of common cryptographic keys without an observer being able to get these keys. Generally, to establish common symmetric keys.
+
+---
+
+### How does Diffie Hellman Key Exchange work?
+
+Alice and Bob want to talk securely. They want to establish a common key, so they can use symmetric cryptography, but they don’t want to use key exchange with asymmetric cryptography. This is where DH Key Exchange comes in.
+
+Alice and Bob both have secrets that they generate, let’s call these A and B. They also have some common material that’s public, let’s call this C.
+
+We need to make some assumptions. Firstly, whenever we combine secrets/material it’s impossible or very very difficult to separate. Secondly, the order that they're combined in doesn’t matter.
+
+Alice and Bob will combine their secrets with the common material, and form AC and BC. They will then send these to each other, and combine that with their secrets to form two identical keys, both ABC. Now they can use this key to communicate.
+
+---
+
+### Extra Resources
+
+An excellent video if you want a visual explanation is available here. [Secret Key Exchange - Computerphile - YouTube](https://www.youtube.com/watch?v=NmM9HA2MQGI)
+
+DH Key Exchange is often used alongside RSA public key cryptography, to prove the identity of the person you’re talking to with digital signing. This prevents someone from attacking the connection with a man-in-the-middle attack by pretending to be Bob.
+
+
+
+
+
 
 
 
