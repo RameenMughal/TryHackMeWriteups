@@ -16,5 +16,17 @@ What does SQL stand for?
 
 Structured Query Language
 
+## What is Database?
+
+### Answer the questions below
+
+1. What is the acronym for the software that controls a database?
+
+DBMS
+
+2. What is the name of the grid-like structure which holds the data?
+
+Table
+
 
 
