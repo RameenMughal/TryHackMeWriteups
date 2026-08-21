@@ -245,7 +245,25 @@ What is the flag after completing level two? (and moving to level 3)
 
 <img width="1878" height="855" alt="image" src="https://github.com/user-attachments/assets/2507a334-0488-4641-a0b5-38c6d56fc095" />
 
+## Blind SQLi - Boolean Based
 
+### Boolean Based
+
+Boolean-based SQL Injection refers to the response we receive from our injection attempts, which could be a true/false, yes/no, on/off, 1/0 or any response that can only have two outcomes. That outcome confirms that our SQL Injection payload was either successful or not. On the first inspection, you may feel like this limited response can't provide much information. Still, with just these two responses, it's possible to enumerate a whole database structure and contents.
+
+---
+
+### Practical
+
+On level three of the SQL Injection Examples Machine, you're presented with a mock browser with the following URL: `https://website.thm/checkuser?username=admin`
+
+<img width="891" height="710" alt="image" src="https://github.com/user-attachments/assets/b9a6f0c8-64e7-441d-bad5-e7482a4f7c29" />
+
+The browser body contains  {"taken":true}. This API endpoint replicates a common feature found on many signup forms, which checks whether a username has already been registered to prompt the user to choose a different username. Because the taken value is set to true, we can assume the username admin is already registered. We can confirm this by changing the username in the mock browser's address bar from admin to admin123, and upon pressing enter, you'll see the value taken has now changed to false.
+
+<img width="840" height="571" alt="image" src="https://github.com/user-attachments/assets/e483d71a-23c4-46e1-a15d-19773c4bfbaf" />
+
+The SQL query that is processed looks like the following: `select * from users where username = '%username%' LIMIT 1;`
 
 
 
