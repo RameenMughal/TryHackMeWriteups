@@ -265,6 +265,81 @@ The browser body contains  {"taken":true}. This API endpoint replicates a common
 
 The SQL query that is processed looks like the following: `select * from users where username = '%username%' LIMIT 1;`
 
+The only input we have control over is the username in the query string, and we'll have to use this to perform our SQL injection. Keeping the username as admin123, we can start appending to this to try and make the database confirm true things, changing the state of the taken field from false to true.
+
+Like in previous levels, our first task is to establish the number of columns in the users' table, which we can achieve by using the UNION statement. Change the username value to the following: `admin123' UNION SELECT 1;--`
+
+<img width="409" height="376" alt="image" src="https://github.com/user-attachments/assets/6a090fe8-c9c0-4b43-82bd-f050eb15205a" />
+
+As the web application has responded with the value taken as false, we can confirm this is the incorrect value of columns. Keep on adding more columns until we have a taken value of true. You can confirm that the answer is three columns by setting the username to the below value: `admin123' UNION SELECT 1,2,3;--`
+
+<img width="408" height="292" alt="image" src="https://github.com/user-attachments/assets/fd1b12c3-7aa8-4263-bc38-1b1881b4e172" />
+
+Now that our number of columns has been established, we can work on the enumeration of the database. Our first task is to discover the database name. We can do this by using the built-in database() method and then using the like operator to try and find results that will return a true status.
+
+Try the below username value and see what happens: `admin123' UNION SELECT 1,2,3 where database() like '%';--`
+
+<img width="407" height="59" alt="image" src="https://github.com/user-attachments/assets/6116e76a-c94f-4766-a6e8-9473c90f984a" />
+
+We get a true response because, in the like operator, we just have the value of %, which will match anything as it's the wildcard value. If we change the wildcard operator to a%, you'll see the response goes back to false, which confirms that the database name does not begin with the letter a.
+
+<img width="408" height="59" alt="image" src="https://github.com/user-attachments/assets/6b6f8800-f0e6-453e-94b9-5fb6693c0bf2" />
+
+We can cycle through all the letters, numbers and characters such as - and _ until we discover a match. If you send the below as the username value, you'll receive a true response that confirms the database name begins with the letter s.
+
+`admin123' UNION SELECT 1,2,3 where database() like 's%';--`
+
+<img width="810" height="118" alt="image" src="https://github.com/user-attachments/assets/4dde1302-6fac-495c-8695-690d82e5466d" />
+
+Now you move on to the next character of the database name until you find another true response, for example, 'sa%', 'sb%', 'sc%', etc. Keep on with this process until you discover all the characters of the database name, which is sqli_three.
+
+We've established the database name, which we can now use to enumerate table names using a similar method by utilising the information_schema database. Try setting the username to the following value: `admin123' UNION SELECT 1,2,3 FROM information_schema.tables WHERE table_schema = 'sqli_three' and table_name like 'a%';--`
+
+<img width="816" height="131" alt="image" src="https://github.com/user-attachments/assets/a86e821a-4437-490b-9b6d-6c495ae646db" />
+
+This query looks for results in the information_schema database in the tables table where the database name matches sqli_three, and the table name begins with the letter a. As the above query results in a false response, we can confirm that there are no tables in the sqli_three database that begin with the letter a. Like previously, you'll need to cycle through letters, numbers and characters until you find a positive match.
+
+You'll finally end up discovering a table in the sqli_three database named users, which you can confirm by running the following username payload: `admin123' UNION SELECT 1,2,3 FROM information_schema.tables WHERE table_schema = 'sqli_three' and table_name='users';--`
+
+<img width="811" height="121" alt="image" src="https://github.com/user-attachments/assets/6b2a4987-b783-4d78-91d7-b700aa135ee2" />
+
+Lastly, we now need to enumerate the column names in the users table so we can properly search it for login credentials. Again, we can use the information_schema database and the information we've already gained to query it for column names. Using the payload below, we search the columns table where the database is equal to sqli_three, the table name is users, and the column name begins with the letter a.
+
+`admin123' UNION SELECT 1,2,3 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='sqli_three' and TABLE_NAME='users' and COLUMN_NAME like 'a%';`
+
+<img width="814" height="130" alt="image" src="https://github.com/user-attachments/assets/abf22302-2b52-4b40-a149-af98e239dd97" />
+
+Again,  you'll need to cycle through letters, numbers and characters until you find a match. As you're looking for multiple results, you'll have to add this to your payload each time you find a new column name to avoid discovering the same one. For example, once you've found the column named id, you'll append that to your original payload (as seen below).
+
+`admin123' UNION SELECT 1,2,3 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='sqli_three' and TABLE_NAME='users' and COLUMN_NAME like 'a%' and COLUMN_NAME !='id';`
+
+Repeating this process three times will enable you to discover the columns' id, username and password. Which now you can use to query the users table for login credentials. First, you'll need to discover a valid username, which you can use the payload below: `admin123' UNION SELECT 1,2,3 from users where username like 'a%`
+
+<img width="400" height="64" alt="image" src="https://github.com/user-attachments/assets/0d5abc14-ceaf-49be-94fc-3a8ba1fc645c" />
+
+Once you've cycled through all the characters, you will confirm the existence of the username admin. Now you've got the username. You can concentrate on discovering the password. The payload below shows you how to find the password: `admin123' UNION SELECT 1,2,3 from users where username='admin' and password like 'a%`
+
+Cycling through all the characters, you'll discover the password is 3845.
+
+---
+
+### Answer the questions below
+
+What is the flag after completing level three?
+
+<img width="845" height="619" alt="image" src="https://github.com/user-attachments/assets/aa66f853-8e30-4b93-82dc-8a8e24ce22be" />
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
