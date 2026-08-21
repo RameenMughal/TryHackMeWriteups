@@ -329,6 +329,26 @@ What is the flag after completing level three?
 
 <img width="845" height="619" alt="image" src="https://github.com/user-attachments/assets/aa66f853-8e30-4b93-82dc-8a8e24ce22be" />
 
+## Blind SQLi - Time Based
+
+A time-based blind SQL injection is very similar to the above boolean-based one in that the same requests are sent, but there is no visual indicator of your queries being wrong or right this time. Instead, your indicator of a correct query is based on the time the query takes to complete. This time delay is introduced using built-in methods such as SLEEP(x) alongside the UNION statement. The SLEEP() method will only ever get executed upon a successful UNION SELECT statement. 
+
+So, for example, when trying to establish the number of columns in a table, you would use the following query: `admin123' UNION SELECT SLEEP(5);--`
+
+<img width="802" height="163" alt="image" src="https://github.com/user-attachments/assets/22a78ad5-7397-4212-be1d-17189203981f" />
+
+If there was no pause in the response time, we know that the query was unsuccessful, so like on previous tasks, we add another column: `admin123' UNION SELECT SLEEP(5),2;--`
+
+<img width="810" height="151" alt="image" src="https://github.com/user-attachments/assets/d96d0ec7-16cf-4fcb-94f0-85681fd9a455" />
+
+This payload should have produced a 5-second delay, confirming the successful execution of the UNION statement and that there are two columns.
+
+
+
+
+
+
+
 
 
 
