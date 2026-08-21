@@ -209,6 +209,43 @@ What is the flag after completing level 1?
 
 <img width="1129" height="618" alt="image" src="https://github.com/user-attachments/assets/953a6c5f-2216-47b5-b07f-ffe0754362cc" />
 
+## Blind SQLi - Authentication Bypass
+
+### Blind SQLi
+
+Unlike In-Band SQL injection, where we can see the results of our attack directly on the screen, blind SQLi is when we get little to no feedback to confirm whether our injected queries were, in fact, successful or not, this is because the error messages have been disabled, but the injection still works regardless. It might surprise you that all we need is that little bit of feedback to successfully enumerate a whole database.
+
+---
+
+### Authentication Bypass
+
+One of the most straightforward Blind SQL Injection techniques is when bypassing authentication methods such as login forms. In this instance, we aren't that interested in retrieving data from the database; We just want to get past the login. 
+
+Login forms that are connected to a database of users are often developed in such a way that the web application isn't interested in the content of the username and password but more in whether the two make a matching pair in the users table. In basic terms, the web application is asking the database, "Do you have a user with the username bob and the password bob123?" the database replies with either yes or no (true/false) and, depending on that answer, dictates whether the web application lets you proceed or not. 
+
+Taking the above information into account, it's unnecessary to enumerate a valid username/password pair. We just need to create a database query that replies with a yes/true.
+
+---
+
+### Practical
+
+Level Two of the SQL Injection examples shows this exact example. We can see in the box labelled "SQL Query" that the query to the database is the following: `select * from users where username='%username%' and password='%password%' LIMIT 1;`
+
+To make this into a query that always returns as true, we can enter the following into the password field: `' OR 1=1;--`
+
+Which turns the SQL query into the following: `select * from users where username='' and password='' OR 1=1;`
+
+Because 1=1 is a true statement and we've used an OR operator, this will always cause the query to return as true, which satisfies the web applications logic that the database found a valid username/password combination and that access should be allowed.
+
+---
+
+### Answer the questions below
+
+What is the flag after completing level two? (and moving to level 3)
+
+<img width="1878" height="855" alt="image" src="https://github.com/user-attachments/assets/2507a334-0488-4641-a0b5-38c6d56fc095" />
+
+
 
 
 
