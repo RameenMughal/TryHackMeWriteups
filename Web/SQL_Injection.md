@@ -269,7 +269,7 @@ The only input we have control over is the username in the query string, and we'
 
 Like in previous levels, our first task is to establish the number of columns in the users' table, which we can achieve by using the UNION statement. Change the username value to the following: `admin123' UNION SELECT 1;--`
 
-<img width="409" height="376" alt="image" src="https://github.com/user-attachments/assets/6a090fe8-c9c0-4b43-82bd-f050eb15205a" />
+<img width="800" height="569" alt="image" src="https://github.com/user-attachments/assets/4ab177ea-4887-4c8d-aeb7-013b98a79c31" />
 
 As the web application has responded with the value taken as false, we can confirm this is the incorrect value of columns. Keep on adding more columns until we have a taken value of true. You can confirm that the answer is three columns by setting the username to the below value: `admin123' UNION SELECT 1,2,3;--`
 
