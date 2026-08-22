@@ -389,33 +389,41 @@ What is the final flag after completing level four?
 
 <img width="1877" height="336" alt="image" src="https://github.com/user-attachments/assets/f55e557f-0386-406c-8ef2-7f6de581267f" />
 
+## Out-of-Band SQLi
 
+Out-of-band SQL Injection isn't as common as it either depends on specific features being enabled on the database server or the web application's business logic, which makes some kind of external network call based on the results from an SQL query.
 
+An Out-Of-Band attack is classified by having two different communication channels, one to launch the attack and the other to gather the results. For example, the attack channel could be a web request, and the data gathering channel could be monitoring HTTP/DNS requests made to a service you control.
 
+1. An attacker makes a request to a website vulnerable to SQL Injection with an injection payload.
+2. The Website makes an SQL query to the database, which also passes the hacker's payload.
+3. The payload contains a request which forces an HTTP request back to the hacker's machine containing data from the database.
 
+---
 
+### Answer the questions below
 
+Name a protocol beginning with D that can be used to exfiltrate data from a database.
 
+DNS
 
+## Remediation
 
+**Remediation**
 
+As impactful as SQL Injection vulnerabilities are, developers do have a way to protect their web applications from them by following the advice below:
 
+**1. Prepared Statements (With Parameterized Queries)**:
 
+In a prepared query, the first thing a developer writes is the SQL query, and then any user inputs are added as parameters afterwards. Writing prepared statements ensures the SQL code structure doesn't change and the database can distinguish between the query and the data. As a benefit, it also makes your code look much cleaner and easier to read.
 
+**2. Input Validation**:
 
+Input validation can go a long way to protecting what gets put into an SQL query. Employing an allow list can restrict input to only certain strings, or a string replacement method in the programming language can filter the characters you wish to allow or disallow. 
 
+**3. Escaping User Input**:
 
-
-
-
-
-
-
-
-
-
-
-
+Allowing user input containing characters such as ' " $ \ can cause SQL Queries to break or, even worse, as we've learnt, open them up for injection attacks. Escaping user input is the method of prepending a backslash (\) to these characters, which then causes them to be parsed just as a regular string and not a special character.
 
 
 
