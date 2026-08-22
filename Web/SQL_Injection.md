@@ -425,5 +425,13 @@ Input validation can go a long way to protecting what gets put into an SQL query
 
 Allowing user input containing characters such as ' " $ \ can cause SQL Queries to break or, even worse, as we've learnt, open them up for injection attacks. Escaping user input is the method of prepending a backslash (\) to these characters, which then causes them to be parsed just as a regular string and not a special character.
 
+---
+
+### Answer the questions below
+
+Name a method of protecting yourself from an SQL Injection exploit.
+
+Prepared Statements
+
 
 
