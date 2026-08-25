@@ -1,4 +1,4 @@
-<img width="248" height="283" alt="image" src="https://github.com/user-attachments/assets/3db47e2f-041b-49ec-b617-94c3e0ac568a" /># Advanced SQL Injection
+# Advanced SQL Injection
 
 Room: [Advanced SQL Injection](https://tryhackme.com/room/advancedsqlinjection)
 
