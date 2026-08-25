@@ -97,5 +97,49 @@ What is the port on which MySQL service is running?
 
 3306
 
+## Quick Recap
 
+In the last SQL injection room, we explored the basics of SQL injection, understanding how attackers exploit vulnerabilities in web applications to manipulate SQL queries and access unauthorised data. We covered essential techniques, such as error-based and union-based SQL injection, and blind SQL injection methods, such as boolean-based and time-based attacks. 
+
+<img width="708" height="385" alt="image" src="https://github.com/user-attachments/assets/8380ab3d-97dc-4221-a45d-5fd909a3d608" />
+
+---
+
+### In-band SQL Injection
+
+This technique is considered the most common and straightforward type of SQL injection attack. In this technique, the attacker uses the same communication channel for both the injection and the retrieval of data. There are two primary types of in-band SQL injection:
+- **Error-Based SQL Injection**: The attacker manipulates the SQL query to produce error messages from the database. These error messages often contain information about the database structure, which can be used to exploit the database further.
+  - Example: `SELECT * FROM users WHERE id = 1 AND 1=CONVERT(int, (SELECT @@version))`. If the database version is returned in the error message, it reveals information about the database.
+- **Union-Based SQL Injection**: The attacker uses the UNION SQL operator to combine the results of two or more SELECT statements into a single result, thereby retrieving data from other tables.
+  - Example: `SELECT name, email FROM users WHERE id = 1 UNION ALL SELECT username, password FROM admin`.
+
+---
+
+### Inferential (Blind) SQL Injection
+
+Inferential SQL injection does not transfer data directly through the web application, making exploiting it more challenging. Instead, the attacker sends payloads and observes the application’s behaviour and response times to infer information about the database. There are two primary types of inferential SQL injection:
+- **Boolean-Based Blind SQL Injection**: The attacker sends an SQL query to the database, forcing the application to return a different result based on a true or false condition. By analysing the application’s response, the attacker can infer whether the payload was true or false.
+  - Example: `SELECT * FROM users WHERE id = 1 AND 1=1` (true condition) versus `SELECT * FROM users WHERE id = 1 AND 1=2` (false condition). The attacker can infer the result if the page content or behaviour changes based on the condition.
+- **Time-Based Blind SQL Injection**: The attacker sends an SQL query to the database, which delays the response for a specified time if the condition is true. By measuring the response time, the attacker can infer whether the condition is true or false.
+  - For example, `SELECT * FROM users WHERE id = 1; IF (1=1) WAITFOR DELAY '00:00:05'--`. If the response is delayed by 5 seconds, the attacker can infer that the condition was true.
+ 
+---
+
+### Out-of-band SQL Injection
+
+Out-of-band SQL injection is used when the attacker cannot use the same channel to launch the attack and gather results or when the server responses are unstable. This technique relies on the database server making an out-of-band request (e.g., HTTP or DNS) to send the query result to the attacker. HTTP is normally used in out-of-band SQL injection to send the query result to the attacker's server.
+
+In-band SQL Injection is easy to exploit and detect but noisy and can be easily monitored. Inferential (Blind) SQL Injection is more challenging to exploit and requires multiple requests but can be used when detailed error messages are unavailable. Out-of-band SQL Injection is less common and highly effective, requires external server control, and relies on the database’s ability to make out-of-band requests. 
+
+---
+
+### Answer the questions below
+
+1. What type of SQL injection uses the same communication channel for both the injection and data retrieval?
+
+In-band
+
+2. In out-of-band SQL injection, which protocol is usually used to send query results to the attacker's server?
+
+HTTP
 
