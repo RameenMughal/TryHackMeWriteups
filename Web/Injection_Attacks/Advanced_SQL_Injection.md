@@ -1,4 +1,4 @@
-# Advanced SQL Injection
+<img width="248" height="283" alt="image" src="https://github.com/user-attachments/assets/3db47e2f-041b-49ec-b617-94c3e0ac568a" /># Advanced SQL Injection
 
 Room: [Advanced SQL Injection](https://tryhackme.com/room/advancedsqlinjection)
 
@@ -142,4 +142,175 @@ In-band
 2. In out-of-band SQL injection, which protocol is usually used to send query results to the attacker's server?
 
 HTTP
+
+## Second-Order SQL Injection
+
+Second-order SQL injection, also known as stored SQL injection, exploits vulnerabilities where user-supplied input is saved and subsequently used in a different part of the application, possibly after some initial processing. This type of attack is more insidious because the malicious SQL code does not need to immediately result in a SQL syntax error or other obvious issues, making it harder to detect with standard input validation techniques. The injection occurs upon the second use of the data when it is retrieved and used in a SQL command, hence the name "Second Order".
+
+---
+
+### Impact
+
+The danger of Second-Order SQL Injection lies in its ability to bypass typical front-end defences like basic input validation or sanitisation, which only occur at the point of initial data entry. Since the payload does not cause disruption during the first step, it can be overlooked until it's too late, making the attack particularly stealthy.
+
+**Example**
+
+We will be using a book review application. The application allows users to add new books via a web page (`add.php`). Users are prompted to provide details about the book they wish to add to the database. You can access the app at `http://MACHINE_IP/second/add.php`. The data collected includes the `SSN`, `book_name`, and `author`.
+
+<img width="248" height="283" alt="image" src="https://github.com/user-attachments/assets/215d43b4-9feb-4737-9194-2a5adb81f079" />
+
+Let's consider adding a book with the following details: SSN: UI00012, Book Name: Intro to PHP, Author: Tim. This information is input through a form on the add.php page, and upon submission, it is stored in the BookStore database.
+
+As we know, Second-Order SQL injection is notably challenging to identify. Unlike traditional SQL Injection, which exploits real-time processing vulnerabilities, it occurs when data previously stored in a database is later used in a SQL query. Detecting this vulnerability often requires understanding how data flows through the application and is reused, necessitating a deep knowledge of the backend operations.
+
+**Analysis of the Code**
+
+Consider the PHP code snippet used in our application for adding books:
+
+```
+if (isset($_POST['submit'])) {
+
+    $ssn = $conn->real_escape_string($_POST['ssn']);
+
+    $book_name = $conn->real_escape_string($_POST['book_name']);
+
+    $author = $conn->real_escape_string($_POST['author']);
+
+    $sql = "INSERT INTO books (ssn, book_name, author) VALUES ('$ssn', '$book_name', '$author')";
+
+    if ($conn->query($sql) === TRUE) {
+
+        echo "<p class='text-green-500'>New book added successfully</p>";
+
+    } else {
+
+        echo "<p class='text-red-500'>Error: " . $conn->error . "</p>";
+
+    }
+
+}
+```
+
+The code uses the `real_escape_string()` method to escape special characters in the inputs. While this method can mitigate some risks of immediate SQL Injection by escaping single quotes and other SQL meta-characters, it does not secure the application against Second Order SQLi. 
+
+The key issue here is the lack of parameterised queries, which is essential for preventing SQL injection attacks. When data is inserted using the `real_escape_string()` method, it might include payload characters that don't cause immediate harm but can be activated upon subsequent retrieval and use in another SQL query. 
+
+Parameterized queries (also called prepared statements) are a method of executing database queries where the SQL command structure is strictly separated from the user-provided data parameters. Instead of dynamically building an SQL query string by concatenating strings or inserting raw user input directly, parameterized queries use placeholders (`?` or named parameters like `:ssn`) for any data values.
+
+For instance, inserting a book with a name like `Intro to PHP'; DROP TABLE books;--` might not affect the INSERT operation but could have serious implications if the book name is later used in another SQL context without proper handling.
+
+Let's try adding another book with the SSN `test'`.
+
+<img width="563" height="332" alt="image" src="https://github.com/user-attachments/assets/6c75df8c-60fe-4837-a0a4-4d8d8eedc150" />
+
+Here we go, the SSN `test'` is successfully inserted into the database. The application includes a feature to update book details through an interface like `update.ph`p. This interface might display existing book details in editable form fields, retrieved based on earlier stored data, and then update them based on user input. 
+
+The pentester would investigate whether the application reuses the data (such as `book_name`) that was previously stored and potentially tainted. Then, he would construct SQL queries for updating records using this potentially tainted data without proper sanitisation or parameterisation. By manipulating the update feature, the tester can see if the malicious payload added during the insertion phase gets executed during the update operation. If the application fails to employ proper security practices at this stage, the earlier injected payload `'; DROP TABLE books; --` could be activated, leading to the execution of a harmful SQL command like dropping a table. 
+
+You can visit the page `http://MACHINE_IP/second/update.php` to update any book details.
+
+<img width="737" height="335" alt="image" src="https://github.com/user-attachments/assets/4df1600d-4e58-4168-bd5c-24b280463553" />
+
+Now, let's review the `update.php` code. The PHP script allows users to update book details within the BookStore database. 
+
+Through the query structure, we will analyse a typical scenario where a penetration tester might look for SQL injection vulnerabilities, specifically focusing on how user inputs are handled and utilised in SQL queries. 
+
+```
+ if ( isset($_POST['update'])) {
+    $unique_id = $_POST['update'];
+    $ssn = $_POST['ssn_' . $unique_id];
+    $new_book_name = $_POST['new_book_name_' . $unique_id];
+    $new_author = $_POST['new_author_' . $unique_id];
+
+    $update_sql = "UPDATE books SET book_name = '$new_book_name', author = '$new_author' WHERE ssn = '$ssn'; INSERT INTO logs (page) VALUES ('update.php');";
+```
+
+The script begins by checking if the request method is POST and if the update button was pressed, indicating that a user intends to update a book's details. Following this, the script retrieves user inputs directly from the POST data:
+
+```
+     $unique_id = $_POST['update'];
+    $ssn = $_POST['ssn_' . $unique_id];
+    $new_book_name = $_POST['new_book_name_' . $unique_id];
+    $new_author = $_POST['new_author_' . $unique_id];
+```
+
+These variables (`ssn`, `new_book_name`, `new_author`) are then used to construct an SQL query for updating the specified book's details in the database:
+
+```
+ $update_sql = "UPDATE books SET book_name = '$new_book_name', author = '$new_author' WHERE ssn = '$ssn'; INSERT INTO logs (page) VALUES ('update.php');";
+```
+
+The script uses` multi_query` to execute multiple queries. It also inserts logs into the logs table for analytical purposes.
+
+---
+
+### Preparing the Payload
+
+We know that we can add or modify the book details based on their ssn. The normal query for updating a book might look like this:
+
+```
+ UPDATE books SET book_name = '$new_book_name', author = '$new_author' WHERE ssn = '123123';
+```
+
+However, the SQL command could be manipulated if an attacker inserts a specially crafted `ssn` value. For example, if the attacker uses the `ssn` value:
+
+```
+12345'; UPDATE books SET book_name = 'Hacked'; --
+```
+
+When this value is used in the update query, it effectively ends the initial update command after `12345` and starts a new command. This would change the `book_name` of all entries in the books table to Hacked.
+
+**Let's do this**
+
+**Initial Payload Insertion**: A new book is added with the payload `12345'; UPDATE books SET book_name = 'Hacked'; --` is inserted as the `ssn`. The semicolon (`;`) will be used to terminate the current SQL statement.
+
+<img width="238" height="153" alt="image" src="https://github.com/user-attachments/assets/41911d3d-a126-4fc0-a27d-d3cc3866a7c9" />
+
+**Malicious SQL Execution**: After that, when the admin or any other user visits the URL `http://MACHINE_IP/second/update.php` and updates the book, the inserted payload breaks out of the intended SQL command structure and injects a new command that updates all records in the books table. 
+
+Let's visit the page  `http://MACHINE_IP/second/update.php` page, update the book name to anything, and click the Update button. The code will execute the following statement in the backend.
+
+```
+UPDATE books SET book_name = 'Testing', author = 'Hacker' WHERE ssn = '12345'; Update books set book_name ="hacked"; --'; INSERT INTO logs (page) VALUES ('update.php');
+```
+
+**Commenting Out the Rest**: The double dash (`--`) is an SQL comment symbol. Anything following `--` will be ignored by the SQL server, effectively neutralising any remaining parts of the original SQL statement that could cause errors or reveal the attack. Once the above query is executed, it will change the name of all the books to hacked, as shown below:
+
+<img width="233" height="145" alt="image" src="https://github.com/user-attachments/assets/a7f270cb-5aa2-4893-a839-2f20b3b7f153" />
+
+---
+
+### Answer the questions below
+
+1. What is the flag value after updating the title of all books to "compromised"?
+
+Updating the SQL Query for `ssn`: `12345'; UPDATE books SET book_name = 'compromised'; --`
+
+Adding this in `ssn` and adding a book:
+
+<img width="234" height="178" alt="image" src="https://github.com/user-attachments/assets/2743a0a4-f54e-4d95-b36b-84a1515df54d" />
+
+Updating the book name then we get the flag:
+
+<img width="636" height="418" alt="image" src="https://github.com/user-attachments/assets/1dffe6f7-e5cd-4340-a36c-4dd4f087dae0" />
+
+2. What is the flag value once you drop the table hello from the database?
+
+SQL Query as `ssn`: `12345'; DROP TABLE hello; --`
+
+<img width="237" height="214" alt="image" src="https://github.com/user-attachments/assets/56e40619-98a3-40a1-a20c-296d64a8b141" />
+
+Then update the book name, you get the flag:
+
+<img width="643" height="403" alt="image" src="https://github.com/user-attachments/assets/559f98a8-eee0-48c4-bd1d-67ed48023b06" />
+
+
+
+
+
+        
+
+
+
+
 
