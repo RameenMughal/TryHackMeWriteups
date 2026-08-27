@@ -336,7 +336,7 @@ For example, the string `admin` can be encoded as `\u0061\u0064\u006d\u0069\u006
 
 In this example, we explore how developers can implement basic filtering to prevent SQL injection attacks by removing specific keywords and characters from user input. However, we will also see how attackers can bypass these defences using character encoding techniques like URL encoding.
 
-You can access the page at `http://10.48.172.223/encoding/`.
+You can access the page at `http://MACHINE_IP/encoding/`.
 
 <img width="353" height="104" alt="image" src="https://github.com/user-attachments/assets/fdb39db7-190b-4a41-bbcc-245b9bf96034" />
 
@@ -357,9 +357,180 @@ In the above example, the developer has implemented a basic defence mechanism to
 
 Here's the Javascript code in the index.html page that provides the user interface for searching books:
 
-
+```
+function searchBooks() {
+const bookName = document.getElementById('book_name').value;
+const xhr = new XMLHttpRequest();
+xhr.open('GET', 'search_books.php?book_name=' + encodeURIComponent(bookName), true);
+   xhr.onload = function() {
+       if (this.status === 200) {
+           document.getElementById('results').innerHTML = this.responseText;
+```
 
 This `searchBooks()` function takes the book name entered by the user from the `book_name` input box, creates a request using XMLHttpRequest, and sends the book name to `search_books.php` using a GET request. `encodeURIComponent()` safely encodes the book name for use in the URL.
+
+---
+
+### Preparing the Payload
+
+Let's go through the process of preparing an SQL injection payload step-by-step, showing how URL encoding can bypass basic defences. First, let’s see what happens with a normal input that contains special characters or SQL keywords. When we search for a book named `Intro to PHP`, we get the successful result as shown below:
+
+<img width="328" height="174" alt="image" src="https://github.com/user-attachments/assets/d9b4c2a7-ef43-4f28-aa31-03a076e8074d" />
+
+But what if we try to break the query by adding special characters like `'`, `;`, etc? We will get the following output:
+
+<img width="677" height="131" alt="image" src="https://github.com/user-attachments/assets/99560687-9f20-49ae-a163-c9482e053a70" />
+
+The SQL query is not executing correctly, which probably means there is a chance of SQL Injection. 
+
+Let's try to inject the payload `'Intro to PHP' OR 1=1`. We will get the following output:
+
+<img width="641" height="142" alt="image" src="https://github.com/user-attachments/assets/54cd06d3-473e-4cc7-b9ac-b4078fd701d4" />
+
+When this input is passed to the PHP script, the `str_replace` function will strip out the `OR` keyword and the single quote, resulting in a sanitised input that will not execute the intended SQL injection. This input is ineffective because the filtering removes the critical components needed for the SQL injection to succeed.
+
+To bypass the filtering, we need to encode the input using URL encoding, which represents special characters and keywords in a way that the filter does not recognise and remove.
+
+Here is the example payload `1%27%20||%201=1%20--+`.
+- `%27` is the URL encoding for the single quote (`'`).
+- `%20` is the URL encoding for a space ( ).
+- `||` represents the SQL `OR` operator.
+- `%3D` is the URL encoding for the equals sign (`=`).
+- `%2D%2D` is the URL encoding for `--`, which starts a comment in SQL.
+
+The original (unencoded) payload is: `1' || 1=1 --+`
+
+In the above payload, `1'` closes the current string or value in the SQL query. For example, if the query is looking for a book name that matches `1`, adding `'` closes the string, making the rest of the input part of the SQL statement. `|| 1=1` part uses the SQL `OR` operator to add a condition that is always true. This condition ensures that the query returns true for all records, bypassing the original condition that was supposed to restrict the results. Similarly, `--` starts a comment in SQL, causing the database to ignore the rest of the query. This is useful to terminate any remaining part of the query that might cause syntax errors or unwanted conditions. To ensure proper spacing, `+` add a space after the comment, ensuring that the comment is properly terminated and there are no syntax issues.
+
+From the console, we can see that clicking the search button makes an AJAX call to `search_book.php`.
+
+Let's use the payload directly on the PHP page to avoid unnecessary tweaking/validation from the client.  Let's visit the URL `http://MACHINE_IP/encoding/search_books.php?book_name=Intro%20to%20PHP%27%20OR%201=1` with the standard payload `Intro to PHP' OR 1=1`, and you will see an error. 
+
+<img width="762" height="83" alt="image" src="https://github.com/user-attachments/assets/0554860f-ed90-40bb-82c5-88576aa0ceef" />
+
+Now, URL encode the payload `Intro to PHP' || 1=1 --+` using [Cyber Chef](https://gchq.github.io/CyberChef/#recipe=URL_Encode(false)) and try to access the URL with an updated payload. We will get the following output dumping the complete information.
+
+First URL Encode `Intro to PHP' || 1=1 --+`
+
+<img width="554" height="269" alt="image" src="https://github.com/user-attachments/assets/4803c56d-31de-4e1b-bcc5-05e1fbd52893" />
+
+Now add this string to the URL `http://MACHINE_IP/encoding/search_books.php?book_name=Intro%20to%20PHP'%20%7C%7C%201=1%20%2D%2D+`
+
+<img width="514" height="274" alt="image" src="https://github.com/user-attachments/assets/1bdfd930-066a-4a83-8b9e-d15604570be5" />
+
+The payload works because URL encoding represents the special characters and SQL keywords in a way that bypasses the filtering mechanism. When the server decodes the URL-encoded input, it restores the special characters and keywords, allowing the SQL injection to execute successfully.
+
+---
+
+### Answer the questions below
+
+1. What is the MySQL error code once an invalid query is entered with bad characters?
+
+1064
+
+2. What is the name of the book where book ID=6?
+
+Animal Series
+
+---
+
+### No-Quote SQL Injection
+
+No-Quote SQL injection techniques are used when the application filters single or double quotes or escapes.
+
+**Using Numerical Values**: One approach is to use numerical values or other data types that do not require quotes. 
+
+For example, instead of injecting `' OR '1'='1`, an attacker can use `OR 1=1` in a context where quotes are not necessary. This technique can bypass filters that specifically look for an escape or strip out quotes, allowing the injection to proceed.
+
+**Using SQL Comments**: Another method involves using SQL comments to terminate the rest of the query. 
+
+For instance, the input `admin'--` can be transformed into `admin--`, where the `--` signifies the start of a comment in SQL, effectively ignoring the remainder of the SQL statement. This can help bypass filters and prevent syntax errors.
+
+**Using CONCAT() Function**: Attackers can use SQL functions like `CONCAT()` to construct strings without quotes. 
+
+For example, `CONCAT(0x61, 0x64, 0x6d, 0x69, 0x6e)` constructs the string `admin`. The `CONCAT()` function and similar methods allow attackers to build strings without directly using quotes, making it harder for filters to detect and block the payload.
+
+---
+
+### No Spaces Allowed
+
+When spaces are not allowed or are filtered out, various techniques can be used to bypass this restriction.
+
+**Comments to Replace Spaces**: One common method is to use SQL comments (`/**/`) to replace spaces. 
+
+For example, instead of `SELECT * FROM users WHERE name = 'admin'`, an attacker can use `SELECT/**/*FROM/**/users/**/WHERE/**/name/**/='admin'`. SQL comments can replace spaces in the query, allowing the payload to bypass filters that remove or block spaces.
+
+**Tab or Newline Characters**: Another approach is using tab (`\t`) or newline (`\n`) characters as substitutes for spaces. Some filters might allow these characters, enabling the attacker to construct a query like `SELECT\t*\tFROM\tusers\tWHERE\tname\t=\t'admin'`. This technique can bypass filters that specifically look for spaces.
+
+**Alternate Characters**: One effective method is using alternative URL-encoded characters representing different types of whitespace, such as `%09` (horizontal tab), `%0A` (line feed), `%0C` (form feed), `%0D` (carriage return), and `%A0` (non-breaking space). These characters can replace spaces in the payload. 
+
+---
+
+### Practical Example
+
+In this scenario, we have an endpoint, `http://10.48.151.93/space/search_users.php?username=?` that returns user details based on the provided username. The developer has implemented filters to block common SQL injection keywords such as `OR`, `AND`, and spaces (`%20`) to protect against SQL injection attacks.
+
+Here is the PHP filtering added by the developer.
+
+```
+$special_chars = array(" ", "AND", "and" ,"or", "OR" , "UNION", "SELECT");
+$username = str_replace($special_chars, '', $username);
+$sql = "SELECT * FROM user WHERE username = '$username'";
+```
+
+If we use our standard payload `1%27%20||%201=1%20--+` on the endpoint, we can see that even through URL encoding, it is not working.
+
+<img width="731" height="86" alt="image" src="https://github.com/user-attachments/assets/8229c1a7-338f-42b4-aaac-5272cc1cb092" />
+
+The SQL query shows that the spaces are being omitted by code. To bypass these protections, we can use URL-encoded characters that represent different types of whitespace or line breaks, such as `%09` (horizontal tab), `%0A` (line feed). These characters can replace spaces and still be interpreted correctly by the SQL parser.
+
+The original payload `1' OR 1=1 --` can be modified to use newline characters instead of spaces, resulting in the payload `1'%0A||%0A1=1%0A--%27+`. This payload constructs the same logical condition as `1' OR 1=1 --` but uses newline characters to bypass the space filter.
+
+The SQL parser interprets the newline characters as spaces, transforming the payload into `1' OR 1=1 --`. Therefore, the query will be interpreted from `SELECT * FROM users WHERE username = '$username'` to `SELECT * FROM users WHERE username = '1' OR 1=1 --`.
+
+Now, if we access the endpoint through an updated payload, we can view all the details. 
+
+<img width="521" height="190" alt="image" src="https://github.com/user-attachments/assets/402bc84c-bda3-4489-bded-cb2c25a4f1be" />
+
+To summarise, it is important to understand that no single technique guarantees a bypass when dealing with filters or Web Application Firewalls (WAFs) designed to prevent SQL injection attacks.
+
+However, here are some tips and tricks that can be used to circumvent these protections. This table highlights various techniques that can be employed to try and bypass filters and WAFs:
+
+<img width="899" height="365" alt="image" src="https://github.com/user-attachments/assets/1744f737-92e7-48cf-bb16-818b9ad7b2bf" />
+
+---
+
+### Answer the questions below
+
+1. What is the password for the username "attacker"?
+
+tesla
+
+2. Which of the following can be used if the SELECT keyword is banned? Write the correct option only.
+
+a) SElect
+
+b) SeLect
+
+c) Both a and b
+
+d) We cannot bypass SELECT keyword filter
+
+c
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         
