@@ -304,8 +304,62 @@ Then update the book name, you get the flag:
 
 <img width="643" height="403" alt="image" src="https://github.com/user-attachments/assets/559f98a8-eee0-48c4-bd1d-67ed48023b06" />
 
+## Filter Evasion Techniques
+
+In advanced SQL injection attacks, evading filters is crucial for successfully exploiting vulnerabilities. 
+
+Statement “evading filters is crucial” it means bypassing input restrictions/security filters so that the intended SQL injection reaches and is processed by the database.
+
+Modern web applications often implement defensive measures to sanitise or block common attack patterns, making simple SQL injection attempts ineffective. As pentesters, we must adapt using more sophisticated techniques to bypass these filters.
+
+Even if a web application has strong checks that try to prevent attacks, understanding filter-evasion techniques can help an attacker find ways around those checks.
+
+---
+
+### Character Encoding
+
+Character encoding involves converting special characters in the SQL injection payload into encoded forms that may bypass input filters.
+
+**URL Encoding**: URL encoding is a common method where characters are represented using a percent (`%`) sign followed by their ASCII value in hexadecimal. 
+
+For example, the payload `' OR 1=1--` can be encoded as `%27%20OR%201%3D1--`. This encoding can help the input pass through web application filters and be decoded by the database, which might not recognise it as malicious during initial processing.
+
+**Hexadecimal Encoding**: Hexadecimal encoding is another effective technique for constructing SQL queries using hexadecimal values. 
+
+For instance, the query `SELECT * FROM users WHERE name = 'admin'` can be encoded as `SELECT * FROM users WHERE name = 0x61646d696e`. By representing characters as hexadecimal numbers, the attacker can bypass filters that do not decode these values before processing the input.
+
+**Unicode Encoding**: Unicode encoding represents characters using Unicode escape sequences. 
+
+For example, the string `admin` can be encoded as `\u0061\u0064\u006d\u0069\u006e`. This method can bypass filters that only check for specific ASCII characters, as the database will correctly process the encoded input.
+
+**Example**
+
+In this example, we explore how developers can implement basic filtering to prevent SQL injection attacks by removing specific keywords and characters from user input. However, we will also see how attackers can bypass these defences using character encoding techniques like URL encoding.
+
+You can access the page at `http://10.48.172.223/encoding/`.
+
+<img width="353" height="104" alt="image" src="https://github.com/user-attachments/assets/fdb39db7-190b-4a41-bbcc-245b9bf96034" />
+
+Here's the PHP code (`search_books.php`) that handles the search functionality:
+
+```
+$book_name = $_GET['book_name'] ?? '';
+$special_chars = array("OR", "or", "AND", "and" , "UNION", "SELECT");
+$book_name = str_replace($special_chars, '', $book_name);
+$sql = "SELECT * FROM books WHERE book_name = '$book_name'";
+echo "<p>Generated SQL Query: $sql</p>";
+$result = $conn->query($sql) or die("Error: " . $conn->error . " (Error Code: " . $conn->errno . ")");
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+```
+
+In the above example, the developer has implemented a basic defence mechanism to prevent SQL injection attacks by removing specific SQL keywords, such as `OR`, `AND`, `UNION`, and `SELECT`. The filtering uses the `str_replace` function, which strips these keywords from the user input before they are included in the SQL query. This filtering approach aims to make it harder for attackers to inject malicious SQL commands, as these keywords are essential for many SQL injection payloads.
+
+Here's the Javascript code in the index.html page that provides the user interface for searching books:
 
 
+
+This `searchBooks()` function takes the book name entered by the user from the `book_name` input box, creates a request using XMLHttpRequest, and sends the book name to `search_books.php` using a GET request. `encodeURIComponent()` safely encodes the book name for use in the URL.
 
 
         
