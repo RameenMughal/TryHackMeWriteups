@@ -42,5 +42,48 @@ Multiple collections are finally grouped in databases, which is the highest hier
 
 <img width="658" height="274" alt="image" src="https://github.com/user-attachments/assets/c849d1d0-289b-46cb-b219-b5de0d3825db" />
 
+---
+
+### Querying the Database
+
+As with any database, a special language is used to retrieve information from the database. Just as relational databases use some variant of SQL, non-relational databases such as MongoDB use NoSQL. In general terms, NoSQL refers to any way of querying a database that is not SQL, meaning it may vary depending on the database used.
+
+With MongoDB, queries use a structured associative array that contains groups of criteria to be met to filter the information. These filters offer similar functionality to a `WHERE` clause in SQL and offer operators the ability to build complex queries if needed.
+
+To better understand NoSQL queries, let's start by assuming we have a database with a collection of people containing the following three documents:
+
+<img width="591" height="152" alt="image" src="https://github.com/user-attachments/assets/21ab29a1-d5f8-4881-a7ee-6bb526ae7766" />
+
+If we wanted to build a filter so that only the documents where the last_name is "Sandler" are retrieved, our filter would look like this: `['last_name' => 'Sandler']`
+
+As a result, this query only retrieves the second document.
+
+If we wanted to filter the documents where the gender is male, and the last_name is Phillips, we would have the following filter: `['gender' => 'male', 'last_name' => 'Phillips']`
+
+This would only return the first document.
+
+If we wanted to retrieve all documents where the age is less than 50, we could use the following filter: `['age' => ['$lt'=>'50']]`
+
+This would return the second and third documents. Notice we are using the $lt operator in a nested array. Operators allow for more complex filters by nesting conditions.
+
+A complete reference of possible operators can be found on the following link: [Query Predicates](https://www.mongodb.com/docs/manual/reference/mql/query-predicates/)
+
+---
+
+### Answer the questions below
+
+1. What is a group of documents in MongoDB is known as?
+
+Collection
+
+2. Using the MongoDB Operator Reference, what operator is used to filter data when a field isn't equal to a given value?
+
+`$ne`
+
+3. Following the example of the 3 documents given before, how many documents would be returned by the following filter: `['gender' => ['$ne' => 'female'] , 'age' => ['$gt'=>'65'] ]?`
+
+0
+
+
 
 
