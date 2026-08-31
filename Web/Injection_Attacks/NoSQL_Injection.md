@@ -114,4 +114,64 @@ Therefore, there are two main types of NoSQL Injection:
 
 When looking at how NoSQL filters are built, bypassing them to inject any payload might look impossible, as they rely on creating a structured array. Unlike SQL injection, where queries were normally built by simple string concatenation, NoSQL queries require nested associative arrays. From an attacker's point of view, this means that to inject NoSQL, one must be able to inject arrays into the application.
 
+Luckily for us, many server-side programming languages allow passing array variables by using a special syntax on the query string of an HTTP Request.
+
+For the purpose of this example, let's focus on the following code written in PHP for a simple login page:
+
+```
+<?php
+$con = new MongoDB\Driver\Manager("mongodb://localhost:27017");
+
+
+if(isset($_POST) && isset($_POST['user']) && isset($_POST['pass'])){
+        $user = $_POST['user'];
+        $pass = $_POST['pass'];
+
+        $q = new MongoDB\Driver\Query(['username'=>$user, 'password'=>$pass]);
+        $record = $con->executeQuery('myapp.login', $q );
+        $record = iterator_to_array($record);
+
+        if(sizeof($record)>0){
+                $usr = $record[0];
+
+                session_start();
+                $_SESSION['loggedin'] = true;
+                $_SESSION['uid'] = $usr->username;
+
+                header('Location: /sekr3tPl4ce.php');
+                die();
+        }
+}
+header('Location: /?err=1');
+
+?>
+```
+
+The web application is making a query to MongoDB, using the "myapp" database and "login" collection, requesting any document that passes the filter `['username'=>$user, 'password'=>$pass]`, where both `$user` and `$pass` are obtained directly from HTTP POST parameters.
+
+Let's take a look at how we can leverage Operator Injection in order to bypass authentication.
+
+If somehow we could send an array to the $user and $pass variables with the following content:
+
+`$user = ['$ne'=>'xxxx']` 
+
+`$pass = ['$ne'=>'yyyy']`
+
+The resulting filter would end up looking like this: `['username'=>['$ne'=>'xxxx'], 'password'=>['$ne'=>'yyyy']]`
+
+We could trick the database into returning any document where the username isn't equal to 'xxxx,' and the password isn't equal to 'yyyy'. This would probably return all documents in the login collection. As a result, the application would assume a correct login was performed and let us into the application with the privileges of the user corresponding to the first document obtained from the database.
+
+The problem that remains unsolved is how to pass an array as part of a POST HTTP Request. It turns out that PHP and many other languages allow you to pass an array by using the following notation on the POST Request Body: `user[$ne]=xxxx&pass[$ne]=yyyy`
+
+---
+
+### Answer the questions below
+
+1. What type of NoSQL Injection is similar to normal SQL Injection?
+
+Syntax
+
+2. What type of NoSQL Injection allows you to modify the behaviour of the query, even if you can't escape the syntax?
+
+Operator
 
