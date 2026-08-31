@@ -84,6 +84,34 @@ Collection
 
 0
 
+## NoSQL Injection
 
+First, let's start the Lab Machine by pressing the Start Lab Machine button at the top of this task.
+
+You may access the VM using the AttackBox or your VPN connection. I am using my Kali Linux as AttackBox and use OpenVPN to connect to TryHackMe Server.
+
+Command: `sudo openvpn FILENAME`
+
+You can check how to connect through OpenVPN by this room: [OpenVPN](https://tryhackme.com/room/openvpn)
+
+Once the machine is ready, navigate to `http://MACHINE_IP` to start the exercise.
+
+---
+
+### Injection is Injection
+
+While it may seem complex to think about NoSQL Injection, when we boil down injection attacks to their very essence, we can understand the similarities between SQL Injection and NoSQL Injection.
+
+The root cause of an injection attack is that improper concatenation of untrusted user input into a command can allow an attacker to alter the command itself. With SQL injection, the most common approach is to inject a single or double quote, that terminates the current data concatenation and allows the attacker to modify the query. The same approach applies to NoSQL Injection. If untrusted user input is directly added to the query, we have the opportunity to modify the query itself. However, with NoSQL Injection, even if we can't escape the current query, we still have the opportunity to manipulate the query itself. 
+
+Therefore, there are two main types of NoSQL Injection:
+- **Syntax Injection** - This is similar to SQL injection, where we have the ability to break out of the query and inject our own payload. The key difference to SQL injection is the syntax used to perform the injection attack.
+- **Operator Injection** — Even if we can't break out of the query, we could potentially inject a NoSQL query operator that manipulates the query's behaviour, allowing us to stage attacks such as authentication bypasses.
+
+---
+
+### How to Inject NoSQL
+
+When looking at how NoSQL filters are built, bypassing them to inject any payload might look impossible, as they rely on creating a structured array. Unlike SQL injection, where queries were normally built by simple string concatenation, NoSQL queries require nested associative arrays. From an attacker's point of view, this means that to inject NoSQL, one must be able to inject arrays into the application.
 
 
