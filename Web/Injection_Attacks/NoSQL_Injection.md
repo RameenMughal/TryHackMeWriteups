@@ -96,6 +96,8 @@ You can check how to connect through OpenVPN by this room: [OpenVPN](https://try
 
 Once the machine is ready, navigate to `http://MACHINE_IP` to start the exercise.
 
+<img width="610" height="259" alt="image" src="https://github.com/user-attachments/assets/76dc9e2d-5c34-421b-9f44-17372342db47" />
+
 ---
 
 ### Injection is Injection
@@ -174,4 +176,33 @@ Syntax
 2. What type of NoSQL Injection allows you to modify the behaviour of the query, even if you can't escape the syntax?
 
 Operator
+
+## Operator Injection: Bypassing the Login Screen
+
+First of all, let's open the website on `http://MACHINE_IP/` and send an incorrect user/pass to capture the request on Burp.
+
+Open the Proxy tab with Intecept on and get the request:
+
+<img width="531" height="149" alt="image" src="https://github.com/user-attachments/assets/a96a6ec9-0e26-461d-9e5b-16e42868a9f0" />
+
+We now proceed to intercept another login request and modify the user and pass variables to send the desired arrays.
+
+Modify the parameters to: `user[$ne]=raven&pass[$ne]=123&remember=on`
+
+Then click Forward to send the Request to the server and then turn the Intercept off by clicking the Intecept on button.
+
+This forces the database to return all user documents and as a result we are finally logged into the application:
+
+<img width="121" height="68" alt="image" src="https://github.com/user-attachments/assets/4bbff90e-2d3e-4387-878b-b01ea4e82930" />
+
+---
+
+### Answer the questions below
+
+When bypassing the login screen using the $ne operator, what is the email of the user that you are logged in as?
+
+`admin@nosql.int`
+
+
+
 
