@@ -203,6 +203,60 @@ When bypassing the login screen using the $ne operator, what is the email of the
 
 `admin@nosql.int`
 
+## Operator Injection: Logging in as Other Users
+
+### Logging in as Other Users
+
+We have managed to bypass the application's login screen, but with the former technique, we can only login as the first user returned by the database. By making use of the `$nin` operator, we are going to modify our payload so that we can control which user we want to obtain.
+
+First, the `$nin` operator allows us to create a filter by specifying criteria where the desired documents have some field, not in a list of values. So if we want to log in as any user except for the user admin, we could modify our payload to look like this: `user[$nin][]=admin&pass[$ne]=123&remember=on`
+
+<img width="530" height="152" alt="image" src="https://github.com/user-attachments/assets/10d0160c-70ee-450b-b5a3-88ef2b7372b2" />
+
+This would translate to a filter that has the following structure: `['username'=>['$nin'=>['admin'] ], 'password'=>['$ne'=>'123']]`
+
+Which tells the database to return any user for whom the username isn't admin and the password isn't aweasdf. As a result, we are now granted access to another user's account.
+
+<img width="140" height="67" alt="image" src="https://github.com/user-attachments/assets/b19e91b5-a6a0-4ae1-8bfa-4123c28e1d69" />
+
+Notice that the $nin operator receives a list of values to ignore. We can continue to expand the list by adjusting our payload as follows: `user[$nin][]=admin&user[$nin][]=jude&pass[$ne]=123&remember=on`
+
+<img width="527" height="155" alt="image" src="https://github.com/user-attachments/assets/966ebfb5-3169-4850-a1d1-ab84a7920448" />
+
+This would result in a filter like this: `['username'=>['$nin'=>['admin', 'jude'] ], 'password'=>['$ne'=>'aweasdf']]`
+
+This can be repeated as many times as needed until we gain access to all of the available accounts.
+
+Note: The jude user above is not an actual user, but an example of how an additional username can be added.
+
+---
+
+### Answer the questions below
+
+1. How many users are there in total?
+
+4
+
+We already know 2 users that are `admin` and `pedro` so we will update the parameters to ignore these two parameters: `user[$nin][]=admin&user[$nin][]=pedro&pass[$ne]=123&remember=on`
+
+<img width="121" height="68" alt="image" src="https://github.com/user-attachments/assets/36780df0-95d4-4aef-9fc9-0dbb3664bb61" />
+
+Updating the parameters again to ignore these three users: `user[$nin][]=admin&user[$nin][]=pedro&user[$nin][]=john&pass[$ne]=123&remember=on`
+
+<img width="137" height="77" alt="image" src="https://github.com/user-attachments/assets/1a1fa8ed-6654-4bdd-87e2-37c24d82f8df" />
+
+Updating again to see more than four users: `user[$nin][]=admin&user[$nin][]=pedro&user[$nin][]=john&user[$nin][]=secret&pass[$ne]=123&remember=on`
+
+We get an error meaning there are total four users.
+
+2. There is a user that starts with the letter "p". What is his username?
+
+`pedro`
+
+
+
+
+
 
 
 
