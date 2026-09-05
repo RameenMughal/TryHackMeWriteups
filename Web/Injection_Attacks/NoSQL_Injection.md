@@ -253,6 +253,109 @@ We get an error meaning there are total four users.
 
 `pedro`
 
+## Operator Injection: Extracting Users' Password
+
+### Extracting Users' Passwords
+
+At this point, we have access to all of the accounts in the application. However, it is important to try to extract the actual passwords in use as they might be reused in other services. To accomplish this, we will be abusing the `$regex` operator to ask a series of questions to the server that allow us to recover the passwords via a process that resembles playing the game hangman.
+
+First, let's take one of the users discovered before and try to guess the length of his password.
+
+I am using the username `admin` and then just entering the fake password to get the request in Burp Suite. Then send the request to Repeater section.
+
+We will be using the following payload to actual guess the password: `user=admin&pass[$regex]=^.{7}$&remember=on`
+
+<img width="506" height="172" alt="image" src="https://github.com/user-attachments/assets/7f71eb56-98ec-40ac-a10c-cb6eee920bf3" />
+
+Notice that we are asking the database if there is a user with a username of admin and a password that matches the regex: `^.{7}$`. This basically represents a wildcard word of length 7. Since the server responds with a login error, we know the password length for the user admin isn't 7.
+
+After some trial and error, we finally arrived at the correct answer:
+
+<img width="551" height="194" alt="image" src="https://github.com/user-attachments/assets/6a6de989-7ed9-4ca4-a0b2-7f702ffd5c8b" />
+
+We now know the password for user admin has length 8. Now to figure out the actual content, we modify our payload as follows: `user=admin&pass[$regex]=^c.......$&remember=on`
+
+<img width="479" height="176" alt="image" src="https://github.com/user-attachments/assets/fb16c516-cfbf-4137-94ea-bc7f068ec938" />
+
+We are now working with a regex of length 8 (a single letter c plus 7 dots), matching the discovered password length, and asking if the admin's password matches the regex `^c.......$`, which means it starts with a lowercase c, followed by any 4 characters. Since the server response is an invalid login, we now know the first letter of the password can't be "c". We continue iterating over all available characters until we get a successful response from the server:
+
+<img width="535" height="173" alt="image" src="https://github.com/user-attachments/assets/e6b85d4d-99a3-4268-8911-a7e860338544" />
+
+This confirms that the first letter of admin's password is 'a'. The same process can be repeated for the other letters until the full password is recovered. This can be repeated for other users as well if needed.
+
+---
+
+### Answer the questions below
+
+1. What is john's password?
+
+`10584312`
+
+Updating the payload and first guessing the length of the password: `user=john&pass[$regex]=^.{7}$&remember=on`
+
+<img width="479" height="172" alt="image" src="https://github.com/user-attachments/assets/66951136-1ddb-4339-b395-ddad733f7063" />
+
+After hit and tests, we see the password length is 8.
+
+<img width="539" height="171" alt="image" src="https://github.com/user-attachments/assets/6aa23703-8053-4e80-8822-c0f9888901f0" />
+
+Now guessing the first character of the password: `user=john&pass[$regex]=^a.......$&remember=on
+
+<img width="473" height="173" alt="image" src="https://github.com/user-attachments/assets/516da61a-304f-4ead-83d5-70d5ecce6d3b" />
+
+After checking, we see 1 as the first character of the password.
+
+<img width="551" height="171" alt="image" src="https://github.com/user-attachments/assets/ca1f30b3-9377-4a0d-86a5-d51342e46dc0" />
+
+Now guessing the second character of the password: `user=john&pass[$regex]=^11......$&remember=on`
+
+Got 0 as the second character of the password.
+
+<img width="545" height="184" alt="image" src="https://github.com/user-attachments/assets/1d1e4eeb-45c7-4598-883a-7fba1c8bce8f" />
+
+Repeating the process same for rest of the characters. The password is `10584312`    
+
+<img width="548" height="167" alt="image" src="https://github.com/user-attachments/assets/8add6789-7986-4617-bc53-e61ac82876b2" />
+
+2. One of the users seems to be reusing his password for many services. Find which one and connect through SSH to retrieve the final flag!
+
+Let's check for `pedro`, so guessing the password first same as above: `user=pedro&pass[$regex]=^.{7}$&remember=on`
+
+Correct length is 11.
+
+<img width="535" height="173" alt="image" src="https://github.com/user-attachments/assets/4d1b1e26-b848-4aba-a877-935ebaa89dd3" />
+
+Now guessing the first character of the password: `user=pedro&pass[$regex]=^0..........$&remember=on`
+
+Correct first character is c.
+
+<img width="548" height="174" alt="image" src="https://github.com/user-attachments/assets/e8ab1a57-0f4c-4463-8074-ca262ff8a69d" />
+
+Guessing rest of the password, password is `coolpass123`
+
+<img width="553" height="173" alt="image" src="https://github.com/user-attachments/assets/36ee8558-bd02-4192-8362-145f94d57275" />
+
+Then write the SSH Command to connect to the Pedro's machine: `ssh pedro@MACHINE_IP`
+
+Then write the password and get the flag.
+
+<img width="834" height="447" alt="image" src="https://github.com/user-attachments/assets/7097eb10-fbfc-40ec-bae9-db8d50364880" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
