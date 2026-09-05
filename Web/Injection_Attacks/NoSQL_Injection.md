@@ -341,6 +341,78 @@ Then write the password and get the flag.
 
 <img width="834" height="447" alt="image" src="https://github.com/user-attachments/assets/7097eb10-fbfc-40ec-bae9-db8d50364880" />
 
+## Syntax Injection: Identification and Data Extraction
+
+### Finding Syntax Injection
+
+Now that we have covered Operator Injection, let's take a look at a Syntax Injection example. A Python application is running to allow you to receive the email address of any username that is provided.
+
+To use the application, authenticate via SSH using `ssh syntax@MACHINE_IP` along with the credentials below:
+
+Username: `syntax` and Password: `syntax`
+
+<img width="416" height="122" alt="image" src="https://github.com/user-attachments/assets/4951dedc-d37f-4642-9c1f-6990d8c4ff7d" />
+
+Once authenticated, you can provide a username as input. Let's start by simply providing `admin`:
+
+<img width="299" height="49" alt="image" src="https://github.com/user-attachments/assets/04639d5c-20c3-407f-882f-b2b3c09461af" />
+
+We can start to test for Syntax Injection by simply injecting a `'` character, which will result in the error seen in the response below:
+
+<img width="622" height="186" alt="image" src="https://github.com/user-attachments/assets/e4d0ec7e-7ac7-4866-a439-e093be732093" />
+
+The following line in the error message shows us that there is Syntax Injection: `for x in mycol.find({"$where": "this.username == '" + username + "'"}):`
+
+We can see that the `username` variable is directly concatenated to the query string and that a JavaScript function is being executed in the `find` command, allowing us to inject into the syntax. In this case, we have verbose error messages to give us an indication that injection is possible. 
+
+However, even without verbose error messages, we could test for Syntax Injection by providing both a false and true condition and seeing that the output differs, as shown in the example below:
+
+<img width="360" height="42" alt="image" src="https://github.com/user-attachments/assets/c06fdc45-7b78-44e3-8917-e3dffcb8a91f" />
+
+<img width="352" height="52" alt="image" src="https://github.com/user-attachments/assets/7bff50b9-b3aa-40c8-95bc-1c9dcd2603ea" />
+
+---
+
+### Exploiting Syntax Injection
+
+Now that we have confirmed Syntax Injection, we can leverage this injection point to dump all email addresses. To do this, we want to ensure that the testing statement of the condition always evaluates to true. 
+
+As we are injecting into the JavaScript, we can use the payload of `'||1||'`. Let's use this to disclose sensitive information:
+
+<img width="329" height="78" alt="image" src="https://github.com/user-attachments/assets/59761c59-d16c-473d-a660-d023a76bd92b" />
+
+---
+
+### The Exception to the Rule
+
+It is worth noting that for Syntax Injection to occur, the developer has to create custom JavaScript queries. The same function could be performed using the built-in filter functions where `['username' : username]` would return the same result but not be vulnerable to injection.
+
+As such, Syntax Injection is rare to find, as it means that the developers are not using the built-in functions and filters. While some complex queries might require direct JavaScript, it is always recommended to avoid this to prevent Syntax Injection.
+
+---
+
+### Answer the questions below
+
+1. What common character is used to test for injection in both SQL and NoSQL solutions?
+
+`'`
+
+2. What is the email value of the super secret user returned in the last entry?
+
+`Syntax@Injection.FTW`
+
+## Conclusion
+
+### Defences
+
+To defend against NoSQL Injection attacks, the key remediation is to ensure that there isn't any confusion between what is the query and what is user input. This can be resolved by making use of parameterised queries, which split the query command and user input, meaning that the engine cannot be confused. Furthermore, the built-in functions and filters of the NoSQL solution should always be used to avoid Syntax Injection. Lastly, input validation and sanitisation can also be used to filter for syntax and operator characters and remove them.
+
+
+
+
+
+
+
 
 
 
