@@ -17,3 +17,23 @@ It comes with a powerful detection engine, many niche features for the ultimate 
 ### Installing Sqlmap
 
 If you're using Kali Linux, sqlmap is pre-installed. Otherwise, you can download it here: [sqlmap repo](https://github.com/sqlmapproject/sqlmap)
+
+## Using Sqlmap
+
+### Sqlmap Commands
+
+To show the basic help menu, simply type `sqlmap -h` in the terminal.
+
+<img width="430" height="359" alt="image" src="https://github.com/user-attachments/assets/4aba52e6-525b-4bc9-aa39-ad1e49dee822" />
+
+**Basic commands**:
+
+| **Option** | **Description** |
+|---|---|
+| `-u URL, --url=URL` | Target URL (e.g. `http://www.site.com/vuln.php?id=1`) |
+| `--data=DATA` | Data string to be sent through POST (e.g. `id=1`) |
+| `--random-agent` | Use randomly selected HTTP User-Agent header value |
+| `-p TESTPARAMETER` | Testable parameter(s) |
+| `--level=LEVEL` | Level of tests to perform (1-5, default 1) |
+| `--risk=RISK` | Risk of tests to perform (1-3, default 1) |
+
