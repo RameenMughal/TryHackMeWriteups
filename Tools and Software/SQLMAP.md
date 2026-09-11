@@ -1,4 +1,4 @@
-# SQLMAP
+<img width="391" height="251" alt="image" src="https://github.com/user-attachments/assets/178469bd-cf22-470e-8e02-4e6d50a4180c" /><img width="776" height="332" alt="image" src="https://github.com/user-attachments/assets/5df25a05-4806-4a25-a694-889e562b966d" /><img width="776" height="332" alt="image" src="https://github.com/user-attachments/assets/e285d9aa-98f9-40b4-acc6-d2cea4693a3f" /><img width="776" height="332" alt="image" src="https://github.com/user-attachments/assets/101ee530-52e8-4f45-a261-2455a6089b1e" /># SQLMAP
 
 Room: [SQLMAP](https://tryhackme.com/room/sqlmap)
 
@@ -258,6 +258,110 @@ Or we can simply dump all the available databases and tables using the following
 11. You know the current db type is 'MYSQL'. Which flag allows you to enumerate only MySQL databases?
 
 `--dbms=mysql`
+
+## SQLMap Challenge
+
+Deploy the machine attached to this task, then navigate to `MACHINE_IP`
+
+<img width="291" height="124" alt="image" src="https://github.com/user-attachments/assets/9608cdec-a5f2-4595-ab96-2cce46f8881e" />
+
+I am using my Kali Linux Machine and connecting through OpenVPN Command: `sudo openvpn FILENAME`
+
+You can see how to connect to TryHackMe by this room: [OpenVPN](https://tryhackme.com/room/openvpn)
+
+**Task:**
+
+We have deployed an application to collect **Blood Donations**. The request seems to be vulnerable.
+
+Exploit a SQL Injection vulnerability on the vulnerable application to find the flag.
+
+---
+
+### Answer the questions below
+
+1. What is the name of the interesting directory ?
+
+`blood`
+
+To find directories we can use the `gobuster` command to find these.
+
+Our guess is it would be related to **Blood Donations** as application name it is.
+
+I first tried the common wordlist, but did not get good results, so using the `dirbuster` medium wordlist: `gobuster dir -u http://MACHINE_IP -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 100`
+
+<img width="574" height="175" alt="image" src="https://github.com/user-attachments/assets/7544c623-fac0-431a-a544-a2e57efd00d0" />
+
+Navigating to the `blood` directory `http://MACHINE_IP/blood/`
+
+<img width="740" height="334" alt="image" src="https://github.com/user-attachments/assets/f4f870a0-6d8d-4da4-9ae7-43a940326538" />
+
+2. Who is the current db user?
+
+`root`
+
+Now we need to see any parameter through which we can gather information about the databases.
+
+We see Login and Register on this page, so going to Register so we can see the Dashboard.
+
+<img width="627" height="289" alt="image" src="https://github.com/user-attachments/assets/d0a06bb8-4b3f-499f-aedb-22300aa95931" />
+
+We see three buttons with emojis, one of them is to Submit Donor Information and one where we see other Donor's information.
+
+I submitted some information in the "Submit Donor Information" and then checked the Donor's list so I see my information also.
+
+<img width="623" height="205" alt="image" src="https://github.com/user-attachments/assets/f6d3d41a-7ad2-4b9d-8573-554a5a147f9d" />
+
+I clicked the Actions button of the first Donor Nare, so I see his information.
+
+<img width="776" height="332" alt="image" src="https://github.com/user-attachments/assets/80a5a2b6-9269-4af2-a98b-6355c9f1f141" />
+
+You see the URL `http://MACHINE_IP/blood/view.php?id=1` and when I do `id=2` it shows my information.
+
+Adding little `'` in the parameter we get Database info that it is MySQL.
+
+<img width="596" height="320" alt="image" src="https://github.com/user-attachments/assets/833765e3-c53f-4a15-ad54-63669fe36b67" />
+
+Now using Burp Suite, to capture this request, so choose the Proxy section with Intercept on to get the request.
+
+Save the request by selecting **Save item** by right clicking and I am naming it `get_blood`
+
+We can get the current user by command: `sqlmap -r get_blood --current-user`
+
+<img width="395" height="275" alt="image" src="https://github.com/user-attachments/assets/888e7bed-f5aa-43f1-a946-34a44ce824b8" />
+
+3. What is the final flag? 
+
+Using `sqlmap` command to find the databases: `sqlmap -r get_blood --dbs`
+
+<img width="859" height="284" alt="image" src="https://github.com/user-attachments/assets/7084c700-e897-4c38-8516-5af2583cfb9c" />
+
+After couple scans it says that `id` parameter is vulnerable, so do we want to try other tests so I chose `N` as we can exploit this parameter to know about the databases. So finally get the databases.
+
+<img width="862" height="320" alt="image" src="https://github.com/user-attachments/assets/a2848db2-ae3a-4f79-a03c-7c4e15ad59c9" />
+
+So now we are interested in the `blood` database, so now looking for tables in this database: `sqlmap -r get_blood -D blood --tables`
+
+<img width="391" height="251" alt="image" src="https://github.com/user-attachments/assets/65f89ca0-758f-4a15-9415-86545a332673" />
+
+We are interested in `flag` table so now finding the columns: `sqlmap -r get_blood -D blood -T flag --columns`
+
+<img width="580" height="199" alt="image" src="https://github.com/user-attachments/assets/3b892800-420e-4d23-b2ec-8735604d44ff" />
+
+Now dumping all the information in the `flag` table: `sqlmap -r get_blood -D blood -T flag --dump`
+
+<img width="870" height="430" alt="image" src="https://github.com/user-attachments/assets/4324face-fdaa-483a-aa86-3ca9c6f8fb4d" />
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
