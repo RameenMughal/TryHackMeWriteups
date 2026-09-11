@@ -1,4 +1,4 @@
-<img width="391" height="251" alt="image" src="https://github.com/user-attachments/assets/178469bd-cf22-470e-8e02-4e6d50a4180c" /><img width="776" height="332" alt="image" src="https://github.com/user-attachments/assets/5df25a05-4806-4a25-a694-889e562b966d" /><img width="776" height="332" alt="image" src="https://github.com/user-attachments/assets/e285d9aa-98f9-40b4-acc6-d2cea4693a3f" /><img width="776" height="332" alt="image" src="https://github.com/user-attachments/assets/101ee530-52e8-4f45-a261-2455a6089b1e" /># SQLMAP
+# SQLMAP
 
 Room: [SQLMAP](https://tryhackme.com/room/sqlmap)
 
