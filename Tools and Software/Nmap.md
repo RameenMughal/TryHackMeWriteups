@@ -50,7 +50,34 @@ Ports
 
 1024
 
+## Nmap Switches
 
+Like most pentesting tools, nmap is run from the terminal. There are versions available for both Windows and Linux. Nmap is installed by default in both Kali Linux.
 
+Nmap can be accessed by typing `nmap` into the terminal command line, followed by some of the "switches" (command arguments which tell a program to do different things) we will be covering below.
+
+All you'll need for this is the help menu for nmap (accessed with `nmap -h`) and/or the nmap man page (access with `man nmap`)
+
+<img width="419" height="356" alt="image" src="https://github.com/user-attachments/assets/ebfd7547-6968-4155-b768-c58302d79b23" />
+
+---
+
+### Answer the questions below
+
+1. What is the first switch listed in the help menu for a 'Syn Scan' (more on this later!)?
+
+`-sS`
+
+2. Which switch would you use for a "UDP scan"?
+
+`-sU`
+
+3. If you wanted to detect which operating system the target is running on, which switch would you use?
+
+`-O`
+
+4. Nmap provides a switch to detect the version of the services running on the target. What is this switch?
+
+`-sV`
 
 
