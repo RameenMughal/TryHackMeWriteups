@@ -205,4 +205,50 @@ RFC 9293
 
 RST
 
+## Scan Types - SYN Scans
+
+As with TCP scans, SYN scans (`-sS`) are used to scan the port-range of a target or targets; however, the two scan types work slightly differently. SYN scans are sometimes referred to as "Half-open" scans, or "Stealth" scans.
+
+Where TCP scans perform a full three-way handshake with the target, SYN scans sends back a RST TCP packet after receiving a SYN/ACK from the server (this prevents the server from repeatedly trying to make the request). In other words, the sequence for scanning an open port looks like this:
+
+<img width="272" height="234" alt="image" src="https://github.com/user-attachments/assets/454a4072-292f-4037-9d19-f0aa47ca02fc" />
+
+<img width="1138" height="69" alt="image" src="https://github.com/user-attachments/assets/c7365ca9-e598-415d-a012-c314f78bd459" />
+
+This has a variety of advantages for us as hackers:
+- It can be used to bypass older Intrusion Detection systems as they are looking out for a full three way handshake. This is often no longer the case with modern IDS solutions; it is for this reason that SYN scans are still frequently referred to as "stealth" scans.
+- SYN scans are often not logged by applications listening on open ports, as standard practice is to log a connection once it's been fully established. Again, this plays into the idea of SYN scans being stealthy.
+- Without having to bother about completing (and disconnecting from) a three-way handshake for every port, SYN scans are significantly faster than a standard TCP Connect scan.
+
+There are, however, a couple of disadvantages to SYN scans, namely:
+- They require sudo permissions in order to work correctly in Linux. This is because SYN scans require the ability to create raw packets (as opposed to the full TCP handshake), which is a privilege only the root user has by default.
+- Some services are fragile or unstable, and sending lots of SYN packets during a SYN scan (`-sS`) can sometimes cause those services to crash or stop working.
+
+For this reason, SYN scans are the default scans used by Nmap if run with sudo permissions. If run without sudo permissions, Nmap defaults to the TCP Connect scan.
+
+SYN scans can also be made to work by giving Nmap the `CAP_NET_RAW`, `CAP_NET_ADMIN` and `CAP_NET_BIND_SERVICE` capabilities; however, this may not allow many of the NSE scripts to run properly. These are Linux capabilities. Think of them as small, specific permissions that you can give a program instead of giving it full root privileges.
+
+When using a SYN scan to identify closed and filtered ports, the exact same rules as with a TCP Connect scan apply.
+
+If a port is closed then the server responds with a RST TCP packet. If the port is filtered by a firewall then the TCP SYN packet is either dropped, or spoofed with a TCP reset.
+
+In this regard, the two scans are identical: the big difference is in how they handle open ports.
+
+---
+
+### Answer the questions below
+
+1. There are two other names for a SYN scan, what are they?
+
+Half-Open, Stealth
+
+2. Can Nmap use a SYN scan without Sudo permissions (Y/N)?
+
+N
+
+
+
+
+
+
 
