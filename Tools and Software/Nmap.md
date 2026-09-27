@@ -356,4 +356,38 @@ Lua
 
 intrusive
 
+## NSE Scripts - Working with the NSE
+
+In Task 3 we looked very briefly at the `--script` switch for activating NSE scripts from the `vuln` category using `--script=vuln`. It should come as no surprise that the other categories work in exactly the same way. If the command `--script=safe` is run, then any applicable safe scripts will be run against the target (Note: only scripts which target an active service will be activated).
+
+To run a specific script, we would use `--script=<script-name>` , e.g. `--script=http-fileupload-exploiter`.
+
+Multiple scripts can be run simultaneously in this fashion by separating them by a comma. For example: `--script=smb-enum-users,smb-enum-shares`.
+
+Some scripts require arguments (for example, credentials, if they're exploiting an authenticated vulnerability). These can be given with the `--script-args` Nmap switch. An example of this would be with the `http-put` script (used to upload files using the PUT method). This takes two arguments: the URL to upload the file to, and the file's location on disk.  For example: `nmap -p 80 --script http-put --script-args http-put.url='/dav/shell.php',http-put.file='./shell.php'`
+
+Note that the arguments are separated by commas, and connected to the corresponding script with periods (i.e.  `<script-name>.<argument>`).
+
+A full list of scripts and their corresponding arguments (along with example use cases) can be found here [NSE Scripts](https://nmap.org/nsedoc/scripts/).
+
+Nmap scripts come with built-in help menus, which can be accessed using `nmap --script-help <script-name>`. This tends not to be as extensive as in the link given above, however, it can still be useful when working locally.
+
+---
+
+### Answer the questions below
+
+1. What optional argument can the `ftp-anon.nse` script take?
+
+`maxlist`
+
+Check it from here [Script ftp-anon](https://nmap.org/nsedoc/scripts/ftp-anon.html) in Specific Arguments
+
+## NSE Scripts - Searching for Scripts
+
+Ok, so we know how to use the scripts in Nmap, but we don't yet know how to find these scripts.
+
+We have two options for this, which should ideally be used in conjunction with each other. The first is the page on the Nmap website [NSE Scripts](https://nmap.org/nsedoc/scripts/) (mentioned in the previous task) which contains a list of all official scripts. The second is the local storage on your attacking machine. Nmap stores its scripts on Linux at `/usr/share/nmap/scripts`. All of the NSE scripts are stored in this directory by default -- this is where Nmap looks for scripts when you specify them.
+
+There are two ways to search for installed scripts. One is by using the `/usr/share/nmap/scripts/script.db` file. Despite the extension, this isn't actually a database so much as a formatted text file containing filenames and categories for each available script.
+
 
