@@ -390,4 +390,57 @@ We have two options for this, which should ideally be used in conjunction with e
 
 There are two ways to search for installed scripts. One is by using the `/usr/share/nmap/scripts/script.db` file. Despite the extension, this isn't actually a database so much as a formatted text file containing filenames and categories for each available script.
 
+<img width="470" height="116" alt="image" src="https://github.com/user-attachments/assets/a441c008-38bf-4ea2-a4e1-6cf32b0fbb42" />
+
+Nmap uses this file to keep track of (and utilise) scripts for the scripting engine; however, we can also grep through it to look for scripts. 
+
+For example: `grep "ftp" /usr/share/nmap/scripts/script.db`.
+
+<img width="551" height="119" alt="image" src="https://github.com/user-attachments/assets/6132b02f-7e67-481b-bea2-a673353fb924" />
+
+The second way to search for scripts is quite simply to use the `ls` command. For example, we could get the same results as in the previous screenshot by using `ls -l /usr/share/nmap/scripts/*ftp*`:
+
+<img width="470" height="119" alt="image" src="https://github.com/user-attachments/assets/993761aa-c084-4e8f-87a5-89e0861f18b1" />
+
+The same techniques can also be used to search for categories of script. 
+
+For example: `grep "safe" /usr/share/nmap/scripts/script.db`
+
+<img width="506" height="260" alt="image" src="https://github.com/user-attachments/assets/7dad29cd-49a8-4aab-a52e-a8c4a0471efd" />
+
+---
+
+### Installing new Scripts
+
+We mentioned previously that the Nmap website contains a list of scripts, so, what happens if one of these is missing in the scripts directory locally? 
+
+A standard `sudo apt update && sudo apt install nmap` should fix this; however, it's also possible to install the scripts manually by downloading the script from Nmap (`sudo wget -O /usr/share/nmap/scripts/<script-name>.nse https://svn.nmap.org/nmap/scripts/<script-name>.nse`). This must then be followed up with `nmap --script-updatedb`, which updates the `script.db` file to contain the newly downloaded script.
+
+It's worth noting that you would require the same "updatedb" command if you were to make your own NSE script and add it into Nmap.
+
+---
+
+### Answer the questions below
+
+1. Search for "smb" scripts in the `/usr/share/nmap/scripts/` directory using either of the demonstrated methods. What is the filename of the script which determines the underlying OS of the SMB server?
+
+`smb-os-discovery.nse`
+
+Write command: `grep "smb" script.db"` under the `/usr/share/nmap/scripts/` directory
+
+<img width="529" height="218" alt="image" src="https://github.com/user-attachments/assets/37257e65-d272-480f-909f-608f3828df52" />
+
+2. Read through this script. What does it depend on?
+
+`smb-brute`
+
+<img width="524" height="335" alt="image" src="https://github.com/user-attachments/assets/38264753-f6a3-4fbd-b36f-dd852f9aa25a" />
+
+
+
+
+
+
+
+
 
