@@ -436,6 +436,122 @@ Write command: `grep "smb" script.db"` under the `/usr/share/nmap/scripts/` dire
 
 <img width="524" height="335" alt="image" src="https://github.com/user-attachments/assets/38264753-f6a3-4fbd-b36f-dd852f9aa25a" />
 
+## Firewall Evasion
+
+We have already seen some techniques for bypassing firewalls (think stealth scans, along with NULL, FIN and Xmas scans); however, there is another very common firewall configuration which it's imperative we know how to bypass.
+
+Your typical Windows host will, with its default firewall, block all ICMP packets. This presents a problem: not only do we often use ping to manually establish the activity of a target, Nmap does the same thing by default. This means that Nmap will register a host with this firewall configuration as dead and not bother scanning it at all.
+
+Fortunately Nmap provides an option for this: `-Pn`, which tells Nmap to not bother pinging the host before scanning it. This means that Nmap will always treat the target host(s) as being alive, effectively bypassing the ICMP block; however, it comes at the price of potentially taking a very long time to complete the scan (if the host really is dead then Nmap will still be checking and double checking every specified port).
+
+It's worth noting that if you're already directly on the local network, Nmap can also use ARP requests to determine host activity.
+
+There are a variety of other switches which Nmap considers useful for firewall evasion. We will not go through these in detail, however, they can be found here [Firewall/IDS Evasion and Spoofing](https://nmap.org/book/man-bypass-firewalls-ids.html).
+
+The following switches are of particular note:
+- `-f`:- Used to fragment the packets (i.e. split them into smaller pieces) making it less likely that the packets will be detected by a firewall or IDS.
+- An alternative to `-f`, but providing more control over the size of the packets: `--mtu <number>`, accepts a maximum transmission unit size to use for the packets sent. This must be a multiple of 8.
+- `--scan-delay <time>ms`:- used to add a delay between packets sent. This is very useful if the network is unstable, but also for evading any time-based firewall/IDS triggers which may be in place.
+- `--badsum`:- this is used to generate in invalid checksum for packets. Any real TCP/IP stack would drop this packet, however, firewalls may potentially respond automatically, without bothering to check the checksum of the packet. As such, this switch can be used to determine the presence of a firewall/IDS.
+
+---
+
+### Answer the questions below
+
+1. Which simple (and frequently relied upon) protocol is often blocked, requiring the use of the `-Pn` switch?
+
+ICMP
+
+2. [Research] Which Nmap switch allows you to append an arbitrary length of random data to the end of packets?
+
+`--data-length`
+
+## Practical
+
+I am using my Kali Linux Machine to connect through OpenVPN. You can check the [OpenVPN](https://tryhackme.com/room/openvpn) room in TryHackMe.
+
+Command: `sudo openvpn FILENAME`
+
+---
+
+### Answer the questions below
+
+1. Does the target ip respond to ICMP echo (ping) requests (Y/N)?
+
+N
+
+<img width="347" height="65" alt="image" src="https://github.com/user-attachments/assets/afd81a6f-4cc9-41e2-aebd-4e765d8d5948" />
+
+2. Perform an Xmas scan on the first 999 ports of the target -- how many ports are shown to be open or filtered?
+
+999
+
+Command: `nmap -sX -Pn -p 1-999 TARGET_IP`
+
+<img width="355" height="89" alt="image" src="https://github.com/user-attachments/assets/f50327ad-a9aa-478c-a4e8-7c5ec0708251" />
+
+3. There is a reason given for this -- what is it?
+
+Note: The answer will be in your scan results. Think carefully about which switches to use -- and read the hint before asking for help!
+
+No response
+
+Command: `nmap -vv -Pn -p 1-999 TARGET_IP`
+
+<img width="492" height="255" alt="image" src="https://github.com/user-attachments/assets/ce8dc64f-1094-4b6c-996a-3cb65dd1d8b6" />
+
+4. Perform a TCP SYN scan on the first 5000 ports of the target -- how many ports are shown to be open?
+
+5
+
+Command: `nmap -sS -Pn -p 1-5000 TARGET_IP`
+
+<img width="335" height="140" alt="image" src="https://github.com/user-attachments/assets/9e83e374-7c9b-4ac1-8747-b3f0bea65266" />
+
+5. Open Wireshark and perform a TCP Connect scan against port 80 on the target, monitoring the results. Make sure you understand what's going on. Deploy the ftp-anon script against the box. Can Nmap login successfully to the FTP server on port 21? (Y/N)
+
+Y
+
+Choose the `tun0` network interface as it connects to TryHackMe
+
+Start capturing packets by double-clicking the interface.
+
+Let's do the first part: TCP Connect Scan
+
+Then run in terminal: `nmap -sT -Pn -p 80 TARGET_IP`
+
+<img width="341" height="100" alt="image" src="https://github.com/user-attachments/assets/988e937c-ba7b-4e31-8d02-7187e3b865e7" />
+
+Stop the Wireshark capture after the scan finishes.
+
+In Wireshark, use this display filter: `tcp.port == 80`
+
+<img width="859" height="176" alt="image" src="https://github.com/user-attachments/assets/da32abf8-f966-4b98-a5fd-78879fcd95d1" />
+
+Look at the TCP packets. You should see the basic TCP connection process:
+
+Your machine → Target: SYN
+Target → Your machine: SYN/ACK
+Your machine → Target: ACK
+
+With `-sT`, Nmap makes a normal TCP connection to the target using your computer's regular networking system. If the port is open, the connection is successfully established. So `-sT` = make a normal TCP connection and see if it succeeds.
+
+Let's do the second part: Run the `ftp-anon` script
+
+Write in terminal: `nmap -Pn -p 21 --script ftp-anon TARGET_IP`
+
+<img width="344" height="116" alt="image" src="https://github.com/user-attachments/assets/6e425045-d4af-4f4c-965b-cc23c438efb3" />
+
+It's a yes as it allows anonymous login.
+
+## Conclusion
+
+There are lots of great resources for learning more about Nmap on your own. Front and center are Nmaps own (highly extensive) docs [Nmap Network Scanning](https://nmap.org/book/) which have already been mentioned several times throughout the room. It would be highly advisable to use them as a point of reference, should you need it.
+
+
+
+
+
 
 
 
