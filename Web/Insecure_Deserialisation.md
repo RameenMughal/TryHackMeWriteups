@@ -108,7 +108,13 @@ The T3 protocol is Oracle WebLogic Server's proprietary, high-performance transp
 
 nay
 
+## Serialisation Formats
 
+While different programming languages may use varying keywords and functions for serialisation, the underlying principle remainsdifferent serialisation methods in different languages consistent. As we know, serialisation is the process of converting an object's state into a format that can be easily stored or transmitted and then reconstructed later. Whether Java, Python, .NET, or PHP, each language implements serialisation to accommodate specific features or security measures inherent to its environment. 
+
+Unlike other common vulnerabilities that exploit the immediate processing of user inputs, insecure deserialisation problems involve a deeper interaction with the application’s core logic, often manipulating the fundamental behaviour of its components.
+
+Now, let's explore how serialisation is explicitly handled in different languages, exploring its functionality, syntax, and unique features.
 
 
 
