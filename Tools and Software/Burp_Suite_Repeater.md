@@ -190,6 +190,97 @@ I tried to change number 3 from alphabets a or A, or number 0, then I tried -1 n
 
 ## Extra-mile Challenge
 
+### Challenge Objective
+
+Your objective in this challenge is to identify and exploit a Union SQL Injection vulnerability present in the ID parameter of the `/about/ID` endpoint. By leveraging this vulnerability, your task is to launch an attack to retrieve the notes about the CEO stored in the database.
+
+---
+
+### Walkthrough
+
+The About page:
+
+<img width="653" height="353" alt="image" src="https://github.com/user-attachments/assets/b5c94ab1-18e0-4a78-a177-a211a34636d4" />
+
+And specific person about page:
+
+<img width="652" height="350" alt="image" src="https://github.com/user-attachments/assets/d5c1da4f-3b4b-466e-93bf-e69349a34717" />
+
+Let's start by capturing a request to `http://<MACHINE_IP>/about/2` in the Burp Proxy. Once you have captured the request, send it to Repeater with`Ctrl + R` or by right-clicking and choosing "Send to Repeater".
+
+Now that we have our request primed, let's confirm that a vulnerability exists. Adding a single apostrophe (`'`) is usually enough to cause the server to error when a simple SQLi is present, so, either using Inspector or by editing the request path manually, add an apostrophe after the "2" at the end of the path and send the request:
+
+<img width="618" height="271" alt="image" src="https://github.com/user-attachments/assets/f2ac9526-593b-46af-8891-f0b8a62a4c59" />
+
+You should see that the server responds with a "500 Internal Server Error", indicating that we successfully broke the query
+
+If we look through the body of the server's response, we see something very interesting at around line 40. The server is telling us the query we tried to execute:
+
+<img width="629" height="203" alt="image" src="https://github.com/user-attachments/assets/bcd48591-20de-469d-97d2-f963534229e7" />
+
+This is an extremely useful error message that the server should absolutely not be sending us, but the fact that we have it makes our job significantly more straightforward.
+
+The message tells us a couple of things that will be invaluable when exploiting this vulnerability:
+- The database table we are selecting from is called `people`.
+- The query selects five columns from the table: `firstName`, `lastName`, `pfpLink`, `role`, and `bio`. We can guess where these fit into the page, which will be helpful for when we choose where to place our requests.
+
+With this information, we can skip over the query column number and table name enumeration steps.
+
+Although we have managed to cut out a lot of the enumeration required here, we still need to find the name of our target column.
+
+As we know the table name and the number of rows, we can use a union query to select the column names for the `people` table from the `columns` table in the `information_schema` default database.
+
+A simple query for this is as follows:
+
+`/about/0 UNION ALL SELECT column_name,null,null,null,null FROM information_schema.columns WHERE table_name="people"`
+
+This creates a union query and selects our target, then four `null` columns (to avoid the query erroring out). Notice that we also changed the ID that we are selecting from `2` to `0`. By setting the ID to an invalid number, we ensure that we don't retrieve anything with the original (legitimate) query; this means that the first row returned from the database will be our desired response from the injected query.
+
+ooking through the returned response, we can see that the first column name (`id`) has been inserted into the page title:
+
+<img width="527" height="166" alt="image" src="https://github.com/user-attachments/assets/e456774f-0ba3-49a1-b7b8-f6dfd9a56e9e" />
+
+We have successfully pulled the first column name out of the database, but we now have a problem. The page is only displaying the first matching item, we need to see all of the matching items.
+
+Fortunately, we can use our SQLi to group the results. We can still only retrieve one result at a time, but by using the `group_concat()` function, we can combine all of the column names into a single output:
+
+`/about/0 UNION ALL SELECT group_concat(column_name),null,null,null,null FROM information_schema.columns WHERE table_name="people"`
+
+This process is shown below:
+
+<img width="631" height="180" alt="image" src="https://github.com/user-attachments/assets/9ed3a76f-2c4c-415f-b06c-805224f3e95d" />
+
+We have successfully identified eight columns in this table: `id`, `firstName`, `lastName`, `pfpLink`, `role`, `shortRole`, `bio`, and `notes`.
+
+Considering our task, it seems a safe bet that our target column is `notes`.
+
+Finally, we are ready to take the flag from this database — we have all of the information that we need:
+- The name of the table: `people`.
+- The name of the target column: `notes`.
+- The ID of the CEO is `1`.
+
+Let's craft a query to extract this flag:
+
+`/about/0 UNION ALL SELECT notes,null,null,null,null FROM people WHERE id = 1`
+
+---
+
+### Answer the questions below
+
+Exploit the union SQL injection vulnerability in the site.
+
+What is the flag?
+
+<img width="1261" height="378" alt="image" src="https://github.com/user-attachments/assets/dd9c8112-e196-4501-b1ef-867089f3679b" />
+
+
+
+
+
+
+
+
+
 
 
 
