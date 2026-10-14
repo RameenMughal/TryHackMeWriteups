@@ -388,6 +388,12 @@ Once you visit the URL, the `index.php` file's deserialise function will deseria
 
 <img width="67" height="38" alt="image" src="https://github.com/user-attachments/assets/45ca25e7-b714-4f78-ad80-e6ad71d399ec" />
 
+## Automation Scripts
+
+Automating scripts during pen-testing is essential for efficiently identifying and exploiting vulnerabilities in web applications. In this task, we will explore one such tool called PHP Gadge Chain (PHPGGC) that plays a crucial role in this process, automating the discovery of insecure deserialisation vulnerabilities. 
+
+Just like ysoserial does for Java, PHPGGC automates the process of finding and stringing together existing bits of framework code—called "gadgets"—to execute unauthorized actions, often leading to Remote Code Execution (RCE).
+
 
 
 
