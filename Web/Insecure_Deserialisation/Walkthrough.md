@@ -394,6 +394,17 @@ Automating scripts during pen-testing is essential for efficiently identifying a
 
 Just like ysoserial does for Java, PHPGGC automates the process of finding and stringing together existing bits of framework code—called "gadgets"—to execute unauthorized actions, often leading to Remote Code Execution (RCE).
 
+---
+
+### PHP Gadget Chain (PHPGGC)
+
+ PHPGGC is primarily a tool for generating gadget chains used in PHP object injection attacks, specifically tailored for exploiting vulnerabilities related to PHP object serialisation and deserialisation.
+
+**Functionality**
+- **Gadget Chains**: PHPGGC provides a library of gadget chains for various PHP frameworks and libraries. These gadget chains are sequences of objects and methods designed to exploit specific vulnerabilities when a PHP application unsafely unserialises user-provided data.
+- **Payload Generation**: The main purpose of PHPGGC is to facilitate the generation of serialised payloads that can trigger these vulnerabilities. It helps security researchers and penetration testers create payloads that demonstrate the impact of insecure deserialisation flaws.
+- **Payload Customisation**: Users can customise payloads by specifying arguments for the functions or methods involved in the gadget chain, thereby tailoring the attack to achieve specific outcomes, such as encoding.
+
 
 
 
