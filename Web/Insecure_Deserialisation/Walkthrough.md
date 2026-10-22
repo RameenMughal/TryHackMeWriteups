@@ -398,7 +398,38 @@ Just like ysoserial does for Java, PHPGGC automates the process of finding and s
 
 ### PHP Gadget Chain (PHPGGC)
 
- PHPGGC is primarily a tool for generating gadget chains used in PHP object injection attacks, specifically tailored for exploiting vulnerabilities related to PHP object serialisation and deserialisation.
+PHPGGC is primarily a tool for generating gadget chains used in PHP object injection attacks, specifically tailored for exploiting vulnerabilities related to PHP object serialisation and deserialisation.
+
+A gadget chain is a sequence of existing functions in an application that an attacker can make execute one after another to perform an unintended action.
+
+A simple example of a gadget chain in PHP:
+
+```
+class FileHandler {
+    function __destruct() {
+        $this->logger->log($this->filename);
+    }
+}
+
+class Logger {
+    function log($data) {
+        file_put_contents("output.txt", $data);
+    }
+}
+```
+
+Suppose an application unserializes an object containing these classes.
+1. The `FileHandler` object's `__destruct()` method runs when the object is destroyed.
+2. It calls the `Logger` object's `log()` method.
+3. The `log()` method writes data to a file.
+
+These connected operations form a gadget chain. If an attacker can control the relevant properties and exploit the application's behavior, the chain might be abused to perform an unintended action.
+
+**Gadget**: One useful piece of existing code.
+
+**Gadget chain**: Multiple pieces of code connected together.
+
+**PHPGGC**: A tool that generates payloads using known PHP gadget chains.
 
 **Functionality**
 - **Gadget Chains**: PHPGGC provides a library of gadget chains for various PHP frameworks and libraries. These gadget chains are sequences of objects and methods designed to exploit specific vulnerabilities when a PHP application unsafely unserialises user-provided data.
