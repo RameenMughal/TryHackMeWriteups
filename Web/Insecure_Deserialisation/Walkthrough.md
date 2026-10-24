@@ -436,6 +436,26 @@ These connected operations form a gadget chain. If an attacker can control the r
 - **Payload Generation**: The main purpose of PHPGGC is to facilitate the generation of serialised payloads that can trigger these vulnerabilities. It helps security researchers and penetration testers create payloads that demonstrate the impact of insecure deserialisation flaws.
 - **Payload Customisation**: Users can customise payloads by specifying arguments for the functions or methods involved in the gadget chain, thereby tailoring the attack to achieve specific outcomes, such as encoding.
 
+You can download PHPGGC from its GitHub repository [phpggc](https://github.com/ambionics/phpggc). These gadget chains leverage PHP's magic methods to achieve various attack objectives, such as remote code execution.
+
+If you want to download the tool in your machine like in Kali Linux, then follow these commands one by one:
+
+```
+sudo apt update
+sudo apt install git -y
+git clone https://github.com/ambionics/phpggc.git
+```
+
+To list all available gadget chains, you can use the `-l` option with PHPGGC, which will show the Name, Version, Type and Vector for launching a specific attack. 
+
+<img width="847" height="300" alt="image" src="https://github.com/user-attachments/assets/d8f556df-9d3f-4bff-9bc1-ffbc2626a7de" />
+
+For example, the output for `CakePHP/RCE1` means that the gadget chain named `CakePHP/RCE1` exploits an RCE vulnerability in CakePHP versions of up to `3.9.6`. This vulnerability allows attackers to execute arbitrary commands on the server by leveraging the `__destruct` magic method.
+
+CakePHP is an open-source web development framework written in PHP. It helps developers build websites and web applications without writing everything from scratch.
+
+Additionally, you can filter gadget chains based on their capabilities, such as those targeting particular PHP frameworks or achieving specific exploit techniques, using the -l option followed by a filter keyword (Drupal, Laravel, etc.). This allows you to select the appropriate gadget chain for your exploitation scenario, as shown below:
+
 
 
 
