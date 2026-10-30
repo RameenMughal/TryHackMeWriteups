@@ -1,4 +1,4 @@
-<img width="1141" height="58" alt="image" src="https://github.com/user-attachments/assets/6e1ae025-edb3-412c-9e82-730ed82f4989" /># Insecure Deserialisation
+# Insecure Deserialisation
 
 Room: [Insecure Deserialisation](https://tryhackme.com/room/insecuredeserialisation)
 
