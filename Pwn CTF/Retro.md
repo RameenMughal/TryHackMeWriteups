@@ -2,6 +2,10 @@
 
 Room: [Retro](https://tryhackme.com/room/retro)
 
+This challenge is similar to the [Blaster](https://tryhackme.com/room/blaster)
+
+You can see the challenge writeup also in Penetration Testing directory.
+
 <img width="940" height="198" alt="image" src="https://github.com/user-attachments/assets/69f16f09-939e-45b3-aff7-80dbfd824869" />
 
 ## Pwn
