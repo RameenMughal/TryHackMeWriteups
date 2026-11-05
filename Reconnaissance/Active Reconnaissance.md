@@ -1,5 +1,9 @@
 # Active Reconnaissance
 
+Room: [Active Reconnaissance](https://tryhackme.com/room/activerecon)
+
+<img width="946" height="208" alt="image" src="https://github.com/user-attachments/assets/c1d9c0fe-94cd-47d7-a628-a3459a74a0c9" />
+
 ## Introduction
 
 Active reconnaissance requires you to make some kind of contact with your target. This contact can be a phone call or a visit to the target company under some pretence to gather more information, usually as part of social engineering. Alternatively, it can be a direct connection to the target system, whether visiting their website or checking if their firewall has an SSH port open.
