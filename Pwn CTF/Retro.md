@@ -46,7 +46,7 @@ You can also check the `retro` directory by `gobuster` command: `gobuster dir -u
 
 2. user.txt
 
-By checking the `retro` page we see that it is from Wade name Retro Fanatics.
+By checking the `retro` page we see that it is from Wade named Retro Fanatics.
 
 As our motive will be to collect information to get credentials of login.
 
@@ -55,6 +55,25 @@ Scrolling down we see second last post which he says about forgetting the avatar
 <img width="763" height="356" alt="image" src="https://github.com/user-attachments/assets/b137f193-d3d2-4a2e-870e-b97cd2774f16" />
 
 Clicking the "Wade" link goes to the Wade Profile `http://TARGET_IP/retro/index.php/author/wade/` about his posts and comments, so we can see that he has commented on the same post "Ready Player One" where he mentioned about logging in and forgetting the avatar name.
+
+<img width="770" height="399" alt="image" src="https://github.com/user-attachments/assets/103ee571-d658-474f-a1b3-11273b12a733" />
+
+Clicking the Recent Comment Link `http://TARGET_IP/retro/index.php/2019/12/09/ready-player-one/#comment-2` shows us the comment indicating the avatar name:
+
+<img width="779" height="259" alt="image" src="https://github.com/user-attachments/assets/d0e6798e-278e-4407-86a4-e9bb4c4de2dc" />
+
+So we know that the password is `parzival` and username is `Wade`
+
+We can try to log in without the password by Microsoft Remote Desktop software as it will be Microsoft Operating System.
+
+Command: `xfreerdp /v:TARGET_IP /u:Wade /p:'parzival'` and open the `user.txt` file
+
+<img width="779" height="253" alt="image" src="https://github.com/user-attachments/assets/99818d14-3ca6-46c5-910a-6c1f22cd9f33" />
+
+
+
+
+
 
 
 
