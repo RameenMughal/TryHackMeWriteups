@@ -84,7 +84,7 @@ CVE-2019-1388
 
 I could not find the CVE in the Windows even watching the official walkthrough so I found out that other people are also having this issue that they cannot see the CVE in Internet Explorere History. So I got to know from the Hint and checking the walkthrough.
 
-Original way is to open the Internet Explorer, click the Start icon and you see the CVE under History of 2 weeks ago but in mine I dont see that.
+Original way is to open the Internet Explorer, click the Star icon and you see the CVE under History of 2 weeks ago but in mine I dont see that.
 
 <img width="505" height="225" alt="image" src="https://github.com/user-attachments/assets/0d256d37-7d38-45bd-a9c7-5ebfa1561a39" />
 
