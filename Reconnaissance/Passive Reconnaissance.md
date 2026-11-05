@@ -1,5 +1,9 @@
 # Passive Reconnaissance
 
+Room: [Passive Reconnaissance](https://tryhackme.com/room/passiverecon)
+
+<img width="937" height="207" alt="image" src="https://github.com/user-attachments/assets/424dc0ba-1ff6-47c9-b510-76c770089145" />
+
 ## Introduction
 
 We will learn three command-line tools:
