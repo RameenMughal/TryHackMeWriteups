@@ -10,4 +10,4 @@ Free Rooms Included:
 
 1. [Nmap Live Host Discovery](https://tryhackme.com/room/nmap01)
 2. [Nmap Basic Port Scans](https://tryhackme.com/room/nmap02)
-3. [Nmap]()(Separated room, not included in Module)
+3. [Nmap](https://tryhackme.com/room/furthernmap)(Separated room, not included in Module)
