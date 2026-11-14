@@ -1,4 +1,4 @@
-<img width="383" height="272" alt="image" src="https://github.com/user-attachments/assets/fd90063e-5302-41ab-a746-9b00a98f0c03" /># Nmap Live Host Discovery
+# Nmap Live Host Discovery
 
 Room: [Nmap Live Host Discovery](https://tryhackme.com/room/nmap01)
 
