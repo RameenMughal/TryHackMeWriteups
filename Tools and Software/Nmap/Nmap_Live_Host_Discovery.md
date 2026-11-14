@@ -1,4 +1,4 @@
-# Nmap Live Host Discovery
+<img width="383" height="272" alt="image" src="https://github.com/user-attachments/assets/fd90063e-5302-41ab-a746-9b00a98f0c03" /># Nmap Live Host Discovery
 
 Room: [Nmap Live Host Discovery](https://tryhackme.com/room/nmap01)
 
@@ -101,6 +101,85 @@ How many devices can see the ARP Request?
 ```
 yea
 ```
+
+## Understanding Hosts Discovery through TCP/IP Layer
+
+Starting from bottom to top, we can use:
+- ARP from Link Layer
+- ICMP from the Network Layer
+- TCP from the Transport Layer
+- UDP from the Transport Layer
+
+<img width="1200" height="800" alt="image" src="https://github.com/user-attachments/assets/19b8d76c-586b-4dd3-9ee8-1db2250f90b8" />
+
+ARP has one purpose: sending a frame to the broadcast address on the network segment and asking the computer with a specific IP address to respond by providing its MAC (hardware) address.
+
+ICMP has many [types](https://www.iana.org/assignments/icmp-parameters). ICMP ping uses Type 8 (Echo) and Type 0 (Echo Reply).
+
+If you want to ping a system on the same subnet, an ARP query should precede (come before) the ICMP Echo.
+
+Although TCP and UDP are transport-layer protocols, for network scanning, a scanner can send a specially crafted packet to common TCP or UDP ports to check whether the target responds. This method is efficient, especially when ICMP Echo is blocked.
+
+---
+
+### Answer the questions below
+
+1. Send a packet with the following:
+- From computer1
+- To computer3
+- Packet Type: “Ping Request”
+
+What type of packet did computer1 send before the ping?
+
+```
+ARP Request
+```
+
+<img width="388" height="248" alt="image" src="https://github.com/user-attachments/assets/f734c296-d47d-42f1-b902-98d5fee58d95" />
+
+2. What type of packet did computer1 receive before it was able to send the ping?
+
+```
+ARP Response
+```
+
+3. How many computers responded to the ping request?
+
+```
+1
+```
+
+4. Send a packet with the following:
+- From computer2
+- To computer5
+- Packet Type: “Ping Request”
+
+What is the name of the first device that responded to the first ARP Request?
+
+```
+Router
+```
+
+<img width="383" height="272" alt="image" src="https://github.com/user-attachments/assets/bd85bfba-e567-4f92-997b-a1f6ab60b518" />
+
+5. What is the name of the first device that responded to the second ARP Request?
+
+```
+computer5
+```
+
+<img width="398" height="273" alt="image" src="https://github.com/user-attachments/assets/c4764b4e-623e-4c64-a1b5-19bbb7bac166" />
+
+6. Send another Ping Request. Did it require new ARP Requests? (yea/nay)
+
+```
+nay
+```
+
+
+
+
+
 
 
 
