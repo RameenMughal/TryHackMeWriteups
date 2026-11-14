@@ -176,6 +176,60 @@ computer5
 nay
 ```
 
+## Enumerating Targets
+
+Before we explain each in detail and test it against a live target, we need to specify the targets we want to scan. Generally speaking, you can provide a list, a range, or a subnet. 
+
+Examples of target specification are:
+- **list**: `MACHINE_IP scanme.nmap.org example.com` will scan 3 IP addresses.
+- **range**: `10.11.12.15-20` will scan 6 IP addresses: `10.11.12.15`, `10.11.12.16`,… and `10.11.12.20`. A range can appear in any octet, and Nmap combines them: `10.11.12-13.1-3` scans `2 x 3 = 6` addresses, `.1` to `.3` in both `10.11.12` and `10.11.13`.
+- **subnet**: `MACHINE_IP/30` will scan 4 IP addresses.
+
+You can also provide a file as input for your list of targets, `nmap -iL list_of_hosts.txt`.
+
+If you want to check the list of hosts that Nmap will scan, you can use nmap `-sL TARGETS`. This option gives you a detailed list of hosts that Nmap will scan without actually scanning them; however, Nmap will attempt reverse-DNS resolution on all targets to obtain their names. Names might reveal various information to the pentester. (If you don’t want Nmap to use the DNS server, you can add `-n`.)
+
+---
+
+### Connecting to the Network
+
+In this room, you will work with a small network consisting of one Windows host and one Ubuntu host to practice identifying live systems on a network.
+
+When you open the room, you will see a network diagram showing the available hosts. To begin, click the `Start button` to deploy the network. Allow up to 2 minutes for all machines to initialise properly. Once the network has finished loading, launch the `AttackBox` by clicking the Start AttackBox button. When the AttackBox opens in split view, open a Terminal and run Nmap to perform host discovery, then answer the questions in this room.
+
+<img width="254" height="344" alt="image" src="https://github.com/user-attachments/assets/1da42f47-6f6a-4011-9a9d-991df946f15d" />
+
+The questions in this task need only a terminal with Nmap, because `nmap -sL -n` lists targets without sending any packets to them.
+
+---
+
+### Answer the questions below
+
+1. What is the first IP address Nmap would scan if you provided 10.10.12.13/29 as your target?
+
+```
+10.10.12.8
+```
+
+With command: `nmap -sL -n 10.10.12.13/29`
+
+<img width="515" height="239" alt="image" src="https://github.com/user-attachments/assets/f1ebe988-7209-4669-b529-639780976c59" />
+
+2. How many IP addresses will Nmap scan if you provide the following range: `10.10.0-255.101-125`?
+
+```
+6400
+```
+
+Command: `nmap -sL -n 10.10.0-255.101-125`
+
+<img width="509" height="251" alt="image" src="https://github.com/user-attachments/assets/899e036c-4d09-4a4d-8c2f-f31f9db19acd" />
+
+## Nmap Host Discovery using ARP
+
+
+
+
 
 
 
