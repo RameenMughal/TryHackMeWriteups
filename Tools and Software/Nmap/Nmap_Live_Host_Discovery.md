@@ -62,7 +62,7 @@ In simple words:
 
 1. Send a packet with the following:
 
-<img width="395" height="782" alt="image" src="https://github.com/user-attachments/assets/92c11919-c095-4750-9ee7-32e898c5b748" />
+<img width="195" height="382" alt="image" src="https://github.com/user-attachments/assets/92c11919-c095-4750-9ee7-32e898c5b748" />
 
 - From computer1
 - To computer1 (to indicate it is broadcast)
@@ -83,7 +83,7 @@ nay
 
 3. Send a packet with the following:
 
-<img width="397" height="779" alt="image" src="https://github.com/user-attachments/assets/a925aca5-6ed3-4e35-87e9-f8933a29b421" />
+<img width="197" height="379" alt="image" src="https://github.com/user-attachments/assets/a925aca5-6ed3-4e35-87e9-f8933a29b421" />
 
 - From computer4
 - To computer4 (to indicate it is broadcast)
