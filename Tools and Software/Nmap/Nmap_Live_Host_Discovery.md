@@ -308,6 +308,22 @@ Host is up (0.069s latency).
 Nmap done: 256 IP addresses (3 hosts up) scanned in 3.38 seconds
 ```
 
+If you look at the network packets using a tool like Wireshark, you will see something similar to the image below. You can see that we have one source IP address on a different subnet than the destination subnet, sending ICMP echo requests to all IP addresses in the target subnet to see which will reply.
+
+<img width="959" height="577" alt="image" src="https://github.com/user-attachments/assets/e48762d7-91ef-41a5-b1ff-5cde11827561" />
+
+**ICMP Timestamp**
+
+Because ICMP echo requests tend to be blocked, you might also consider ICMP Timestamp or ICMP Address Mask requests to tell if a system is online. Nmap uses a timestamp request (ICMP Type 13) and checks whether it will get a Timestamp reply (ICMP Type 14). Adding the `-PP` option tells Nmap to use ICMP timestamp requests. 
+
+As shown in the figure below, you expect live hosts to reply.
+
+<img width="1200" height="596" alt="image" src="https://github.com/user-attachments/assets/7e37cd29-e139-49e0-acf0-e120f844a286" />
+
+In the following example, we run `nmap -PP -sn 10.200.6.0/24` to discover the online computers on the lab machine subnet.
+
+
+
 
 
 
