@@ -322,6 +322,235 @@ As shown in the figure below, you expect live hosts to reply.
 
 In the following example, we run `nmap -PP -sn 10.200.6.0/24` to discover the online computers on the lab machine subnet.
 
+```
+root@ip-10-201-66-6:~# nmap -PP -sn 10.200.6.0/24
+Starting Nmap 7.80 ( https://nmap.org ) at 2026-02-05 12:10 GMT
+mass_dns: warning: Unable to open /etc/resolv.conf. Try using --system-dns or specify valid servers with --dns-servers
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 10.200.6.50
+Host is up (0.069s latency).
+Nmap scan report for 10.200.6.250
+Host is up (0.069s latency).
+Nmap done: 256 IP addresses (2 hosts up) scanned in 8.44 seconds
+```
+
+Similar to the previous ICMP scan, this scan will send many ICMP timestamp requests to every valid IP address in the target subnet. In the Wireshark screenshot below (use `tun0` interface in the AB), you can see one source IP address sending ICMP packets to every possible IP address to discover online hosts.
+
+<img width="960" height="577" alt="image" src="https://github.com/user-attachments/assets/270c15e1-4c66-4352-9c2a-5286a9f65323" />
+
+**ICMP Type 17**
+
+Similarly, Nmap uses address mask queries (ICMP Type 17) and checks whether it gets an address mask reply (ICMP Type 18). This scan can be enabled with the option `-PM`. As shown in the figure below, live hosts are expected to reply to ICMP address mask requests.
+
+Why would anyone ask for an address mask? [RFC 950](https://www.rfc-editor.org/info/rfc950/) defined this request so a host could learn its subnet mask from the network. DHCP took over that job, and [RFC 6918](https://www.rfc-editor.org/info/rfc6918/) formally deprecated the message in 2013. Most modern systems no longer answer it. It still earns a place in your toolbox, because administrators who block echo requests sometimes forget other ICMP queries.
+
+<img width="1200" height="594" alt="image" src="https://github.com/user-attachments/assets/8c2cdf4a-19b3-459c-9cc7-1ca93e12ee6a" />
+
+In an attempt to discover live hosts using ICMP address mask queries, we run the command `nmap -PM -sn 10.200.6.0/24`. Although earlier scans showed at least 2 hosts are up, this scan returned none. The reason is that the target system or a firewall on the route is blocking this type of ICMP packet. Therefore, it is essential to learn multiple approaches to achieve the same result. If one packet type is blocked, we can always choose another to discover the target network and services.
+
+<img width="510" height="70" alt="image" src="https://github.com/user-attachments/assets/2ab9f0e3-028a-4499-88a3-7eb79be6b303" />
+
+Although we didn’t receive any reply and couldn't determine which hosts were online, it is essential to note that this scan sent ICMP address-mask requests to every valid IP address and waited for a reply. Each ICMP request was sent twice, as shown in the screenshot below.
+
+<img width="956" height="581" alt="image" src="https://github.com/user-attachments/assets/1d7fefa7-c66a-41bd-9570-e402c15be49b" />
+
+---
+
+### Answer the questions below
+
+1. What is the option required to tell Nmap to use ICMP Timestamp to discover live hosts?
+
+```
+-PP
+```
+
+2. What is the option required to tell Nmap to use ICMP Address Mask to discover live hosts?
+
+```
+-PM
+```
+
+3. What is the option required to tell Nmap to use ICMP Echo to discover live hosts?
+
+```
+-PE
+```
+
+## Nmap Host Discovery Using TCP and UDP
+
+TCP SYN Ping
+
+We can send a packet with the SYN (Synchronise) flag set to TCP port 80 (80 by default) and wait for a response. An open port should reply with a SYN/ACK (Acknowledge); a closed port would result in an RST (Reset). In this case, we only check whether we receive a response to infer whether the host is up. The specific state of the port is not significant here.
+
+The figure below is a reminder of how a TCP 3-way handshake usually works.
+
+<img width="1200" height="592" alt="image" src="https://github.com/user-attachments/assets/e7d65304-c459-4b9a-910d-8e124fa3ba07" />
+
+If you want Nmap to use TCP SYN ping, you can do so via the option `-PS` followed by the port number, range, list, or a combination of them. For example, `-PS21` will target port 21, while `-PS21-25` will target ports 21, 22, 23, 24, and 25. Finally, `-PS80,443,8080` will target the three ports 80, 443, and 8080.
+
+Privileged users (`root` and `sudoers`) can send TCP SYN packets and don’t need to complete the TCP 3-way handshake even if the port is open, as shown in the figure below. Unprivileged users have no choice but to complete the 3-way handshake if the port is open.
+
+Privilege changes how Nmap sends the probe. A privileged `-PS` sends a raw SYN; when the port is open, your own kernel answers the target's SYN/ACK with an RST, so the handshake never completes. An unprivileged user can't craft raw packets, so Nmap asks the operating system to `connect()` instead. That call still opens with a SYN and completes the handshake when the port is open. Either way, any reply tells Nmap the host is up.
+
+<img width="1200" height="598" alt="image" src="https://github.com/user-attachments/assets/c104e5fe-abb9-4366-9941-82cfa8005b0d" />
+
+We will run `nmap -PS -sn 10.200.6.0/24` to scan the target VM subnet. As shown in the output below, we discovered two hosts.
+
+```
+root@ip-10-201-66-6:~# nmap -PS -sn 10.200.6.0/24
+Starting Nmap 7.80 ( https://nmap.org ) at 2026-02-05 12:22 GMT
+mass_dns: warning: Unable to open /etc/resolv.conf. Try using --system-dns or specify valid servers with --dns-servers
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 10.200.6.50
+Host is up (0.070s latency).
+Nmap scan report for 10.200.6.250
+Host is up (0.068s latency).
+Nmap done: 256 IP addresses (2 hosts up) scanned in 33.88 seconds
+```
+
+Let’s take a closer look at what happened behind the scenes by looking at the network traffic on Wireshark in the figure below. Technically speaking, since we didn’t specify any TCP ports to use in the TCP ping scan, Nmap used the default TCP port, 80. Any service listening on port 80 is expected to reply, indirectly indicating that the host is online.
+
+**TCP ACK Ping**
+
+As you have guessed, this sends a packet with an ACK flag set. You must run Nmap as a privileged user to accomplish this. If you try it as an unprivileged user, Nmap will attempt a 3-way handshake.
+
+By default, port 80 is used. The syntax is similar to TCP SYN ping. `-PA` should be followed by a port number, a port number range, a list, or a combination of them. For example, consider `-PA21`, `-PA21-25` and `-PA80,443,8080`. If no port is specified, port 80 will be used.
+
+The following figure shows that any TCP packet with the ACK flag set should receive a TCP packet with the RST flag set. The target responds with the RST flag set because the TCP packet with the ACK flag is not part of any ongoing connection. The expected response is used to detect if the target host is up.
+
+<img width="1200" height="600" alt="image" src="https://github.com/user-attachments/assets/e65e3d5f-89bb-4910-94de-99be5464bd4c" />
+
+In this example, we run `sudo nmap -PA -sn 10.200.6.0/24` to discover the online hosts on the target’s subnet. We can see that the TCP ACK ping scan detected two hosts as up.
+
+```
+root@ip-10-201-66-6:~# sudo nmap -PA -sn 10.200.6.0/24
+sudo: unable to resolve host ip-10-201-66-6: Name or service not known
+Starting Nmap 7.80 ( https://nmap.org ) at 2026-02-05 12:33 GMT
+mass_dns: warning: Unable to open /etc/resolv.conf. Try using --system-dns or specify valid servers with --dns-servers
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 10.200.6.50
+Host is up (0.070s latency).
+Nmap scan report for 10.200.6.250
+Host is up (0.069s latency).
+Nmap done: 256 IP addresses (2 hosts up) scanned in 36.64 seconds
+```
+
+If we peek at the network traffic shown in the figure below, we will discover many packets with the ACK flag set, sent to port 80 on the target systems. Nmap sends each packet twice. The systems that don’t respond are offline or inaccessible.
+
+<img width="955" height="576" alt="image" src="https://github.com/user-attachments/assets/8585c630-21d2-4d24-9cbe-d1e8ee3309c6" />
+
+**UDP Ping**
+
+Finally, we can use UDP to discover if the host is online. Unlike a TCP SYN ping, sending a UDP packet to an open port is not expected to elicit a reply. However, if we send a UDP packet to a closed UDP port, we expect to get an ICMP port-unreachable packet; this indicates that the target system is up and available.
+
+In the following figure, we see a UDP packet sent to an open UDP port that does not trigger a response. However, sending a UDP packet to any closed UDP port can trigger a response indirectly, indicating that the target is online.
+
+<img width="1200" height="594" alt="image" src="https://github.com/user-attachments/assets/645d44be-9469-4d30-85b4-95e2d0081da1" />
+
+<img width="1200" height="638" alt="image" src="https://github.com/user-attachments/assets/3ef158e6-7306-44a8-a8c3-66ca6c15e85b" />
+
+The syntax to specify the ports is similar to that of TCP SYN ping and TCP ACK ping; Nmap uses `-PU` for UDP ping. In the following example, we run a UDP scan and discover two live hosts.
+
+```
+root@ip-10-201-66-6:~# sudo nmap -PU -sn 10.200.6.0/24
+sudo: unable to resolve host ip-10-201-66-6: Name or service not known
+Starting Nmap 7.80 ( https://nmap.org ) at 2026-02-05 12:38 GMT
+mass_dns: warning: Unable to open /etc/resolv.conf. Try using --system-dns or specify valid servers with --dns-servers
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 10.200.6.50
+Host is up (0.070s latency).
+Nmap scan report for 10.200.6.250
+Host is up (0.069s latency).
+Nmap done: 256 IP addresses (2 hosts up) scanned in 35.97 seconds
+```
+
+Let’s inspect the UDP packets generated. In the following Wireshark screenshot, we notice Nmap sending UDP packets to UDP ports that are most likely closed. The image below shows that Nmap uses an uncommon UDP port to trigger an ICMP destination unreachable (port unreachable) error.
+
+
+<img width="953" height="575" alt="image" src="https://github.com/user-attachments/assets/f0a55b76-1fae-468a-85ee-4da6c6b56df3" />
+
+**Masscan**
+
+On a side note, Masscan uses a similar approach to discover the available systems. However, to complete its network scan quickly, Masscan is quite aggressive in the rate at which it generates packets. The syntax is quite similar: `-p` can be followed by a port number, list, or range. 
+
+Consider the following examples:
+- `masscan 10.200.6.0/24 -p443`
+- `masscan 10.200.6.0/24 -p80,443`
+- `masscan 10.200.6.0/24 -p22-25`
+
+It can be installed using `apt install masscan`.
+
+---
+
+### Answer the questions below
+
+1. Which TCP ping scan still sends the packet type it is named after when run from an unprivileged account?
+
+```
+TCP SYN Ping
+```
+
+2. Which TCP ping scan needs a privileged account to send the packet type it is named after?
+
+```
+TCP ACK Ping
+```
+
+3. What option do you need to add to Nmap to run a TCP SYN ping scan on the telnet port?
+
+```
+-PS23
+```
+
+## Using Reverse-DNS Lookup
+
+Reverse DNS (rDNS) is the process of resolving an IP address to a hostname (the opposite of normal DNS). Instead of asking “What is the IP of `example.com`?”, you ask “What domain name is assigned to `10.200.6.15`?”
+
+In Nmap, using `-R` forces reverse lookups for every target address, even if the host is down, while `-n` disables them. This helps identify system roles (e.g., `mail.company.local`, `dc01.domain.com`) and understand network structure during recon. However, rDNS records aren’t always configured or accurate, so results may be missing or misleading. It can also slightly slow scans due to additional DNS queries.
+
+By default, Nmap will look up online hosts; however, you can use the option `-R` to query the DNS server even for offline hosts. If you want to use a specific DNS server, you can add the `--dns-servers DNS_SERVER` option.
+
+---
+
+### Answer the questions below
+
+We want Nmap to issue a reverse DNS lookup for every address in the target subnet, including hosts that don't respond to host discovery, hoping the names reveal something about each system. Which option forces this? (Answer format: one Nmap option, including its leading dash.)
+
+```
+-R
+```
+
+## Summary
+
+Below is a quick summary of the Nmap command-line options we covered.
+
+| **Scan Type** | **Example Command** | **Probe Sent** | **Host Is Up If It Returns** |
+| :--- | :--- | :--- | :--- |
+| ARP Scan | `sudo nmap -PR -sn 10.200.6.0/24` | ARP request (same subnet only) | ARP reply |
+| ICMP Echo Scan | `sudo nmap -PE -sn 10.200.6.0/24` | ICMP Type 8 (Echo) | ICMP Type 0 (Echo Reply) |
+| ICMP Timestamp Scan | `sudo nmap -PP -sn 10.200.6.0/24` | ICMP Type 13 | ICMP Type 14 |
+| ICMP Address Mask Scan | `sudo nmap -PM -sn 10.200.6.0/24` | ICMP Type 17 | ICMP Type 18 |
+| TCP SYN Ping Scan | `sudo nmap -PS22,80,443 -sn 10.200.6.0/30` | TCP SYN | SYN/ACK or RST |
+| TCP ACK Ping Scan | `sudo nmap -PA22,80,443 -sn 10.200.6.0/30` | TCP ACK | RST |
+| UDP Ping Scan | `sudo nmap -PU53,161,162 -sn 10.200.6.0/30` | UDP datagram, ideally to a closed port | ICMP Port Unreachable |
+
+Remember to add `-sn` if you are only interested in host discovery without port-scanning. Omitting `-sn` will let Nmap default to scanning live hosts for ports.
+
+| **Option** | **Purpose** |
+| :--- | :--- |
+| `-n` | No DNS lookup |
+| `-R` | Reverse DNS lookup for all hosts |
+| `-sn` | Host discovery only (no port scanning) |
+
+
+
+
+
+
+
+
+
+
 
 
 
