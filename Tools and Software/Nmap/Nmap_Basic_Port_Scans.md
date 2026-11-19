@@ -126,6 +126,177 @@ We notice that port 80 is open, so it replied with a SYN/ACK, and Nmap completed
 
 <img width="990" height="210" alt="image" src="https://github.com/user-attachments/assets/e19129d7-ec11-484b-bdc7-5b3420d4ce8f" />
 
+To illustrate the `-sT` (TCP connect scan), Run the following command in the AB to get a detailed list of the open ports.
+
+<img width="457" height="173" alt="image" src="https://github.com/user-attachments/assets/b12cc787-408e-40bf-b7b4-f0cf96ff68c0" />
+
+Note that we can use `-F` to enable fast mode and decrease the number of scanned ports from 1000 to 100 most common ports.
+
+It is worth mentioning that the `-r` option can also be added to scan the ports in consecutive order instead of random order. This option is useful for testing whether ports open consistently, for instance, when a target boots up.
+
+---
+
+### Answer the questions below
+
+1. What is the state of the FTP service running on port 21?
+
+```
+open
+```
+
+2. What is Nmap’s guess about the service running on port 53?
+
+```
+domain
+```
+
+## TCP SYN Scan
+
+Unprivileged users are limited to the connect scan. However, the default scan mode is a SYN scan, and it requires a privileged (`root` or `sudo`) user to run. SYN scan does not need to complete the TCP 3-way handshake; instead, it tears down the connection after receiving a response from the server. Because we didn’t establish a TCP connection, the scan is less likely to be logged. We can select this scan type by using the `-sS` option.
+
+The figure below shows how the TCP SYN scan works without completing the TCP 3-way handshake.
+
+<img width="1200" height="583" alt="image" src="https://github.com/user-attachments/assets/5b8e4543-8205-4658-8048-10ddd0ae3e46" />
+
+We see how a SYN scan -sS does not need to complete the TCP 3-way handshake; instead, Nmap sends an RST packet once a SYN/ACK packet is received.
+
+<img width="1056" height="192" alt="image" src="https://github.com/user-attachments/assets/7c6bdf08-7a27-438e-8477-cb8d39f5d6ae" />
+
+TCP SYN scan is the default scan mode when running Nmap as a privileged user (`root` or `sudo`), and it is a very reliable choice. It has successfully discovered the open ports you found earlier with the TCP connect scan, yet no TCP connection was fully established with the target.
+
+<img width="464" height="171" alt="image" src="https://github.com/user-attachments/assets/d9be5f47-5e28-4ebf-a325-6838f853a5c0" />
+
+---
+
+### Answer the questions below
+
+1. After launching a TCP SYN scan, how many SYN-ACK packets are successfully received in AttackBox?
+
+```
+4
+```
+
+Open Wireshark and select the `tun0` interface and then run the Nmap command `nmap -sS <MACHINE_IP>`
+
+When it runs then see the WireShark you see packets recorded, use the filter `ip.src == <MACHINE_IP> && tcp.flags.syn == 1 && tcp.flags.ack == 1`
+
+<img width="863" height="171" alt="image" src="https://github.com/user-attachments/assets/ac63b4e4-cf72-4705-b14c-1f9eb9ce2073" />
+
+2. How many ports are open on the target machine?
+
+```
+4
+```
+
+## UDP Scan
+
+UDP is a connectionless protocol; hence, it does not require a handshake for connection establishment. We cannot guarantee that a service listening on a UDP port would respond to our packets. However, if a UDP packet is sent to a closed port, an ICMP port unreachable error (type 3, code 3) is returned. You can select UDP scan using the `-sU` option; moreover, you can combine it with another TCP scan.
+
+The following figure shows that if we send a UDP packet to an open UDP port, we cannot expect a reply. Therefore, sending a UDP packet to an open port won’t tell us anything.
+
+<img width="1200" height="583" alt="image" src="https://github.com/user-attachments/assets/09a12364-001c-42e5-bdfb-2f1a8665a0b2" />
+
+However, as shown in the figure below, we expect to receive an ICMP type 3, code 3, destination unreachable, port unreachable message. In other words, the UDP ports that don’t generate any response are the ones that Nmap will state as open.
+
+<img width="1200" height="636" alt="image" src="https://github.com/user-attachments/assets/563396e0-f02b-423a-bb74-acb1ae6ab869" />
+
+In the Wireshark capture below, we can see that every closed port generates an ICMP destination unreachable (port unreachable) message.
+
+<img width="1034" height="582" alt="image" src="https://github.com/user-attachments/assets/cebbd312-2b40-4dbc-9d83-286d7bfc4819" />
+
+From the AB, use the following command to perform a UDP scan of the top 10 ports on the target machine:
+
+<img width="464" height="257" alt="image" src="https://github.com/user-attachments/assets/3e35c3d0-5026-4c31-93bd-7f2248265985" />
+
+---
+
+### Answer the questions below
+
+1. What is the state of port number 161 over UDP in the target machine?
+
+```
+closed
+```
+
+2. What is the service name according to Nmap on port 161?
+
+```
+snmp
+```
+
+## Fine-Tuning and Scope Performance
+
+You can specify the ports you want to scan instead of the default 1000 ports. Specifying the ports is intuitive by now. Let’s see some examples: 
+- port list: `-p22,80,443` will scan ports 22, 80 and 443.
+- port range: `-p1-1023` will scan all ports between 1 and 1023 inclusive, while -p20-25 will scan ports between 20 and 25 inclusive.
+
+You can request the scan of all ports by using `-p-`, which will scan all 65535 ports. If you want to scan the most common 100 ports, add `-F`. Using `--top-ports 10` will check the ten most common ports.
+
+You can control the scan timing using `-T<0-5>`. `-T0` is the slowest (paranoid), while `-T5` is the fastest. According to the Nmap manual page, there are six templates:
+- paranoid (0)
+- sneaky (1)
+- polite (2)
+- normal (3)
+- aggressive (4)
+- insane (5)
+
+To avoid IDS alerts, you might consider `-T0` or `-T1`. For instance, `-T0` scans one port at a time and waits 5 minutes between sending each probe, so you can guess how long scanning one target would take to finish. If you don’t specify any timing, Nmap uses normal `-T3`. Note that `-T5` is the most aggressive in terms of speed; however, this can affect the accuracy of the scan results due to the increased likelihood of packet loss. Note that `-T4` is often used during CTFs and when learning to scan on practice targets, whereas `-T1` is often used during real engagements where stealth is more important.
+
+Moreover, you can control probing parallelisation using `--min-parallelism <numprobes>` and `--max-parallelism <numprobes>`. Nmap probes targets to discover which hosts are live and which ports are open; the probing parallelisation parameter specifies the number of such probes that can run in parallel. For instance, `--min-parallelism=512` pushes Nmap to maintain at least 512 probes in parallel; these 512 probes are related to host discovery and open ports.
+
+Probes are the packets that Nmap sends to a target system to check whether it is alive or whether its ports are open.
+
+Parallelisation means how many probes Nmap can send or handle at the same time.
+
+---
+
+### Answer the questions below
+
+1. What is the option to scan all the TCP ports between 5000 and 5500?
+
+```
+-p5000-5500
+```
+
+2. How can you ensure that Nmap will run at least 64 probes in parallel?
+
+```
+--min-parallelism=64
+```
+
+3. What option would you add to make Nmap very slow and paranoid?
+
+```
+-T0
+```
+
+## Summary
+
+This room covered three types of scans.
+
+| Port Scan Type       | Example Command          |
+|----------------------|--------------------------|
+| TCP Connect Scan     | `nmap -sT MACHINE_IP`    |
+| TCP SYN Scan         | `sudo nmap -sS MACHINE_IP` |
+| UDP Scan             | `sudo nmap -sU MACHINE_IP` |
+
+These scan types should get you started discovering running TCP and UDP services on a target host.
+
+| Option                 | Purpose                                   |
+|------------------------|-------------------------------------------|
+| `-p-`                  | Scan all ports                            |
+| `-p1-1023`              | Scan ports 1 to 1023                      |
+| `-F`                   | Scan the 100 most common ports             |
+| `-r`                   | Scan ports in consecutive order           |
+| `-T<0-5>`              | `-T0` is the slowest and `-T5` is the fastest |
+| `--max-rate 50`        | Rate ≤ 50 packets/sec                     |
+| `--min-rate 15`        | Rate ≥ 15 packets/sec                     |
+| `--min-parallelism 100` | At least 100 probes in parallel           |
+
+
+
+
+
 
 
 
